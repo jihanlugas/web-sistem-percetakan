@@ -61,3 +61,7 @@ input, select, textarea{
     )
     rgb(var(--background-start-rgb));
 } */
+
+.react-tooltip {
+  @apply bg-blue-400;
+}

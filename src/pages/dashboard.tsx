@@ -1,6 +1,6 @@
 import PageWithLayoutType from '@/types/layout';
 import Head from 'next/head';
-import MainUser from '@/components/layout/main-user';
+import MainAuth from '@/components/layout/main-auth';
 
 const Index = () => {
   return (
@@ -15,6 +15,6 @@ const Index = () => {
   );
 };
 
-(Index as PageWithLayoutType).layout = MainUser;
+(Index as PageWithLayoutType).layout = MainAuth;
 
 export default Index;
