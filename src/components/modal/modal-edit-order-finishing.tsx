@@ -13,6 +13,8 @@ import { Api } from "@/lib/api";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import notif from "@/utils/notif";
 import { OrderView } from "@/types/order";
+import { displayMoney } from "@/utils/formater";
+import TextFieldNumber from "../formik/text-field-number";
 
 type Props = {
   show: boolean;
@@ -23,10 +25,9 @@ type Props = {
 
 const schema = Yup.object().shape({
   name: Yup.string().required('Required field'),
-  description: Yup.string().max(200, 'Must be 200 characters or less'),
-  qty: Yup.number().nullable().required('Required field'),
-  price: Yup.number().nullable().required('Required field'),
-  total: Yup.number().nullable().required('Required field'),
+    description: Yup.string().max(200, 'Must be 200 characters or less'),
+    qty: Yup.number().nullable().required('Required field'),
+    price: Yup.number().nullable().required('Required field'),
 });
 
 const defaultInitFormikValue: CreateFinishing = {
@@ -64,6 +65,9 @@ const ModalEditOrderFinishing: NextPage<Props> = ({ show, onClickOverlay, id, or
   });
 
   const handleSubmit = (values: CreateFinishing | UpdateFinishing, formikHelpers: FormikHelpers<CreateFinishing | UpdateFinishing>) => {
+    values.qty = parseInt(values.qty as string)
+    values.price = parseInt(values.price as string)
+    values.total = (values.qty * values.price) || 0
     if (selectedId) {
       const newData: UpdateFinishing = {
         name: values.name,
@@ -117,15 +121,7 @@ const ModalEditOrderFinishing: NextPage<Props> = ({ show, onClickOverlay, id, or
     }
   }
 
-  const handleChangeQty = (e, values, setFieldValue) => {
-    setFieldValue('qty', e.target.value)
-    setFieldValue('total', values.price * e.target.value)
-  }
 
-  const handleChangePrice = (e, values, setFieldValue) => {
-    setFieldValue('price', e.target.value)
-    setFieldValue('total', values.qty * e.target.value)
-  }
 
   useEffect(() => {
     if (show) {
@@ -176,7 +172,7 @@ const ModalEditOrderFinishing: NextPage<Props> = ({ show, onClickOverlay, id, or
               enableReinitialize={true}
               onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
             >
-              {({ values, setFieldValue }) => {
+              {({ values }) => {
                 return (
                   <Form noValidate={true}>
                     <div className="mb-4">
@@ -189,43 +185,31 @@ const ModalEditOrderFinishing: NextPage<Props> = ({ show, onClickOverlay, id, or
                       />
                     </div>
                     <div className="mb-4">
-                      <TextField
-                        label={'Qty'}
-                        name={'qty'}
-                        type={'number'}
-                        placeholder={'Qty'}
-                        field={true}
-                        onChange={(e) => handleChangeQty(e, values, setFieldValue)}
-                        required
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <TextField
-                        label={'Price'}
-                        name={'price'}
-                        type={'number'}
-                        placeholder={'Price'}
-                        field={true}
-                        onChange={(e) => handleChangePrice(e, values, setFieldValue)}
-                        required
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <TextField
-                        label={'Total'}
-                        name={'total'}
-                        type={'number'}
-                        placeholder={'Total'}
-                        field={true}
-                        required
-                      />
-                    </div>
-                    <div className="mb-4">
                       <TextAreaField
                         label={'Keterangan'}
                         name={'description'}
                         placeholder={'Keterangan'}
                       />
+                    </div>
+                    <div className="mb-4">
+                      <TextFieldNumber
+                        label={'Harga'}
+                        name={'price'}
+                        placeholder={'Harga'}
+                        required
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <TextFieldNumber
+                        label={'Qty'}
+                        name={'qty'}
+                        placeholder={'Qty'}
+                        required
+                      />
+                    </div>
+                    <div className="mb-4 flex justify-end font-bold">
+                      <div className="mr-4">Total Finishing</div>
+                      <div>{displayMoney((parseInt(values.qty as string) * parseInt(values.price as string)) || 0)}</div>
                     </div>
                     <div className="mb-4">
                       <ButtonSubmit
@@ -234,12 +218,6 @@ const ModalEditOrderFinishing: NextPage<Props> = ({ show, onClickOverlay, id, or
                         loading={isPendingSubmit || isPendingUpdate}
                       />
                     </div>
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                    {JSON.stringify(values, null, 4)}
-                  </div>
-                  <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                    {JSON.stringify(errors, null, 4)}
-                  </div> */}
                   </Form>
                 )
               }}

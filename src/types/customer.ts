@@ -1,3 +1,4 @@
+import { CompanyView } from "./company";
 import { Paging } from "./pagination";
 
 export declare interface CustomerView {
@@ -16,6 +17,7 @@ export declare interface CustomerView {
   companyName: string;
   createName: string;
   updateName: string;
+  company?: CompanyView;
 }
 
 export declare interface PageCustomer extends Paging {

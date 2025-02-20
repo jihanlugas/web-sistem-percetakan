@@ -13,7 +13,7 @@ const CheckboxField: NextPage<Props> = ({ name, showError = true, field = false,
 		<span className={'flex flex-col w-full pl-1'}>
 			<span className='flex items-center'>
 				{props.label && (
-					<label className={'select-none py-2 flex items-center'} >
+					<label className={'select-none py-2 flex items-center cursor-pointer'} >
 						<FieldComponent
 							className={'mr-4 accent-current py-2 scale-150'}
 							type={'checkbox'}

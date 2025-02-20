@@ -14,6 +14,7 @@ import TextField from "@/components/formik/text-field";
 import TextAreaField from "@/components/formik/text-area-field";
 import { PagePhase, PhaseView } from "@/types/phase";
 import DateField from "@/components/formik/date-field";
+import TextFieldNumber from "../formik/text-field-number";
 
 
 type Props = {
@@ -62,6 +63,8 @@ const ModalFilterOrder: NextPage<Props> = ({ show, onClickOverlay, filter, setFi
       name: '',
       description: '',
       isDone: '',
+      startTotalOrder: '',
+      endTotalOrder: '',
       startDt: '',
       endDt: '',
     })
@@ -133,6 +136,17 @@ const ModalFilterOrder: NextPage<Props> = ({ show, onClickOverlay, filter, setFi
                     </div>
                     <div className="mb-4">
                       <DropdownField
+                        label={"Pembayaran"}
+                        name={"isDone"}
+                        items={[{name: "Lunas", id: true}, {name: "Belum Lunas", id: false}]}
+                        keyValue={"id"}
+                        keyLabel={"name"}
+                        placeholder="Pilih Pembayaran"
+                        placeholderValue={""}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <DropdownField
                         label={"Pelanggan"}
                         name={"customerId"}
                         items={customers}
@@ -153,6 +167,18 @@ const ModalFilterOrder: NextPage<Props> = ({ show, onClickOverlay, filter, setFi
                         placeholder="Pilih Phase"
                         placeholderValue={""}
                         isLoading={isLoadingPhase}
+                      />
+                    </div>
+                    <div className="mb-4 grid grid-cols-2 gap-2">
+                      <TextFieldNumber
+                        label={'Total Order Mulai Dari'}
+                        name={'startTotalOrder'}
+                        placeholder={'Harga Mulai Dari'}
+                      />
+                      <TextFieldNumber
+                        label={'Hingga'}
+                        name={'endTotalOrder'}
+                        placeholder={'Hingga'}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">

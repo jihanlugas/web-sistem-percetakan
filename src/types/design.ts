@@ -33,6 +33,8 @@ export declare interface PageDesign extends Paging {
   orderName?: string;
   createName?: string;
   preloads?: string;
+  startTotalDesign?: string | number;
+  endTotalDesign?: string | number;
   startDt?: string | DateConstructor;
   endDt?: string | DateConstructor;
 }

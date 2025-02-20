@@ -3,10 +3,10 @@ import MainAuth from "@/components/layout/main-auth";
 import ModalDeleteVerify from "@/components/modal/modal-delete-verify";
 import Table from "@/components/table/table";
 import { Api } from "@/lib/api";
-import { PaymentView, PagePayment } from "@/types/payment";
+import { UserView, PageUser } from "@/types/user";
 import PageWithLayoutType from "@/types/layout";
 import { PageInfo } from "@/types/pagination";
-import { displayDateTime, displayMoney, displayNumber } from "@/utils/formater";
+import { displayDateTime, displayPhoneNumber } from "@/utils/formater";
 import { removeEmptyValues } from "@/utils/helper";
 import notif from "@/utils/notif";
 import { isEmptyObject } from "@/utils/validate";
@@ -20,7 +20,7 @@ import { BiPlus } from "react-icons/bi";
 import { CgChevronDown } from "react-icons/cg";
 import { TbFilter, TbFilterFilled } from "react-icons/tb";
 import { Tooltip } from "react-tooltip";
-import ModalFilter from "@/components/modal/modal-filter-payment";
+import ModalFilter from "@/components/modal/modal-filter-user";
 
 type Props = object
 
@@ -28,7 +28,7 @@ type PropsDropdownMore = {
   toggleModalDelete: (id: string, name: string) => void
 }
 
-const DropdownMore: NextPage<CellContext<PaymentView, unknown> & PropsDropdownMore> = ({
+const DropdownMore: NextPage<CellContext<UserView, unknown> & PropsDropdownMore> = ({
   row,
   toggleModalDelete,
 }) => {
@@ -65,12 +65,12 @@ const DropdownMore: NextPage<CellContext<PaymentView, unknown> & PropsDropdownMo
       </button>
       <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
         <div className="" role="none">
-          <Link href={{ pathname: '/payment/[id]', query: { id: row.original.id } }}>
+          <Link href={{ pathname: '/user/[id]', query: { id: row.original.id } }}>
             <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'} title='Edit'>
               {'Detail'}
             </div>
           </Link>
-          <button onClick={() => handleClickDelete(row.original.id, row.original.name)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+          <button onClick={() => handleClickDelete(row.original.id, row.original.fullname)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
             {'Delete'}
           </button>
         </div>
@@ -81,15 +81,21 @@ const DropdownMore: NextPage<CellContext<PaymentView, unknown> & PropsDropdownMo
 
 const Index: NextPage<Props> = () => {
 
-  const [payment, setPayment] = useState<PaymentView[]>([]);
+  const [user, setUser] = useState<UserView[]>([]);
   const [showModalFilter, setShowModalFilter] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<string>('');
   const [deleteVerify, setDeleteVerify] = useState<string>('');
 
-  const [filter, setFilter] = useState<PagePayment>({
-    name: '',
-    description: '',
+  const [filter, setFilter] = useState<PageUser>({
+    companyId: '',
+    fullname: '',
+    email: '',
+    phoneNumber: '',
+    username: '',
+    address: '',
+    birthPlace: '',
+    createName: '',
     startDt: '',
     endDt: '',
   })
@@ -101,20 +107,20 @@ const Index: NextPage<Props> = () => {
     page: 0,
   });
 
-  const [pageRequest, setPageRequest] = useState<PagePayment>({
+  const [pageRequest, setPageRequest] = useState<PageUser>({
     limit: 10,
     page: 1,
-    preloads: "Company,Order",
+    // preloads: '',
   });
 
-  const column: ColumnDef<PaymentView>[] = [
+  const column: ColumnDef<UserView>[] = [
     {
-      id: 'name',
-      accessorKey: 'name',
+      id: 'fullname',
+      accessorKey: 'fullname',
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Nama Payment"}
+            {"Nama User"}
           </div>
         );
       },
@@ -123,24 +129,44 @@ const Index: NextPage<Props> = () => {
           <>
             <div className='w-full capitalize'>
               <span data-tooltip-id={`tootltip-name-${row.original.id}`}>{getValue() as string}</span>
-              {row.original.description && (
+              {/* {row.original.description && (
                 <Tooltip id={`tootltip-name-${row.original.id}`} clickable>
                   <div className="font-bold">Description</div>
                   <div className="whitespace-pre-line">{row.original.description}</div>
                 </Tooltip>
-              )}
+              )} */}
             </div>
           </>
         )
       },
     },
     {
-      id: 'order_name',
-      accessorKey: 'orderName',
+      id: 'email',
+      accessorKey: 'email',
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Nama Order"}
+            {"Email"}
+          </div>
+        );
+      },
+      cell: ({ getValue }) => {
+        return (
+          <>
+            <div className='w-full'>
+              <span>{getValue() as string}</span>
+            </div>
+          </>
+        )
+      },
+    },
+    {
+      id: 'phone_number',
+      accessorKey: 'phoneNumber',
+      header: () => {
+        return (
+          <div className='whitespace-nowrap'>
+            {"Phone Number"}
           </div>
         );
       },
@@ -148,19 +174,19 @@ const Index: NextPage<Props> = () => {
         return (
           <>
             <div className='w-full capitalize'>
-              {getValue() as string}
+              <span>{displayPhoneNumber(getValue() as string)}</span>
             </div>
           </>
         )
       },
     },
     {
-      id: 'amount',
-      accessorKey: 'amount',
+      id: 'address',
+      accessorKey: 'address',
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Harga"}
+            {"Address"}
           </div>
         );
       },
@@ -168,7 +194,7 @@ const Index: NextPage<Props> = () => {
         return (
           <>
             <div className='w-full capitalize'>
-              <span>{displayMoney(getValue() as number)}</span>
+              <span>{getValue() as string}</span>
             </div>
           </>
         )
@@ -213,13 +239,13 @@ const Index: NextPage<Props> = () => {
   ]
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['payment', pageRequest],
-    queryFn: ({ queryKey }) => Api.get('/payment', queryKey[1] as object),
+    queryKey: ['user', pageRequest],
+    queryFn: ({ queryKey }) => Api.get('/user', queryKey[1] as object),
   });
 
   const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
-    mutationKey: ['payment', 'delete', deleteId],
-    mutationFn: (id: string) => Api.delete('/payment/' + id)
+    mutationKey: ['user', 'delete', deleteId],
+    mutationFn: (id: string) => Api.delete('/user/' + id)
   });
 
   const toggleModalFilter = () => {
@@ -252,7 +278,7 @@ const Index: NextPage<Props> = () => {
 
   useEffect(() => {
     if (data?.status) {
-      setPayment(data.payload.list);
+      setUser(data.payload.list);
       setPageInfo({
         pageCount: data.payload.totalPage,
         pageSize: data.payload.dataPerPage,
@@ -274,7 +300,7 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Payment'}</title>
+        <title>{process.env.APP_NAME + ' - User'}</title>
       </Head>
       <ModalFilter
         show={showModalFilter}
@@ -297,7 +323,7 @@ const Index: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Payment', path: '' },
+            { name: 'User', path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -313,7 +339,7 @@ const Index: NextPage<Props> = () => {
                   </button>
                 </div>
                 <div className='ml-2'>
-                  <Link href={{ pathname: '/payment/new' }}>
+                  <Link href={{ pathname: '/user/new' }}>
                     <div className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 shadow hover:scale-110'>
                       <BiPlus className='text-primary-500' size={'1.2rem'} />
                     </div>
@@ -324,7 +350,7 @@ const Index: NextPage<Props> = () => {
             <div className=''>
               <Table
                 columns={column}
-                data={payment}
+                data={user}
                 setPageRequest={setPageRequest}
                 pageRequest={pageRequest}
                 pageInfo={pageInfo}

@@ -8,6 +8,8 @@ import ButtonSubmit from "@/components/formik/button-submit";
 import * as Yup from 'yup';
 import { RefObject } from "react";
 import { IoClose } from "react-icons/io5";
+import TextFieldNumber from "../formik/text-field-number";
+import { displayMoney } from "@/utils/formater";
 
 type Props = {
   show: boolean;
@@ -22,7 +24,6 @@ const schema = Yup.object().shape({
   description: Yup.string().max(200, 'Must be 200 characters or less'),
   qty: Yup.number().nullable().required('Required field'),
   price: Yup.number().nullable().required('Required field'),
-  total: Yup.number().nullable().required('Required field'),
 });
 
 const ModalCreateOrderDesign: NextPage<Props> = ({ show, onClickOverlay, formRef, dataDesignIndex, initFormikValue }) => {
@@ -30,23 +31,13 @@ const ModalCreateOrderDesign: NextPage<Props> = ({ show, onClickOverlay, formRef
   const handleSubmit = (values: CreateOrderDesign) => {
     values.qty = parseInt(values.qty as string)
     values.price = parseInt(values.price as string)
-    values.total = parseInt(values.total as string)
+    values.total = ( values.qty * values.price) || 0
     if (dataDesignIndex !== -1) {
       formRef.current.setFieldValue('designs', formRef.current.values.designs.map((item, index) => index === dataDesignIndex ? values : item))
     } else {
       formRef.current.setFieldValue('designs', [...formRef.current.values.designs, values])
     }
     onClickOverlay()
-  }
-
-  const handleChangeQty = (e, values, setFieldValue) => {
-    setFieldValue('qty', e.target.value)
-    setFieldValue('total', values.price *e.target.value)
-  }
-
-  const handleChangePrice = (e, values, setFieldValue) => {
-    setFieldValue('price', e.target.value)
-    setFieldValue('total', values.qty * e.target.value)
   }
 
   return (
@@ -65,47 +56,15 @@ const ModalCreateOrderDesign: NextPage<Props> = ({ show, onClickOverlay, formRef
             enableReinitialize={true}
             onSubmit={(values) => handleSubmit(values)}
           >
-            {({ values, setFieldValue }) => {
+            {({ values }) => {
               return (
                 <Form noValidate={true}>
                   <div className="mb-4">
                     <TextField
-                      label={'Nama Desain'}
+                      label={'Nama Design'}
                       name={'name'}
                       type={'text'}
-                      placeholder={'Nama Desain'}
-                      required
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <TextField
-                      label={'Qty'}
-                      name={'qty'}
-                      type={'number'}
-                      placeholder={'Qty'}
-                      field={true}
-                      onChange={(e) => handleChangeQty(e, values, setFieldValue)}
-                      required
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <TextField
-                      label={'Price'}
-                      name={'price'}
-                      type={'number'}
-                      placeholder={'Price'}
-                      field={true}
-                      onChange={(e) => handleChangePrice(e, values, setFieldValue)}
-                      required
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <TextField
-                      label={'Total'}
-                      name={'total'}
-                      type={'number'}
-                      placeholder={'Total'}
-                      field={true}
+                      placeholder={'Nama Design'}
                       required
                     />
                   </div>
@@ -117,18 +76,30 @@ const ModalCreateOrderDesign: NextPage<Props> = ({ show, onClickOverlay, formRef
                     />
                   </div>
                   <div className="mb-4">
-                    <ButtonSubmit
-                      label={'Simpan'}
-                    // disabled={isPending}
-                    // loading={isPending}
+                    <TextFieldNumber
+                      label={'Harga'}
+                      name={'price'}
+                      placeholder={'Harga'}
+                      required
                     />
                   </div>
-                  {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                    {JSON.stringify(values, null, 4)}
+                  <div className="mb-4">
+                    <TextFieldNumber
+                      label={'Qty'}
+                      name={'qty'}
+                      placeholder={'Qty'}
+                      required
+                    />
                   </div>
-                  <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                    {JSON.stringify(errors, null, 4)}
-                  </div> */}
+                  <div className="mb-4 flex justify-end font-bold">
+                    <div className="mr-4">Total Design</div>
+                    <div>{displayMoney((parseInt(values.qty as string) *  parseInt(values.price as string)) || 0)}</div>
+                  </div>
+                  <div className="mb-4">
+                    <ButtonSubmit
+                      label={'Simpan'}
+                    />
+                  </div>
                 </Form>
               )
             }}

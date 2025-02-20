@@ -7,7 +7,7 @@ import { Api } from '@/lib/api';
 import { CreatePrint } from '@/types/print';
 import PageWithLayoutType from '@/types/layout';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
+import { Form, Formik, FormikHelpers, FormikProps, FormikValues } from 'formik';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -15,9 +15,11 @@ import * as Yup from 'yup';
 import notif from "@/utils/notif";
 import DropdownField from '@/components/formik/dropdown-field';
 import { OrderView, PageOrder } from '@/types/order';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import CheckboxField from '@/components/formik/checkbox-field';
 import { PagePaper, PaperView } from '@/types/paper';
+import TextFieldNumber from '@/components/formik/text-field-number';
+import { displayMoney } from '@/utils/formater';
 
 
 type Props = object
@@ -31,7 +33,6 @@ const schema = Yup.object().shape({
   isDuplex: Yup.boolean(),
   pageCount: Yup.number().nullable().required('Required field'),
   price: Yup.number().nullable().required('Required field'),
-  total: Yup.number().nullable().required('Required field'),
 });
 
 const pageRequestOrder: PageOrder = {
@@ -86,7 +87,7 @@ const New: NextPage<Props> = () => {
     values.pageCount = parseInt(values.pageCount as string)
     values.qty = parseInt(values.qty as string)
     values.price = parseInt(values.price as string)
-    values.total = parseInt(values.total as string)
+    values.total = (values.pageCount * values.qty * values.price) || 0
 
     mutateSubmit(values, {
       onSuccess: ({ status, message, payload }) => {
@@ -112,7 +113,6 @@ const New: NextPage<Props> = () => {
     if (paper) {
       const price = values.isDuplex ? paper.defaultPriceDuplex : paper.defaultPrice
       setFieldValue('price', price)
-      setFieldValue('total', price * values.qty * values.pageCount)
     }
   }
 
@@ -120,27 +120,9 @@ const New: NextPage<Props> = () => {
     setFieldValue('isDuplex', e.target.checked)
     const paper = papers.find((paper) => paper.id === values.paperId)
     if (paper) {
-      const price = e.target.checked ? paper.defaultPriceDuplex : paper.defaultPrice
       setFieldValue('price', e.target.checked ? paper.defaultPriceDuplex : paper.defaultPrice)
-      setFieldValue('total', price * values.qty * values.pageCount)
     }
   }
-
-  const handleChangePageCount = (e, values, setFieldValue) => {
-    setFieldValue('pageCount', e.target.value)
-    setFieldValue('total', values.price * values.qty * e.target.value)
-  }
-
-  const handleChangeQty = (e, values, setFieldValue) => {
-    setFieldValue('qty', e.target.value)
-    setFieldValue('total', values.price * values.pageCount * e.target.value)
-  }
-
-  const handleChangePrice = (e, values, setFieldValue) => {
-    setFieldValue('price', e.target.value)
-    setFieldValue('total', values.pageCount * values.qty * e.target.value)
-  }
-
   useEffect(() => {
     if (dataOrder?.status) {
       setOrders(dataOrder.payload.list);
@@ -203,6 +185,13 @@ const New: NextPage<Props> = () => {
                       />
                     </div>
                     <div className="mb-4 max-w-xl">
+                      <TextAreaField
+                        label={'Keterangan'}
+                        name={'description'}
+                        placeholder={'Keterangan'}
+                      />
+                    </div>
+                    <div className="mb-4 max-w-xl">
                       <DropdownField
                         label={"Kertas"}
                         name={"paperId"}
@@ -214,6 +203,7 @@ const New: NextPage<Props> = () => {
                         placeholderValue={""}
                         onChange={(e) => handleChangePaper(e, values, setFieldValue)}
                         field={true}
+                        required
                       />
                     </div>
                     <div className="mb-4 max-w-xl">
@@ -225,53 +215,32 @@ const New: NextPage<Props> = () => {
                       />
                     </div>
                     <div className="mb-4 max-w-xl">
-                      <TextField
+                      <TextFieldNumber
+                        label={'Harga'}
+                        name={'price'}
+                        placeholder={'Harga'}
+                        required
+                      />
+                    </div>
+                    <div className="mb-4 max-w-xl">
+                      <TextFieldNumber
                         label={'Jumlah Lembar'}
                         name={'pageCount'}
-                        type={'number'}
                         placeholder={'Jumlah Lembar'}
-                        field={true}
-                        onChange={(e) => handleChangePageCount(e, values, setFieldValue)}
+                        required
                       />
                     </div>
                     <div className="mb-4 max-w-xl">
-                      <TextField
+                      <TextFieldNumber
                         label={'Qty'}
                         name={'qty'}
-                        type={'number'}
                         placeholder={'Qty'}
-                        field={true}
-                        onChange={(e) => handleChangeQty(e, values, setFieldValue)}
                         required
                       />
                     </div>
-                    <div className="mb-4 max-w-xl">
-                      <TextField
-                        label={'Price'}
-                        name={'price'}
-                        type={'number'}
-                        placeholder={'Price'}
-                        field={true}
-                        onChange={(e) => handleChangePrice(e, values, setFieldValue)}
-                        required
-                      />
-                    </div>
-                    <div className="mb-4 max-w-xl">
-                      <TextField
-                        label={'Total'}
-                        name={'total'}
-                        type={'number'}
-                        placeholder={'Total'}
-                        field={true}
-                        required
-                      />
-                    </div>
-                    <div className="mb-4 max-w-xl">
-                      <TextAreaField
-                        label={'Keterangan'}
-                        name={'description'}
-                        placeholder={'Keterangan'}
-                      />
+                    <div className="mb-4 max-w-xl flex justify-end font-bold">
+                      <div className="mr-4">Total Print</div>
+                      <div>{displayMoney((parseInt(values.qty as string) * parseInt (values.pageCount as string) * parseInt(values.price as string)) || 0)}</div>
                     </div>
                     <div className="mb-8 max-w-xl">
                       <ButtonSubmit

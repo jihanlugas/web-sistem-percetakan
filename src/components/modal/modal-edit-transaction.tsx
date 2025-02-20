@@ -1,6 +1,6 @@
 import Modal from "@/components/modal/modal";
 import { Api } from "@/lib/api";
-import { UpdatePayment } from "@/types/payment";
+import { UpdateTransaction } from "@/types/transaction";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NextPage } from "next/types";
 import { useEffect, useState } from "react";
@@ -12,6 +12,9 @@ import ButtonSubmit from "@/components/formik/button-submit";
 import notif from "@/utils/notif";
 import TextField from "@/components/formik/text-field";
 import TextAreaField from "@/components/formik/text-area-field";
+import DropdownField from "@/components/formik/dropdown-field";
+import { OrderView, PageOrder } from "@/types/order";
+import TextFieldNumber from "../formik/text-field-number";
 
 
 type Props = {
@@ -26,33 +29,45 @@ const schema = Yup.object().shape({
   amount: Yup.number().nullable().required('Required field'),
 });
 
-const defaultInitFormikValue: UpdatePayment = {
+const defaultInitFormikValue: UpdateTransaction = {
+  orderId: '',
   name: '',
   description: '',
+  type: '',
   amount: '',
 }
 
-const ModalEditPayment: NextPage<Props> = ({ show, onClickOverlay, id }) => {
+const pageRequestOrder: PageOrder = {
+  limit: -1,
+}
+
+const ModalEditTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [selectedId, setSelectedId] = useState<string>('')
+  const [orders, setOrders] = useState<OrderView[]>([]);
 
-  const [initFormikValue, setInitFormikValue] = useState<UpdatePayment>(defaultInitFormikValue)
+  const [initFormikValue, setInitFormikValue] = useState<UpdateTransaction>(defaultInitFormikValue)
 
   const preloads = 'Company'
   const { data, isLoading } = useQuery({
-    queryKey: ['payment', selectedId, preloads],
+    queryKey: ['transaction', selectedId, preloads],
     queryFn: ({ queryKey }) => {
       const [, selectedId] = queryKey;
-      return selectedId ? Api.get('/payment/' + selectedId, { preloads }) : null
+      return selectedId ? Api.get('/transaction/' + selectedId, { preloads }) : null
     },
   })
 
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['payment', 'update', selectedId],
-    mutationFn: (val: FormikValues) => Api.put('/payment/' + selectedId, val),
+    mutationKey: ['transaction', 'update', selectedId],
+    mutationFn: (val: FormikValues) => Api.put('/transaction/' + selectedId, val),
   });
 
-  const handleSubmit = async (values: UpdatePayment, formikHelpers: FormikHelpers<UpdatePayment>) => {
+  const { isLoading: isLoadingOrder, data: dataOrder } = useQuery({
+    queryKey: ['order', pageRequestOrder],
+    queryFn: ({ queryKey }) => Api.get('/order', queryKey[1] as object),
+  });
+
+  const handleSubmit = async (values: UpdateTransaction, formikHelpers: FormikHelpers<UpdateTransaction>) => {
     values.amount = parseInt(values.amount as string)
 
     mutateSubmit(values, {
@@ -76,9 +91,11 @@ const ModalEditPayment: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     if (data) {
       if (data?.status) {
         setInitFormikValue({
+          orderId: data.payload.orderId,
           name: data.payload.name,
           description: data.payload.description,
           amount: data.payload.amount,
+          type: data.payload.type,
         })
       }
     }
@@ -92,11 +109,17 @@ const ModalEditPayment: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     }
   }, [show, id])
 
+  useEffect(() => {
+    if (dataOrder?.status) {
+      setOrders(dataOrder.payload.list);
+    }
+  }, [dataOrder]);
+
   return (
     <Modal show={show} onClickOverlay={() => onClickOverlay('', true)} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Edit Payment</div>
+          <div>Edit Transaction</div>
           <button type="button" onClick={() => onClickOverlay('', true)} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -121,20 +144,25 @@ const ModalEditPayment: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                   return (
                     <Form noValidate={true}>
                       <div className="mb-4">
-                        <TextField
-                          label={'Nama Payment'}
-                          name={'name'}
-                          type={'text'}
-                          placeholder={'Nama Payment'}
-                          required
+                        <DropdownField
+                          label={"Order"}
+                          name={"orderId"}
+                          items={orders}
+                          keyValue={"id"}
+                          keyLabel={"name"}
+                          isLoading={isLoadingOrder}
+                          placeholder="Pilih Order"
+                          placeholderValue={""}
+                          field={true}
+                          disabled
                         />
                       </div>
                       <div className="mb-4">
                         <TextField
-                          label={'Amount'}
-                          name={'amount'}
-                          type={"number"}
-                          placeholder={'10.000.000...'}
+                          label={'Nama Transaction'}
+                          name={'name'}
+                          type={'text'}
+                          placeholder={'Nama Transaction'}
                           required
                         />
                       </div>
@@ -143,6 +171,25 @@ const ModalEditPayment: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                           label={'Keterangan'}
                           name={'description'}
                           placeholder={'Keterangan'}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <DropdownField
+                          label={"Type"}
+                          name={"type"}
+                          items={[{ name: "Debit", id: 1 }, { name: "Kredit", id: -1 }]}
+                          keyValue={"id"}
+                          keyLabel={"name"}
+                          field={true}
+                          required
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <TextFieldNumber
+                          label={'Harga'}
+                          name={'amount'}
+                          placeholder={'Harga'}
+                          required
                         />
                       </div>
                       <div className="mb-4">
@@ -164,4 +211,4 @@ const ModalEditPayment: NextPage<Props> = ({ show, onClickOverlay, id }) => {
   )
 }
 
-export default ModalEditPayment;
+export default ModalEditTransaction;

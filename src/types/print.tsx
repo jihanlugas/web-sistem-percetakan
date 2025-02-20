@@ -40,6 +40,8 @@ export declare interface PagePrint extends Paging {
   paperName?: string;
   createName?: string;
   preloads?: string;
+  startTotalPrint?: string | number;
+  endTotalPrint?: string | number;
   startDt?: string | DateConstructor;
   endDt?: string | DateConstructor;
 }

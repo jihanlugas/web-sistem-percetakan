@@ -1,6 +1,6 @@
 import Modal from "@/components/modal/modal";
 import { Api } from "@/lib/api";
-import { UpdateCustomer } from "@/types/customer";
+import { UpdateFinishing } from "@/types/finishing";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NextPage } from "next/types";
 import { useEffect, useState } from "react";
@@ -12,6 +12,8 @@ import ButtonSubmit from "@/components/formik/button-submit";
 import notif from "@/utils/notif";
 import TextField from "@/components/formik/text-field";
 import TextAreaField from "@/components/formik/text-area-field";
+import TextFieldNumber from "../formik/text-field-number";
+import { displayMoney } from "@/utils/formater";
 
 
 type Props = {
@@ -22,62 +24,44 @@ type Props = {
 
 const schema = Yup.object().shape({
   name: Yup.string().required('Required field'),
+  description: Yup.string().max(200, 'Must be 200 characters or less'),
+  qty: Yup.number().nullable().required('Required field'),
+  price: Yup.number().nullable().required('Required field'),
 });
 
-const defaultInitFormikValue: UpdateCustomer = {
-  companyId: '',
+const defaultInitFormikValue: UpdateFinishing = {
   name: '',
   description: '',
-  address: '',
-  email: '',
-  phoneNumber: '',
+  qty: '',
+  price: '',
+  total: '',
 }
 
-const ModalEditCustomer: NextPage<Props> = ({ show, onClickOverlay, id }) => {
+const ModalEditFinishing: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [selectedId, setSelectedId] = useState<string>('')
 
-  const [initFormikValue, setInitFormikValue] = useState<UpdateCustomer>(defaultInitFormikValue)
+  const [initFormikValue, setInitFormikValue] = useState<UpdateFinishing>(defaultInitFormikValue)
 
   const preloads = 'Company'
   const { data, isLoading } = useQuery({
-    queryKey: ['customer', selectedId, preloads],
+    queryKey: ['finishing', selectedId, preloads],
     queryFn: ({ queryKey }) => {
       const [, selectedId] = queryKey;
-      return selectedId ? Api.get('/customer/' + selectedId, { preloads }) : null
+      return selectedId ? Api.get('/finishing/' + selectedId, { preloads }) : null
     },
   })
 
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['customer', 'update', selectedId],
-    mutationFn: (val: FormikValues) => Api.put('/customer/' + selectedId, val),
+    mutationKey: ['finishing', 'update', selectedId],
+    mutationFn: (val: FormikValues) => Api.put('/finishing/' + selectedId, val),
   });
 
+  const handleSubmit = async (values: UpdateFinishing, formikHelpers: FormikHelpers<UpdateFinishing>) => {
+    values.qty = parseInt(values.qty as string)
+    values.price = parseInt(values.price as string)
+    values.total = (values.qty * values.price) || 0
 
-  useEffect(() => {
-    if (data) {
-      if (data?.status) {
-        setInitFormikValue({
-          companyId: data.payload.companyId,
-          name: data.payload.name,
-          description: data.payload.description,
-          address: data.payload.address,
-          email: data.payload.email,
-          phoneNumber: data.payload.phoneNumber,
-        })
-      }
-    }
-  }, [data])
-
-  useEffect(() => {
-    if (show) {
-      setSelectedId(id)
-    } else {
-      setSelectedId('')
-    }
-  }, [show, id])
-
-  const handleSubmit = async (values: UpdateCustomer, formikHelpers: FormikHelpers<UpdateCustomer>) => {
     mutateSubmit(values, {
       onSuccess: ({ status, message, payload }) => {
         if (status) {
@@ -95,11 +79,33 @@ const ModalEditCustomer: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     });
   }
 
+  useEffect(() => {
+    if (data) {
+      if (data?.status) {
+        setInitFormikValue({
+          name: data.payload.name,
+          description: data.payload.description,
+          qty: data.payload.qty,
+          price: data.payload.price,
+          total: data.payload.total,
+        })
+      }
+    }
+  }, [data])
+
+  useEffect(() => {
+    if (show) {
+      setSelectedId(id)
+    } else {
+      setSelectedId('')
+    }
+  }, [show, id])
+
   return (
     <Modal show={show} onClickOverlay={() => onClickOverlay('', true)} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Edit Customer</div>
+          <div>Edit Finishing</div>
           <button type="button" onClick={() => onClickOverlay('', true)} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -120,32 +126,17 @@ const ModalEditCustomer: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                 enableReinitialize={true}
                 onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
               >
-                {({ }) => {
+                {({ values }) => {
                   return (
                     <Form noValidate={true}>
+
                       <div className="mb-4">
                         <TextField
-                          label={'Nama Customer'}
+                          label={'Nama Finishing'}
                           name={'name'}
                           type={'text'}
-                          placeholder={'Nama Customer'}
+                          placeholder={'Nama Finishing'}
                           required
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <TextField
-                          label={'Email'}
-                          name={'email'}
-                          type={'email'}
-                          placeholder={'Email'}
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <TextField
-                          label={'No. Handphone'}
-                          name={'phoneNumber'}
-                          type={'text'}
-                          placeholder={'No. Handphone'}
                         />
                       </div>
                       <div className="mb-4">
@@ -156,11 +147,24 @@ const ModalEditCustomer: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                         />
                       </div>
                       <div className="mb-4">
-                        <TextAreaField
-                          label={'Alamat'}
-                          name={'address'}
-                          placeholder={'Alamat'}
+                        <TextFieldNumber
+                          label={'Harga'}
+                          name={'price'}
+                          placeholder={'Harga'}
+                          required
                         />
+                      </div>
+                      <div className="mb-4">
+                        <TextFieldNumber
+                          label={'Qty'}
+                          name={'qty'}
+                          placeholder={'Qty'}
+                          required
+                        />
+                      </div>
+                      <div className="mb-4 flex justify-end font-bold">
+                        <div className="mr-4">Total Finishing</div>
+                        <div>{displayMoney((parseInt(values.qty as string) * parseInt(values.price as string)) || 0)}</div>
                       </div>
                       <div className="mb-4">
                         <ButtonSubmit
@@ -181,4 +185,4 @@ const ModalEditCustomer: NextPage<Props> = ({ show, onClickOverlay, id }) => {
   )
 }
 
-export default ModalEditCustomer;
+export default ModalEditFinishing;

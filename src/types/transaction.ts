@@ -2,12 +2,13 @@ import { CompanyView } from "@/types/company";
 import { OrderView } from "@/types/order";
 import { Paging } from "./pagination";
 
-export declare interface PaymentView {
+export declare interface TransactionView {
   id: string;
   companyId: string;
   orderId: string;
   name: string;
   description: string;
+  type: string | number;
   amount: number;
   createBy: string;
   createDt: string;
@@ -15,6 +16,7 @@ export declare interface PaymentView {
   updateDt: string;
   deleteDt: string;
   companyName: string;
+  orderName: string;
   createName: string;
   updateName: string;
 
@@ -22,11 +24,12 @@ export declare interface PaymentView {
   order?: OrderView;
 }
 
-export declare interface PagePayment extends Paging {
+export declare interface PageTransaction extends Paging {
   companyId?: string;
   orderId?: string;
   name?: string;
   description?: string;
+  type?: string | number;
   companyName?: string;
   orderName?: string;
   createName?: string;
@@ -37,16 +40,19 @@ export declare interface PagePayment extends Paging {
   endDt?: string | DateConstructor;
 }
 
-export declare interface CreatePayment {
+export declare interface CreateTransaction {
   companyId: string;
   orderId: string;
   name: string;
   description: string;
+  type: string | number;
   amount: number | string;
 }
 
-export declare interface UpdatePayment {
+export declare interface UpdateTransaction {
+  orderId: string;
   name: string;
   description: string;
+  type: string | number;
   amount: number | string;
 }

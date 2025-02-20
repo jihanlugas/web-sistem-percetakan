@@ -90,6 +90,8 @@ const Index: NextPage<Props> = () => {
   const [filter, setFilter] = useState<PageFinishing>({
     name: '',
     description: '',
+    startTotalFinishing: '',
+    endTotalFinishing: '',
     startDt: '',
     endDt: '',
   })
@@ -200,7 +202,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Total Harga"}
+            {"Total Finishing"}
           </div>
         );
       },

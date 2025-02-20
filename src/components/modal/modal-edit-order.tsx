@@ -14,7 +14,6 @@ import notif from "@/utils/notif";
 import { CustomerView, PageCustomer } from "@/types/customer";
 import TextField from "@/components/formik/text-field";
 import TextAreaField from "@/components/formik/text-area-field";
-import CheckboxField from "@/components/formik/checkbox-field";
 
 
 type Props = {
@@ -34,7 +33,6 @@ const defaultInitFormikValue: UpdateOrder = {
   customerId: '',
   description: '',
   name: '',
-  isDone: false
 }
 
 const ModalEditOrder: NextPage<Props> = ({ show, onClickOverlay, id }) => {
@@ -71,7 +69,6 @@ const ModalEditOrder: NextPage<Props> = ({ show, onClickOverlay, id }) => {
           customerId: data.payload.customerId,
           description: data.payload.description,
           name: data.payload.name,
-          isDone: data.payload.isDone
         })
       }
     }
@@ -144,12 +141,6 @@ const ModalEditOrder: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                           type={'text'}
                           placeholder={'Nama Order'}
                           required
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <CheckboxField
-                          label={'Lunas'}
-                          name={'isDone'}
                         />
                       </div>
                       <div className="mb-4">

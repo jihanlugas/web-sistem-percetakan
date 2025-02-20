@@ -30,6 +30,14 @@ export const displayDateTime = (value, format = 'DD MMM YYYY HH:mm') => {
 
 export const displayDateForm = (value) => {
 	if (value != null) {
+		return moment(value).format('YYYY-MM-DD');
+	} else {
+		return '';
+	}
+};
+
+export const displayDateTimeForm = (value) => {
+	if (value != null) {
 		return moment(value).format('YYYY-MM-DDTHH:mm:ss');
 	} else {
 		return '';

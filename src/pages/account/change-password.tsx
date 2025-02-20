@@ -1,60 +1,48 @@
 import Breadcrumb from '@/components/component/breadcrumb';
 import ButtonSubmit from '@/components/formik/button-submit';
-import TextAreaField from '@/components/formik/text-area-field';
-import TextField from '@/components/formik/text-field';
 import MainAuth from '@/components/layout/main-auth';
 import { Api } from '@/lib/api';
-import { CreatePaper } from '@/types/paper';
+import { ChangePassword } from '@/types/user';
 import PageWithLayoutType from '@/types/layout';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import notif from "@/utils/notif";
-import TextFieldNumber from '@/components/formik/text-field-number';
+import PasswordField from '@/components/formik/password-field';
 
 
 type Props = object
 
 const schema = Yup.object().shape({
-  name: Yup.string().required('Required field'),
-  description: Yup.string().max(200, 'Must be 200 characters or less'),
-  defaultPrice: Yup.number().nullable().required('Required field'),
-  defaultPriceDuplex: Yup.number().nullable().required('Required field'),
+  currentPasswd: Yup.string().label('Password lama').required(),
+  passwd: Yup.string().label('Password baru').required(),
+  confirmPasswd: Yup.string().label('Ulangi password baru').oneOf([Yup.ref('passwd'), null], 'Ulangi password harus baru sama dengan password baru').required(),
 });
 
-const initFormikValue: CreatePaper = {
-  companyId: '',
-  name: '',
-  description: '',
-  defaultPrice: '',
-  defaultPriceDuplex: '',
-}
+const initFormikValue: ChangePassword = {
+  currentPasswd: '',
+  passwd: '',
+  confirmPasswd: '',
+};
 
-const New: NextPage<Props> = () => {
+const ChangePasswordPage: NextPage<Props> = () => {
   const router = useRouter();
 
-  const { data: loginUser } = useQuery({
-    queryKey: ['init'],
-    queryFn: () => Api.get('/auth/init'),
-  })
-
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['paper', 'create'],
-    mutationFn: (val: FormikValues) => Api.post('/paper', val),
+    mutationKey: ['user', 'change-password'],
+    mutationFn: (val: FormikValues) => Api.post('/user/change-password', val),
   });
 
-  const handleSubmit = async (values: CreatePaper, formikHelpers: FormikHelpers<CreatePaper>) => {
-    values.companyId = loginUser?.payload?.company?.id
-
+  const handleSubmit = async (values: ChangePassword, formikHelpers: FormikHelpers<ChangePassword>) => {
     mutateSubmit(values, {
       onSuccess: ({ status, message, payload }) => {
         if (status) {
           notif.success(message);
           // formikHelpers.resetForm();
-          router.push('/paper')
+          router.push('/user')
         } else if (payload?.listError) {
           formikHelpers.setErrors(payload.listError);
         } else {
@@ -70,18 +58,18 @@ const New: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Buat Paper'}</title>
+        <title>{process.env.APP_NAME + ' - Ganti Password'}</title>
       </Head>
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Paper', path: '/paper' },
-            { name: 'Buat', path: '' },
+            { name: 'Akun', path: '/dashboard' },
+            { name: 'Ganti Password', path: '' },
           ]}
         />
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>Buat Paper</div>
+            <div className='text-xl'>Buat User</div>
           </div>
           <div>
             <Formik
@@ -94,34 +82,26 @@ const New: NextPage<Props> = () => {
                 return (
                   <Form noValidate={true}>
                     <div className="mb-4 max-w-xl">
-                      <TextField
-                        label={'Nama Paper'}
-                        name={'name'}
-                        type={'text'}
-                        placeholder={'Nama Paper'}
+                      <PasswordField
+                        label={'Password lama'}
+                        name={'currentPasswd'}
+                        placeholder={'Password lama'}
                         required
                       />
                     </div>
                     <div className="mb-4 max-w-xl">
-                      <TextAreaField
-                        label={'Keterangan'}
-                        name={'description'}
-                        placeholder={'Keterangan'}
-                      />
-                    </div>
-                    <div className="mb-4 max-w-xl">
-                      <TextFieldNumber
-                        label={'Harga'}
-                        name={'defaultPrice'}
-                        placeholder={'Harga'}
+                      <PasswordField
+                        label={'Password baru'}
+                        name={'passwd'}
+                        placeholder={'Password baru'}
                         required
                       />
                     </div>
                     <div className="mb-4 max-w-xl">
-                      <TextFieldNumber
-                        label={'Harga Timbal Balik'}
-                        name={'defaultPriceDuplex'}
-                        placeholder={'Harga Timbal Balik'}
+                      <PasswordField
+                        label={'Ulangi password baru'}
+                        name={'confirmPasswd'}
+                        placeholder={'Ulangi password baru'}
                         required
                       />
                     </div>
@@ -149,6 +129,6 @@ const New: NextPage<Props> = () => {
   );
 }
 
-(New as PageWithLayoutType).layout = MainAuth;
+(ChangePasswordPage as PageWithLayoutType).layout = MainAuth;
 
-export default New;
+export default ChangePasswordPage;

@@ -33,6 +33,8 @@ export declare interface PageOther extends Paging {
   orderName?: string;
   createName?: string;
   preloads?: string;
+  startTotalOther?: string | number;
+  endTotalOther?: string | number;
   startDt?: string | DateConstructor;
   endDt?: string | DateConstructor;
 }

@@ -17,7 +17,7 @@ import notif from '@/utils/notif';
 import Breadcrumb from "@/components/component/breadcrumb";
 import { CgChevronDown } from "react-icons/cg";
 import ModalOrderPhase from "@/components/modal/modal-order-phase";
-import ModalOrderPaymnet from "@/components/modal/modal-order-paymnet";
+import ModalOrderTransaction from "@/components/modal/modal-order-transaction";
 import { Tooltip } from "react-tooltip";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
@@ -31,14 +31,14 @@ type Props = object
 
 type PropsDropdownMore = {
   toggleModalOrderPhase: (id?: string, refresh?: boolean) => void
-  toggleModalOrderPayment: (id?: string, refresh?: boolean) => void
+  toggleModalOrderTransaction: (id?: string, refresh?: boolean) => void
   toggleModalDelete: (id: string, name: string) => void
 }
 
 const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore> = ({
   row,
   toggleModalOrderPhase,
-  toggleModalOrderPayment,
+  toggleModalOrderTransaction,
   toggleModalDelete,
 }) => {
   const refMore = useRef<HTMLDivElement>(null);
@@ -62,7 +62,7 @@ const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore
   }, [moreBar]);
 
 
-  
+
   // const { mutate: mutateSubmit, isPending } = useMutation({
   //   mutationKey: ['order', 'update', selectedId],
   //   mutationFn: (val: FormikValues) => Api.put('/order/' + selectedId, val),
@@ -76,12 +76,12 @@ const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore
   const generateSpk = async (id: string) => {
     mutateSpk(id, {
       onSuccess: () => {
-        
+
       },
       onError: () => {
         notif.error('Please cek you connection');
       }
-    }) 
+    })
   }
 
   const handleClickPhase = (id) => {
@@ -89,9 +89,9 @@ const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore
     toggleModalOrderPhase(id, false);
   }
 
-  const handleClickPayment = (id) => {
+  const handleClickTransaction = (id) => {
     setMoreBar(false);
-    toggleModalOrderPayment(id, false);
+    toggleModalOrderTransaction(id, false);
   }
 
   const handleClickDelete = (id, name) => {
@@ -110,8 +110,8 @@ const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore
           <button onClick={() => handleClickPhase(row.original.id)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
             {'Phase'}
           </button>
-          <button onClick={() => handleClickPayment(row.original.id)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
-            {'Payment'}
+          <button onClick={() => handleClickTransaction(row.original.id)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+            {'Transaction'}
           </button>
           <hr />
           <button onClick={() => generateSpk(row.original.id)} className={'px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left flex '}>
@@ -149,7 +149,7 @@ const Index: NextPage<Props> = () => {
   const [showModalFilter, setShowModalFilter] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const [showModalOrderPhase, setShowModalOrderPhase] = useState<boolean>(false);
-  const [showModalOrderPayment, setShowModalOrderPayment] = useState<boolean>(false);
+  const [showModalOrderTransaction, setShowModalOrderTransaction] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string>('');
   const [deleteVerify, setDeleteVerify] = useState<string>('');
@@ -160,6 +160,8 @@ const Index: NextPage<Props> = () => {
     name: '',
     description: '',
     isDone: '',
+    startTotalOrder: '',
+    endTotalOrder: '',
     startDt: '',
     endDt: '',
   })
@@ -174,7 +176,7 @@ const Index: NextPage<Props> = () => {
   const [pageRequest, setPageRequest] = useState<PageOrder>({
     limit: 10,
     page: 1,
-    preloads: "Orderphases,Customer,Payments",
+    preloads: "Orderphases,Customer,Transactions",
   });
 
   const column: ColumnDef<OrderView>[] = [
@@ -333,8 +335,8 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
-      id: 'total_payment',
-      accessorKey: 'totalPayment',
+      id: 'total_transaction',
+      accessorKey: 'totalTransaction',
       header: () => {
         return (
           <div className='whitespace-nowrap'>
@@ -345,30 +347,35 @@ const Index: NextPage<Props> = () => {
       cell: ({ getValue, row }) => {
         return (
           <div className='w-full capitalize text-right'>
-            <div className="" style={{ display: "ruby" }} data-tooltip-id={`tootltip-payments-${row.original.id}`}>
-              {row.original.isDone && (
+            <div className="" style={{ display: "ruby" }} data-tooltip-id={`tootltip-transactions-${row.original.id}`}>
+              {row.original.outstanding > 0 && (
                 <span className="h-8 w-8 mr-2">
                   <FaCheck className="text-green-500" size={"1.2rem"} />
                 </span>
               )}
               <span>{displayMoney(getValue() as number)}</span>
             </div>
-            {row.original.payments && (
-              <Tooltip id={`tootltip-payments-${row.original.id}`} clickable>
-                {row.original.payments.map((payment, key) => (
+            {row.original.transactions && (
+              <Tooltip id={`tootltip-transactions-${row.original.id}`} clickable>
+                {row.original.transactions.map((transaction, key) => (
                   <div key={key} className="flex justify-between mb-1">
                     <div className="mr-2">
-                      <div>{displayDateTime(payment.createDt) + " | " + payment.name}</div>
+                      <div>{displayDateTime(transaction.createDt) + " | " + transaction.name}</div>
                     </div>
-                    <div className="ml-2 font-bold flex items-center">{displayMoney(payment.amount as number)}</div>
+                    <div className="ml-2 font-bold flex items-center">{displayMoney(transaction.amount as number)}</div>
                   </div>
                 ))}
                 <hr className="mb-1" />
                 <div className="flex justify-between mb-1">
                   <div className="mr-2">Total Pembayaran</div>
-                  <div className="ml-2 font-bold">{displayMoney(row.original.totalPayment as number)}</div>
+                  <div className="ml-2 font-bold text-green-500">{displayMoney(row.original.totalTransaction as number)}</div>
                 </div>
-                {row.original.isDone && (
+                {row.original.outstanding > 0 ? (
+                  <div className="flex justify-between mb-1">
+                    <div className="mr-2">Sisa Tagihan</div>
+                    <div className="ml-2 font-bold text-rose-500">{displayMoney(row.original.outstanding as number)}</div>
+                  </div>
+                ) : (
                   <div className="mb-2 font-bold flex justify-end items-center text-green-500">
                     <FaCheck className="mr-2" size={"1rem"} />
                     <div>Lunas</div>
@@ -427,7 +434,7 @@ const Index: NextPage<Props> = () => {
         return (
           <DropdownMore
             toggleModalOrderPhase={toggleModalOrderPhase}
-            toggleModalOrderPayment={toggleModalOrderPayment}
+            toggleModalOrderTransaction={toggleModalOrderTransaction}
             toggleModalDelete={toggleModalDelete}
             {...props}
           />
@@ -464,12 +471,12 @@ const Index: NextPage<Props> = () => {
     setShowModalOrderPhase(!showModalOrderPhase);
   };
 
-  const toggleModalOrderPayment = (id = '', refresh = false) => {
+  const toggleModalOrderTransaction = (id = '', refresh = false) => {
     if (refresh) {
       refetch()
     }
     setSelectedId(id)
-    setShowModalOrderPayment(!showModalOrderPayment);
+    setShowModalOrderTransaction(!showModalOrderTransaction);
   };
 
 
@@ -540,9 +547,9 @@ const Index: NextPage<Props> = () => {
         onClickOverlay={toggleModalOrderPhase}
         id={selectedId}
       />
-      <ModalOrderPaymnet
-        show={showModalOrderPayment}
-        onClickOverlay={toggleModalOrderPayment}
+      <ModalOrderTransaction
+        show={showModalOrderTransaction}
+        onClickOverlay={toggleModalOrderTransaction}
         id={selectedId}
       />
       <div className='p-4'>

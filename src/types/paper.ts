@@ -33,13 +33,13 @@ export declare interface CreatePaper {
   companyId: string;
   name: string;
   description: string;
-  defaultPrice?: string | number;
-  defaultPriceDuplex?: string | number;
+  defaultPrice: string | number;
+  defaultPriceDuplex: string | number;
 }
 
 export declare interface UpdatePaper {
   name: string;
   description: string;
-  defaultPrice?: string | number;
-  defaultPriceDuplex?: string | number;
+  defaultPrice: string | number;
+  defaultPriceDuplex: string | number;
 }

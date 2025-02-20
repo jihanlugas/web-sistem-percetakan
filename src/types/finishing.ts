@@ -33,6 +33,8 @@ export declare interface PageFinishing extends Paging {
   orderName?: string;
   createName?: string;
   preloads?: string;
+  startTotalFinishing?: string | number;
+  endTotalFinishing?: string | number;
   startDt?: string | DateConstructor;
   endDt?: string | DateConstructor;
 } 

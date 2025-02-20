@@ -96,7 +96,7 @@ const Index: NextPage<Props> = ({ id }) => {
                     <div className="text-gray-600">{'Keterangan'}</div>
                     <div className="whitespace-pre-wrap">{print.description || '-'}</div>
                     <div className="text-gray-600">{'Kertas'}</div>
-                    <div className="whitespace-pre-wrap">{print.paper?.name || '-'}</div>
+                    <div className="whitespace-pre-wrap">{print.paperName || '-'}</div>
                     <div className="text-gray-600">{'Timbal Balik'}</div>
                     <div className="">{displayBoolean(print.isDuplex, "Ya", "Tidak")}</div>
                     <div className="text-gray-600">{'Jumlah Lembar'}</div>
@@ -105,7 +105,7 @@ const Index: NextPage<Props> = ({ id }) => {
                     <div className="">{displayNumber(print.qty)}</div>
                     <div className="text-gray-600">{'Harga'}</div>
                     <div className="">{displayMoney(print.price)}</div>
-                    <div className="text-gray-600">{'Total Harga'}</div>
+                    <div className="text-gray-600">{'Total Print'}</div>
                     <div className="">{displayMoney(print.total)}</div>
                     <div className="text-gray-600">{'Create By'}</div>
                     <div className="">{print.createName}</div>

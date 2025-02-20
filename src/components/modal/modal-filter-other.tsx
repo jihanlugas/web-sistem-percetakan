@@ -1,5 +1,5 @@
 import Modal from "@/components/modal/modal";
-import { PageDesign } from "@/types/design";
+import { PageOther } from "@/types/other";
 import { NextPage } from "next/types";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
@@ -9,23 +9,24 @@ import ButtonSubmit from "@/components/formik/button-submit";
 import TextField from "@/components/formik/text-field";
 import TextAreaField from "@/components/formik/text-area-field";
 import DateField from "@/components/formik/date-field";
+import TextFieldNumber from "../formik/text-field-number";
 
 
 type Props = {
   show: boolean;
   onClickOverlay: () => void;
-  filter: PageDesign
-  setFilter: Dispatch<SetStateAction<PageDesign>>
+  filter: PageOther
+  setFilter: Dispatch<SetStateAction<PageOther>>
 }
 
 const schema = Yup.object().shape({
 });
 
-const ModalFilterDesign: NextPage<Props> = ({ show, onClickOverlay, filter, setFilter }) => {
+const ModalFilterOther: NextPage<Props> = ({ show, onClickOverlay, filter, setFilter }) => {
 
-  const [initFormikValue, setInitFormikValue] = useState<PageDesign>(filter)
+  const [initFormikValue, setInitFormikValue] = useState<PageOther>(filter)
 
-  const handleSubmit = async (values: PageDesign) => {
+  const handleSubmit = async (values: PageOther) => {
     setFilter(values)
     onClickOverlay()
   }
@@ -35,6 +36,8 @@ const ModalFilterDesign: NextPage<Props> = ({ show, onClickOverlay, filter, setF
       orderName: '',
       name: '',
       description: '',
+      startTotalOther: '',
+      endTotalOther: '',
       startDt: '',
       endDt: '',
     })
@@ -60,7 +63,7 @@ const ModalFilterDesign: NextPage<Props> = ({ show, onClickOverlay, filter, setF
     <Modal show={show} onClickOverlay={() => onClickOverlay()} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Filter Design</div>
+          <div>Filter Other</div>
           <button type="button" onClick={() => onClickOverlay()} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -79,10 +82,10 @@ const ModalFilterDesign: NextPage<Props> = ({ show, onClickOverlay, filter, setF
                   <Form noValidate={true}>
                     <div className="mb-4">
                       <TextField
-                        label={'Nama Design'}
+                        label={'Nama Other'}
                         name={'name'}
                         type={'text'}
-                        placeholder={'Nama Design'}
+                        placeholder={'Nama Other'}
                       />
                     </div>
                     <div className="mb-4">
@@ -98,6 +101,18 @@ const ModalFilterDesign: NextPage<Props> = ({ show, onClickOverlay, filter, setF
                         label={'Keterangan'}
                         name={'description'}
                         placeholder={'Keterangan'}
+                      />
+                    </div>
+                    <div className="mb-4 grid grid-cols-2 gap-2">
+                      <TextFieldNumber
+                        label={'Total Other Mulai Dari'}
+                        name={'startTotalOther'}
+                        placeholder={'Harga Mulai Dari'}
+                      />
+                      <TextFieldNumber
+                        label={'Hingga'}
+                        name={'endTotalOther'}
+                        placeholder={'Hingga'}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">
@@ -136,4 +151,4 @@ const ModalFilterDesign: NextPage<Props> = ({ show, onClickOverlay, filter, setF
   )
 }
 
-export default ModalFilterDesign;
+export default ModalFilterOther;

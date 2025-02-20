@@ -90,6 +90,8 @@ const Index: NextPage<Props> = () => {
   const [filter, setFilter] = useState<PagePrint>({
     name: '',
     description: '',
+    startTotalPrint: '',
+    endTotalPrint: '',
     startDt: '',
     endDt: '',
   })
@@ -260,7 +262,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Total Harga"}
+            {"Total Print"}
           </div>
         );
       },

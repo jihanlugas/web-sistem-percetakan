@@ -6,7 +6,7 @@ import { DesignView } from "@/types/design";
 import { PrintView } from "@/types/print";
 import { FinishingView } from "@/types/finishing";
 import { OtherView } from "@/types/other";
-import { PaymentView } from "./payment";
+import { TransactionView } from "./transaction";
 
 
 export declare interface OrderView {
@@ -28,7 +28,7 @@ export declare interface OrderView {
   totalPrint: number;
   totalFinishing: number;
   totalOther: number;
-  totalPayment: number;
+  totalTransaction: number;
   totalOrder: number;
   outstanding: number;
   companyName: string;
@@ -42,7 +42,7 @@ export declare interface OrderView {
   finishings?: FinishingView[];
   others?: OtherView[];
   orderphases?: OrderphaseView[];
-  payments?: PaymentView[]
+  transactions?: TransactionView[]
 }
 
 export declare interface PageOrder extends Paging {
@@ -56,6 +56,8 @@ export declare interface PageOrder extends Paging {
   isDone?: boolean | string;
   createName?: string;
   preloads?: string;
+  startTotalOrder?: string | number;
+  endTotalOrder?: string | number;
   startDt?: string | DateConstructor;
   endDt?: string | DateConstructor;
 }
@@ -115,7 +117,7 @@ export declare interface AddPhase {
   orderphaseId: string;
 }
 
-export declare interface AddPayment {
+export declare interface AddTransaction {
   name: string;
   description: string;
   amount: number | string;
@@ -125,6 +127,5 @@ export declare interface UpdateOrder {
   customerId: string;
   name: string;
   description: string;
-  isDone: boolean;
 }
 

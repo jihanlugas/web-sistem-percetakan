@@ -1,5 +1,5 @@
 import Modal from "@/components/modal/modal";
-import { PageDesign } from "@/types/design";
+import { PageUser } from "@/types/user";
 import { NextPage } from "next/types";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
@@ -9,48 +9,50 @@ import ButtonSubmit from "@/components/formik/button-submit";
 import TextField from "@/components/formik/text-field";
 import TextAreaField from "@/components/formik/text-area-field";
 import DateField from "@/components/formik/date-field";
-import TextFieldNumber from "../formik/text-field-number";
 
 
 type Props = {
   show: boolean;
   onClickOverlay: () => void;
-  filter: PageDesign
-  setFilter: Dispatch<SetStateAction<PageDesign>>
+  filter: PageUser
+  setFilter: Dispatch<SetStateAction<PageUser>>
 }
 
 const schema = Yup.object().shape({
 });
 
-const ModalFilterDesign: NextPage<Props> = ({ show, onClickOverlay, filter, setFilter }) => {
+const ModalFilterUser: NextPage<Props> = ({ show, onClickOverlay, filter, setFilter }) => {
 
-  const [initFormikValue, setInitFormikValue] = useState<PageDesign>(filter)
+  const [initFormikValue, setInitFormikValue] = useState<PageUser>(filter)
 
-  const handleSubmit = async (values: PageDesign) => {
+  const handleSubmit = async (values: PageUser) => {
     setFilter(values)
     onClickOverlay()
   }
 
   const handleClear = () => {
     setFilter({
-      orderName: '',
-      name: '',
-      description: '',
-      startTotalDesign: '',
-      endTotalDesign: '',
+      companyId: '',
+      fullname: '',
+      email: '',
+      phoneNumber: '',
+      username: '',
+      address: '',
+      birthPlace: '',
+      createName: '',
       startDt: '',
       endDt: '',
     })
     onClickOverlay()
   }
 
-  const handleClearStartDt = (setFieldValue) => {
-    setFieldValue('startDt', '')
-  }
+  // const handleClearStartDt = (setFieldValue) => {
+  //   setFieldValue('startDt', '')
+  // }
 
-  const handleClearEndDt = (setFieldValue) => {
-    setFieldValue('endDt', '')
-  }
+  // const handleClearEndDt = (setFieldValue) => {
+  //   setFieldValue('endDt', '')
+  // }
 
   useEffect(() => {
     if (show) {
@@ -63,7 +65,7 @@ const ModalFilterDesign: NextPage<Props> = ({ show, onClickOverlay, filter, setF
     <Modal show={show} onClickOverlay={() => onClickOverlay()} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Filter Design</div>
+          <div>Filter User</div>
           <button type="button" onClick={() => onClickOverlay()} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -80,42 +82,56 @@ const ModalFilterDesign: NextPage<Props> = ({ show, onClickOverlay, filter, setF
               {({ setFieldValue }) => {
                 return (
                   <Form noValidate={true}>
+
                     <div className="mb-4">
                       <TextField
-                        label={'Nama Design'}
-                        name={'name'}
+                        label={'Nama User'}
+                        name={'fullname'}
                         type={'text'}
-                        placeholder={'Nama Design'}
+                        placeholder={'Nama User'}
                       />
                     </div>
                     <div className="mb-4">
                       <TextField
-                        label={'Nama Order'}
-                        name={'orderName'}
+                        label={'Username'}
+                        name={'username'}
                         type={'text'}
-                        placeholder={'Nama Order'}
+                        placeholder={'Username'}
+                        className={'lowercase'}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <TextField
+                        label={'Email'}
+                        name={'email'}
+                        type={'email'}
+                        placeholder={'Email'}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <TextField
+                        label={'No. Handphone'}
+                        name={'phoneNumber'}
+                        type={'text'}
+                        placeholder={'No. Handphone'}
                       />
                     </div>
                     <div className="mb-4">
                       <TextAreaField
-                        label={'Keterangan'}
-                        name={'description'}
-                        placeholder={'Keterangan'}
+                        label={'Alamat'}
+                        name={'address'}
+                        placeholder={'Alamat'}
                       />
                     </div>
-                    <div className="mb-4 grid grid-cols-2 gap-2">
-                      <TextFieldNumber
-                        label={'Total Design Mulai Dari'}
-                        name={'startTotalDesign'}
-                        placeholder={'Harga Mulai Dari'}
-                      />
-                      <TextFieldNumber
-                        label={'Hingga'}
-                        name={'endTotalDesign'}
-                        placeholder={'Hingga'}
+                    <div className="mb-4">
+                      <TextField
+                        label={'Tempat Lahir'}
+                        name={'birthPlace'}
+                        type={'text'}
+                        placeholder={'Tempat Lahir'}
                       />
                     </div>
-                    <div className="mb-4 grid grid-cols-2 gap-2">
+                    {/* <div className="mb-4 grid grid-cols-2 gap-2">
                       <DateField
                         label={'Tanggal Dari'}
                         name={'startDt'}
@@ -128,7 +144,7 @@ const ModalFilterDesign: NextPage<Props> = ({ show, onClickOverlay, filter, setF
                         type={'date'}
                         handleClear={() => handleClearEndDt(setFieldValue)}
                       />
-                    </div>
+                    </div> */}
                     <div className="mb-4 grid grid-cols-2 gap-2">
                       <ButtonSubmit
                         label={'Clear Filter'}
@@ -151,4 +167,4 @@ const ModalFilterDesign: NextPage<Props> = ({ show, onClickOverlay, filter, setF
   )
 }
 
-export default ModalFilterDesign;
+export default ModalFilterUser;

@@ -6,7 +6,7 @@ import ModalOrderPhase from "@/components/modal/modal-order-phase";
 import ModalEditOrderDesign from "@/components/modal/modal-edit-order-design";
 import ModalEditOrderFinishing from "@/components/modal/modal-edit-order-finishing";
 import ModalEditOrderOther from "@/components/modal/modal-edit-order-other";
-import ModalEditOrderPayment from "@/components/modal/modal-edit-order-payment";
+import ModalEditOrderTransaction from "@/components/modal/modal-edit-order-transaction";
 import ModalEditOrderPrint from "@/components/modal/modal-edit-order-print";
 import { Api } from "@/lib/api";
 import PageWithLayoutType from "@/types/layout";
@@ -44,15 +44,15 @@ const Spk: NextPage<Props> = ({ id }) => {
   const [showModalEditOrderPrint, setShowModalEditOrderPrint] = useState<boolean>(false);
   const [showModalEditOrderFinishing, setShowModalEditOrderFinishing] = useState<boolean>(false);
   const [showModalEditOrderOther, setShowModalEditOrderOther] = useState<boolean>(false);
-  const [showModalEditOrderPayment, setShowModalEditOrderPayment] = useState<boolean>(false);
+  const [showModalEditOrderTransaction, setShowModalEditOrderTransaction] = useState<boolean>(false);
 
   const [showModalDeleteDesign, setShowModalDeleteDesign] = useState<boolean>(false);
   const [showModalDeletePrint, setShowModalDeletePrint] = useState<boolean>(false);
   const [showModalDeleteFinishing, setShowModalDeleteFinishing] = useState<boolean>(false);
   const [showModalDeleteOther, setShowModalDeleteOther] = useState<boolean>(false);
-  const [showModalDeletePayment, setShowModalDeletePayment] = useState<boolean>(false);
+  const [showModalDeleteTransaction, setShowModalDeleteTransaction] = useState<boolean>(false);
 
-  const preloads = 'Customer,Orderphases,Payments,Designs,Prints,Prints.Paper,Finishings,Others'
+  const preloads = 'Customer,Orderphases,Transactions,Designs,Prints,Prints.Paper,Finishings,Others'
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['order', id, preloads],
     queryFn: ({ queryKey }) => {
@@ -81,9 +81,9 @@ const Spk: NextPage<Props> = ({ id }) => {
     mutationFn: (id: string) => Api.delete('/other/' + id)
   });
 
-  const { mutate: mutateDeletePayment, isPending: isPendingDeletePayment } = useMutation({
-    mutationKey: ['payment', 'delete', deleteId],
-    mutationFn: (id: string) => Api.delete('/payment/' + id)
+  const { mutate: mutateDeleteTransaction, isPending: isPendingDeleteTransaction } = useMutation({
+    mutationKey: ['transaction', 'delete', deleteId],
+    mutationFn: (id: string) => Api.delete('/transaction/' + id)
   });
 
   const toggleModalEditOrder = (id = '', refresh = false) => {
@@ -134,12 +134,12 @@ const Spk: NextPage<Props> = ({ id }) => {
     setShowModalEditOrderOther(!showModalEditOrderOther)
   }
 
-  const toogleModalEditOrderPayment = (id = '', refresh = false) => {
+  const toogleModalEditOrderTransaction = (id = '', refresh = false) => {
     if (refresh) {
       refetch()
     }
     setSelectedId(id)
-    setShowModalEditOrderPayment(!showModalEditOrderPayment)
+    setShowModalEditOrderTransaction(!showModalEditOrderTransaction)
   }
 
   const toggleModalDeleteDesign = (id = '') => {
@@ -162,9 +162,9 @@ const Spk: NextPage<Props> = ({ id }) => {
     setShowModalDeleteOther(!showModalDeleteOther);
   };
 
-  const toggleModalDeletePayment = (id = '') => {
+  const toggleModalDeleteTransaction = (id = '') => {
     setDeleteId(id);
-    setShowModalDeletePayment(!showModalDeletePayment);
+    setShowModalDeleteTransaction(!showModalDeleteTransaction);
   };
 
   const handleDeleteDesign = () => {
@@ -239,13 +239,13 @@ const Spk: NextPage<Props> = ({ id }) => {
     });
   };
 
-  const handleDeletePayment = () => {
-    mutateDeletePayment(deleteId, {
+  const handleDeleteTransaction = () => {
+    mutateDeleteTransaction(deleteId, {
       onSuccess: ({ status, message }) => {
         if (status) {
           notif.success(message);
           setDeleteId('');
-          toggleModalDeletePayment();
+          toggleModalDeleteTransaction();
           refetch();
         } else {
           notif.error(message);
@@ -315,9 +315,9 @@ const Spk: NextPage<Props> = ({ id }) => {
         id={selectedId}
         order={order}
       />
-      <ModalEditOrderPayment
-        show={showModalEditOrderPayment}
-        onClickOverlay={toogleModalEditOrderPayment}
+      <ModalEditOrderTransaction
+        show={showModalEditOrderTransaction}
+        onClickOverlay={toogleModalEditOrderTransaction}
         id={selectedId}
         order={order}
       />
@@ -366,10 +366,10 @@ const Spk: NextPage<Props> = ({ id }) => {
         </div>
       </ModalDelete>
       <ModalDelete
-        show={showModalDeletePayment}
-        onClickOverlay={toggleModalDeletePayment}
-        onDelete={handleDeletePayment}
-        isLoading={isPendingDeletePayment}
+        show={showModalDeleteTransaction}
+        onClickOverlay={toggleModalDeleteTransaction}
+        onDelete={handleDeleteTransaction}
+        isLoading={isPendingDeleteTransaction}
       >
         <div>
           <div className='mb-4'>Are you sure ?</div>

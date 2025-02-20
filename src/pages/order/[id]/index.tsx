@@ -6,7 +6,7 @@ import ModalOrderPhase from "@/components/modal/modal-order-phase";
 import ModalEditOrderDesign from "@/components/modal/modal-edit-order-design";
 import ModalEditOrderFinishing from "@/components/modal/modal-edit-order-finishing";
 import ModalEditOrderOther from "@/components/modal/modal-edit-order-other";
-import ModalEditOrderPayment from "@/components/modal/modal-edit-order-payment";
+import ModalEditOrderTransaction from "@/components/modal/modal-edit-order-transaction";
 import ModalEditOrderPrint from "@/components/modal/modal-edit-order-print";
 import { Api } from "@/lib/api";
 import PageWithLayoutType from "@/types/layout";
@@ -44,15 +44,15 @@ const Index: NextPage<Props> = ({ id }) => {
   const [showModalEditOrderPrint, setShowModalEditOrderPrint] = useState<boolean>(false);
   const [showModalEditOrderFinishing, setShowModalEditOrderFinishing] = useState<boolean>(false);
   const [showModalEditOrderOther, setShowModalEditOrderOther] = useState<boolean>(false);
-  const [showModalEditOrderPayment, setShowModalEditOrderPayment] = useState<boolean>(false);
+  const [showModalEditOrderTransaction, setShowModalEditOrderTransaction] = useState<boolean>(false);
 
   const [showModalDeleteDesign, setShowModalDeleteDesign] = useState<boolean>(false);
   const [showModalDeletePrint, setShowModalDeletePrint] = useState<boolean>(false);
   const [showModalDeleteFinishing, setShowModalDeleteFinishing] = useState<boolean>(false);
   const [showModalDeleteOther, setShowModalDeleteOther] = useState<boolean>(false);
-  const [showModalDeletePayment, setShowModalDeletePayment] = useState<boolean>(false);
+  const [showModalDeleteTransaction, setShowModalDeleteTransaction] = useState<boolean>(false);
 
-  const preloads = 'Customer,Orderphases,Payments,Designs,Prints,Prints.Paper,Finishings,Others'
+  const preloads = 'Customer,Orderphases,Transactions,Designs,Prints,Prints.Paper,Finishings,Others'
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['order', id, preloads],
     queryFn: ({ queryKey }) => {
@@ -81,9 +81,9 @@ const Index: NextPage<Props> = ({ id }) => {
     mutationFn: (id: string) => Api.delete('/other/' + id)
   });
 
-  const { mutate: mutateDeletePayment, isPending: isPendingDeletePayment } = useMutation({
-    mutationKey: ['payment', 'delete', deleteId],
-    mutationFn: (id: string) => Api.delete('/payment/' + id)
+  const { mutate: mutateDeleteTransaction, isPending: isPendingDeleteTransaction } = useMutation({
+    mutationKey: ['transaction', 'delete', deleteId],
+    mutationFn: (id: string) => Api.delete('/transaction/' + id)
   });
 
   const toggleModalEditOrder = (id = '', refresh = false) => {
@@ -134,12 +134,12 @@ const Index: NextPage<Props> = ({ id }) => {
     setShowModalEditOrderOther(!showModalEditOrderOther)
   }
 
-  const toogleModalEditOrderPayment = (id = '', refresh = false) => {
+  const toogleModalEditOrderTransaction = (id = '', refresh = false) => {
     if (refresh) {
       refetch()
     }
     setSelectedId(id)
-    setShowModalEditOrderPayment(!showModalEditOrderPayment)
+    setShowModalEditOrderTransaction(!showModalEditOrderTransaction)
   }
 
   const toggleModalDeleteDesign = (id = '') => {
@@ -162,9 +162,9 @@ const Index: NextPage<Props> = ({ id }) => {
     setShowModalDeleteOther(!showModalDeleteOther);
   };
 
-  const toggleModalDeletePayment = (id = '') => {
+  const toggleModalDeleteTransaction = (id = '') => {
     setDeleteId(id);
-    setShowModalDeletePayment(!showModalDeletePayment);
+    setShowModalDeleteTransaction(!showModalDeleteTransaction);
   };
 
   const handleDeleteDesign = () => {
@@ -239,13 +239,13 @@ const Index: NextPage<Props> = ({ id }) => {
     });
   };
 
-  const handleDeletePayment = () => {
-    mutateDeletePayment(deleteId, {
+  const handleDeleteTransaction = () => {
+    mutateDeleteTransaction(deleteId, {
       onSuccess: ({ status, message }) => {
         if (status) {
           notif.success(message);
           setDeleteId('');
-          toggleModalDeletePayment();
+          toggleModalDeleteTransaction();
           refetch();
         } else {
           notif.error(message);
@@ -304,9 +304,9 @@ const Index: NextPage<Props> = ({ id }) => {
         id={selectedId}
         order={order}
       />
-      <ModalEditOrderPayment
-        show={showModalEditOrderPayment}
-        onClickOverlay={toogleModalEditOrderPayment}
+      <ModalEditOrderTransaction
+        show={showModalEditOrderTransaction}
+        onClickOverlay={toogleModalEditOrderTransaction}
         id={selectedId}
         order={order}
       />
@@ -355,10 +355,10 @@ const Index: NextPage<Props> = ({ id }) => {
         </div>
       </ModalDelete>
       <ModalDelete
-        show={showModalDeletePayment}
-        onClickOverlay={toggleModalDeletePayment}
-        onDelete={handleDeletePayment}
-        isLoading={isPendingDeletePayment}
+        show={showModalDeleteTransaction}
+        onClickOverlay={toggleModalDeleteTransaction}
+        onDelete={handleDeleteTransaction}
+        isLoading={isPendingDeleteTransaction}
       >
         <div>
           <div className='mb-4'>Are you sure ?</div>
@@ -408,11 +408,11 @@ const Index: NextPage<Props> = ({ id }) => {
                   <div className="col-span-4">{displayMoney(order.totalOther)}</div>
                   <div className="text-gray-600 font-bold">{'Total Order'}</div>
                   <div className="col-span-4 font-bold">{displayMoney(order.totalOrder)}</div>
-                  <div className="text-gray-600 font-bold">{'Total Payment'}</div>
-                  <div className="col-span-4 text-green-500 font-bold">{displayMoney(order.totalPayment)}</div>
+                  <div className="text-gray-600 font-bold">{'Total Transaction'}</div>
+                  <div className="col-span-4 text-green-500 font-bold">{displayMoney(order.totalTransaction)}</div>
                   <div className="text-gray-600 font-bold">{'Outstanding'}</div>
                   <div className="col-span-4 text-rose-500 font-bold">{displayMoney(order.outstanding)}</div>
-                  <div className="text-gray-600">{'Payment Status'}</div>
+                  <div className="text-gray-600">{'Transaction Status'}</div>
                   {order.isDone ? (
                     <div className="col-span-4 text-green-500 font-bold capitalize">{'Full Paid'}</div>
                   ) : (
@@ -516,11 +516,11 @@ const Index: NextPage<Props> = ({ id }) => {
                               <tr key={index} className="p-4 border-2 border-gray-400">
                                 <td className="border-2 border-gray-400 ">
                                   <div className="p-2">
-                                    <span data-tooltip-id={`tootltip-order-detail-payment-designs-name-${design.id}`}>
+                                    <span data-tooltip-id={`tootltip-order-detail-transaction-designs-name-${design.id}`}>
                                       {design.name}
                                     </span>
                                     {design.description && (
-                                      <Tooltip id={`tootltip-order-detail-payment-designs-name-${design.id}`}>
+                                      <Tooltip id={`tootltip-order-detail-transaction-designs-name-${design.id}`}>
                                         <div className="font-bold">Description</div>
                                         <div className="whitespace-pre-line">{design.description}</div>
                                       </Tooltip>
@@ -628,11 +628,11 @@ const Index: NextPage<Props> = ({ id }) => {
                               <tr key={index} className="p-4 border-2 border-gray-400">
                                 <td className="border-2 border-gray-400 ">
                                   <div className="p-2">
-                                    <div data-tooltip-id={`tootltip-order-detail-payment-prints-name-${print.id}`}>
+                                    <div data-tooltip-id={`tootltip-order-detail-transaction-prints-name-${print.id}`}>
                                       {print.name}
                                     </div>
                                     {print.description && (
-                                      <Tooltip id={`tootltip-order-detail-payment-prints-name-${print.id}`}>
+                                      <Tooltip id={`tootltip-order-detail-transaction-prints-name-${print.id}`}>
                                         <div className="font-bold">Description</div>
                                         <div className="whitespace-pre-line">{print.description}</div>
                                       </Tooltip>
@@ -641,11 +641,11 @@ const Index: NextPage<Props> = ({ id }) => {
                                 </td>
                                 <td className="border-2 border-gray-400 ">
                                   <div className="p-2">
-                                    <div data-tooltip-id={`tootltip-order-detail-payment-prints-paper-${print.paper?.id}`}>
+                                    <div data-tooltip-id={`tootltip-order-detail-transaction-prints-paper-${print.paper?.id}`}>
                                       {print.paper?.name || '-'}
                                     </div>
                                     {print.paper?.description && (
-                                      <Tooltip id={`tootltip-order-detail-payment-prints-paper-${print.paper?.id}`}>
+                                      <Tooltip id={`tootltip-order-detail-transaction-prints-paper-${print.paper?.id}`}>
                                         <div className="font-bold">Description</div>
                                         <div className="whitespace-pre-line">{print.paper?.description}</div>
                                       </Tooltip>
@@ -754,11 +754,11 @@ const Index: NextPage<Props> = ({ id }) => {
                               <tr key={index} className="p-4 border-2 border-gray-400">
                                 <td className="border-2 border-gray-400 ">
                                   <div className="p-2">
-                                    <span data-tooltip-id={`tootltip-order-detail-payment-finishings-name-${finishing.id}`}>
+                                    <span data-tooltip-id={`tootltip-order-detail-transaction-finishings-name-${finishing.id}`}>
                                       {finishing.name}
                                     </span>
                                     {finishing.description && (
-                                      <Tooltip id={`tootltip-order-detail-payment-finishings-name-${finishing.id}`}>
+                                      <Tooltip id={`tootltip-order-detail-transaction-finishings-name-${finishing.id}`}>
                                         <div className="font-bold">Description</div>
                                         <div className="whitespace-pre-line">{finishing.description}</div>
                                       </Tooltip>
@@ -857,11 +857,11 @@ const Index: NextPage<Props> = ({ id }) => {
                               <tr key={index} className="p-4 border-2 border-gray-400">
                                 <td className="border-2 border-gray-400 ">
                                   <div className="p-2">
-                                    <span data-tooltip-id={`tootltip-order-detail-payment-others-name-${other.id}`}>
+                                    <span data-tooltip-id={`tootltip-order-detail-transaction-others-name-${other.id}`}>
                                       {other.name}
                                     </span>
                                     {other.description && (
-                                      <Tooltip id={`tootltip-order-detail-payment-others-name-${other.id}`}>
+                                      <Tooltip id={`tootltip-order-detail-transaction-others-name-${other.id}`}>
                                         <div className="font-bold">Description</div>
                                         <div className="whitespace-pre-line">{other.description}</div>
                                       </Tooltip>
@@ -923,12 +923,12 @@ const Index: NextPage<Props> = ({ id }) => {
                   </div>
                   <div>
                     <div className="text-xl flex justify-between items-center mb-2">
-                      <div>Payment</div>
+                      <div>Transaction</div>
                       <button
                         className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                         type="button"
                         title='Delete'
-                        onClick={() => toogleModalEditOrderPayment()}
+                        onClick={() => toogleModalEditOrderTransaction()}
                       >
                         <BiPlus className='text-primary-500' size={'1.2rem'} />
                       </button>
@@ -954,36 +954,36 @@ const Index: NextPage<Props> = ({ id }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {order.payments?.length > 0 ? (
+                        {order.transactions?.length > 0 ? (
                           <>
-                            {order.payments.map((payment, index) => (
+                            {order.transactions.map((transaction, index) => (
                               <tr key={index} className="p-4 border-2 border-gray-400">
                                 <td className="border-2 border-gray-400">
                                   <div className="p-2">
-                                    {displayDateTime(payment.createDt)}
+                                    {displayDateTime(transaction.createDt)}
                                   </div>
                                 </td>
                                 <td className="border-2 border-gray-400">
                                   <div className="p-2">
-                                    {payment.createName}
+                                    {transaction.createName}
                                   </div>
                                 </td>
                                 <td className="border-2 border-gray-400 ">
                                   <div className="p-2">
-                                    <span data-tooltip-id={`tootltip-order-detail-payment-payments-name-${payment.id}`}>
-                                      {payment.name}
+                                    <span data-tooltip-id={`tootltip-order-detail-transaction-transactions-name-${transaction.id}`}>
+                                      {transaction.name}
                                     </span>
-                                    {payment.description && (
-                                      <Tooltip id={`tootltip-order-detail-payment-payments-name-${payment.id}`}>
+                                    {transaction.description && (
+                                      <Tooltip id={`tootltip-order-detail-transaction-transactions-name-${transaction.id}`}>
                                         <div className="font-bold">Description</div>
-                                        <div className="whitespace-pre-line">{payment.description}</div>
+                                        <div className="whitespace-pre-line">{transaction.description}</div>
                                       </Tooltip>
                                     )}
                                   </div>
                                 </td>
                                 <td className="border-2 border-gray-400 text-right">
                                   <div className="p-2">
-                                    {displayMoney(payment.amount as number)}
+                                    {displayMoney(transaction.amount as number)}
                                   </div>
                                 </td>
                                 <td className="border-2 border-gray-400 text-center">
@@ -992,7 +992,7 @@ const Index: NextPage<Props> = ({ id }) => {
                                       className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                                       type="button"
                                       title='Edit'
-                                      onClick={() => toogleModalEditOrderPayment(payment.id)}
+                                      onClick={() => toogleModalEditOrderTransaction(transaction.id)}
                                     >
                                       <RiPencilLine className='text-amber-500' size={'1.2rem'} />
                                     </button>
@@ -1000,7 +1000,7 @@ const Index: NextPage<Props> = ({ id }) => {
                                       className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                                       type="button"
                                       title='Delete'
-                                      onClick={() => toggleModalDeletePayment(payment.id)}
+                                      onClick={() => toggleModalDeleteTransaction(transaction.id)}
                                     >
                                       <VscTrash className='text-rose-500' size={'1.2rem'} />
                                     </button>
@@ -1010,7 +1010,7 @@ const Index: NextPage<Props> = ({ id }) => {
                             ))}
                             <tr className="p-4 border-gray-400">
                               <td colSpan={5} className="text-right font-bold">
-                                <div className="p-2"><span className="mr-4">{"Total Payment"}</span><span>{displayMoney(order.payments.reduce((total, payment) => total + (payment.amount as number), 0))}</span></div>
+                                <div className="p-2"><span className="mr-4">{"Total Transaction"}</span><span>{displayMoney(order.transactions.reduce((total, transaction) => total + (transaction.amount as number), 0))}</span></div>
                               </td>
                             </tr>
                           </>

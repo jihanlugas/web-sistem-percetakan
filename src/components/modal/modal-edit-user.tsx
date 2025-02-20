@@ -1,6 +1,6 @@
 import Modal from "@/components/modal/modal";
 import { Api } from "@/lib/api";
-import { UpdateFinishing } from "@/types/finishing";
+import { UpdateUser } from "@/types/user";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NextPage } from "next/types";
 import { useEffect, useState } from "react";
@@ -12,6 +12,8 @@ import ButtonSubmit from "@/components/formik/button-submit";
 import notif from "@/utils/notif";
 import TextField from "@/components/formik/text-field";
 import TextAreaField from "@/components/formik/text-area-field";
+import DateField from "../formik/date-field";
+import { displayDateForm } from "@/utils/formater";
 
 
 type Props = {
@@ -21,46 +23,47 @@ type Props = {
 }
 
 const schema = Yup.object().shape({
-  name: Yup.string().required('Required field'),
-  description: Yup.string().max(200, 'Must be 200 characters or less'),
-  qty: Yup.number().nullable().required('Required field'),
-  price: Yup.number().nullable().required('Required field'),
-  total: Yup.number().nullable().required('Required field'),
+  fullname: Yup.string().required('Required field'),
+  email: Yup.string().email('Invalid email'),
+  username: Yup.string().required('Required field').min(4, "Username must be at least 6 characters").lowercase(),
+  phoneNumber: Yup.string().required('Required field').min(8, "Phone number must be at least 8 characters").max(15, 'Phone number must be 15 characters or less'),
+  address: Yup.string(),
+  birthPlace: Yup.string(),
+  birthDt: Yup.string(),
 });
 
-const defaultInitFormikValue: UpdateFinishing = {
-  name: '',
-  description: '',
-  qty: '',
-  price: '',
-  total: '',
+const defaultInitFormikValue: UpdateUser = {
+  fullname: '',
+  email: '',
+  address: '',
+  phoneNumber: '',
+  username: '',
+  birthDt: '',
+  birthPlace: ''
 }
 
-const ModalEditFinishing: NextPage<Props> = ({ show, onClickOverlay, id }) => {
+const ModalEditUser: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [selectedId, setSelectedId] = useState<string>('')
 
-  const [initFormikValue, setInitFormikValue] = useState<UpdateFinishing>(defaultInitFormikValue)
+  const [initFormikValue, setInitFormikValue] = useState<UpdateUser>(defaultInitFormikValue)
 
   const preloads = 'Company'
   const { data, isLoading } = useQuery({
-    queryKey: ['finishing', selectedId, preloads],
+    queryKey: ['user', selectedId, preloads],
     queryFn: ({ queryKey }) => {
       const [, selectedId] = queryKey;
-      return selectedId ? Api.get('/finishing/' + selectedId, { preloads }) : null
+      return selectedId ? Api.get('/user/' + selectedId, { preloads }) : null
     },
   })
 
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['finishing', 'update', selectedId],
-    mutationFn: (val: FormikValues) => Api.put('/finishing/' + selectedId, val),
+    mutationKey: ['user', 'update', selectedId],
+    mutationFn: (val: FormikValues) => Api.put('/user/' + selectedId, val),
   });
 
-  const handleSubmit = async (values: UpdateFinishing, formikHelpers: FormikHelpers<UpdateFinishing>) => {
-    values.qty = parseInt(values.qty as string)
-    values.price = parseInt(values.price as string)
-    values.total = parseInt(values.total as string)
-
+  const handleSubmit = async (values: UpdateUser, formikHelpers: FormikHelpers<UpdateUser>) => {
+    values.birthDt = (values.birthDt ? new Date(values.birthDt as string).toISOString() : null)
     mutateSubmit(values, {
       onSuccess: ({ status, message, payload }) => {
         if (status) {
@@ -78,15 +81,22 @@ const ModalEditFinishing: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     });
   }
 
+  const handleClearBirthDt = (setFieldValue) => {
+    setFieldValue('birthDt', '')
+  }
+
+
   useEffect(() => {
     if (data) {
       if (data?.status) {
         setInitFormikValue({
-          name: data.payload.name,
-          description: data.payload.description,
-          qty: data.payload.qty,
-          price: data.payload.price,
-          total: data.payload.total,
+          fullname: data.payload.fullname,
+          email: data.payload.email,
+          phoneNumber: data.payload.phoneNumber,
+          username: data.payload.username,
+          address: data.payload.address,
+          birthDt: displayDateForm(data.payload.birthDt),
+          birthPlace: data.payload.birthPlace,
         })
       }
     }
@@ -100,21 +110,11 @@ const ModalEditFinishing: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     }
   }, [show, id])
 
-  const handleChangeQty = (e, values, setFieldValue) => {
-    setFieldValue('qty', e.target.value)
-    setFieldValue('total', values.price *e.target.value)
-  }
-
-  const handleChangePrice = (e, values, setFieldValue) => {
-    setFieldValue('price', e.target.value)
-    setFieldValue('total', values.qty * e.target.value)
-  }
-
   return (
     <Modal show={show} onClickOverlay={() => onClickOverlay('', true)} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Edit Finishing</div>
+          <div>Edit User</div>
           <button type="button" onClick={() => onClickOverlay('', true)} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -135,56 +135,70 @@ const ModalEditFinishing: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                 enableReinitialize={true}
                 onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
               >
-                {({ values, setFieldValue }) => {
+                {({ values, setFieldValue, errors }) => {
                   return (
                     <Form noValidate={true}>
-
                       <div className="mb-4">
                         <TextField
-                          label={'Nama Finishing'}
-                          name={'name'}
+                          label={'Nama User'}
+                          name={'fullname'}
                           type={'text'}
-                          placeholder={'Nama Finishing'}
+                          placeholder={'Nama User'}
                           required
                         />
                       </div>
                       <div className="mb-4">
                         <TextField
-                          label={'Qty'}
-                          name={'qty'}
-                          type={'number'}
-                          placeholder={'Qty'}
-                          field={true}
-                          onChange={(e) => handleChangeQty(e, values, setFieldValue)}
+                          label={'Username'}
+                          name={'username'}
+                          type={'text'}
+                          placeholder={'Username'}
+                          className={'lowercase'}
                           required
+                          disabled
                         />
                       </div>
                       <div className="mb-4">
                         <TextField
-                          label={'Price'}
-                          name={'price'}
-                          type={'number'}
-                          placeholder={'Price'}
-                          field={true}
-                          onChange={(e) => handleChangePrice(e, values, setFieldValue)}
+                          label={'Email'}
+                          name={'email'}
+                          type={'email'}
+                          placeholder={'Email'}
                           required
+                          disabled
                         />
                       </div>
                       <div className="mb-4">
                         <TextField
-                          label={'Total'}
-                          name={'total'}
-                          type={'number'}
-                          placeholder={'Total'}
-                          field={true}
+                          label={'No. Handphone'}
+                          name={'phoneNumber'}
+                          type={'text'}
+                          placeholder={'No. Handphone'}
                           required
+                          disabled
                         />
                       </div>
                       <div className="mb-4">
                         <TextAreaField
-                          label={'Keterangan'}
-                          name={'description'}
-                          placeholder={'Keterangan'}
+                          label={'Alamat'}
+                          name={'address'}
+                          placeholder={'Alamat'}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <TextField
+                          label={'Tempat Lahir'}
+                          name={'birthPlace'}
+                          type={'text'}
+                          placeholder={'Tempat Lahir'}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <DateField
+                          label={'Tanggal Lahir'}
+                          name={'birthDt'}
+                          type={'date'}
+                          handleClear={() => handleClearBirthDt(setFieldValue)}
                         />
                       </div>
                       <div className="mb-4">
@@ -193,6 +207,12 @@ const ModalEditFinishing: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                           disabled={isPending}
                           loading={isPending}
                         />
+                      </div>
+                      <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                        {JSON.stringify(values, null, 4)}
+                      </div>
+                      <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                        {JSON.stringify(errors, null, 4)}
                       </div>
                     </Form>
                   )
@@ -206,4 +226,4 @@ const ModalEditFinishing: NextPage<Props> = ({ show, onClickOverlay, id }) => {
   )
 }
 
-export default ModalEditFinishing;
+export default ModalEditUser;

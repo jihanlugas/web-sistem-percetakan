@@ -4,9 +4,10 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { BsFiles, BsList, BsMotherboard } from 'react-icons/bs';
 import { FaPrint, FaUserTie, FaUsers } from 'react-icons/fa6';
-import { IoBagCheckOutline, IoFileTrayStackedOutline, IoSettings } from "react-icons/io5";
+import { IoFileTrayStackedOutline, IoSettings } from "react-icons/io5";
 import { MdOutlineDesignServices } from 'react-icons/md';
 import { LuBookCheck } from 'react-icons/lu';
+import { TbCashRegister } from 'react-icons/tb';
 
 interface Props {
   sidebar: boolean,
@@ -24,7 +25,7 @@ const icons = {
   FaPrint,
   LuBookCheck,
   BsMotherboard,
-  IoBagCheckOutline,
+  TbCashRegister,
 };
 
 const defaultMenu = [
@@ -64,9 +65,9 @@ const defaultMenu = [
     path: '/other',
   },
   {
-    name: 'Paymnet',
-    icon: 'IoBagCheckOutline',
-    path: '/payment',
+    name: 'Transaction',
+    icon: 'TbCashRegister',
+    path: '/transaction',
   },
   {
     name: 'Pelanggan',

@@ -3,7 +3,7 @@ import MainAuth from "@/components/layout/main-auth";
 import { Api } from "@/lib/api";
 import PageWithLayoutType from "@/types/layout";
 import { PaperView } from "@/types/paper";
-import { displayDateTime } from "@/utils/formater";
+import { displayDateTime, displayMoney } from "@/utils/formater";
 import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import { GetServerSideProps, NextPage } from "next/types";
@@ -95,6 +95,10 @@ const Index: NextPage<Props> = ({ id }) => {
                     <div className="">{paper.name}</div>
                     <div className="text-gray-600">{'Keterangan'}</div>
                     <div className="whitespace-pre-wrap">{paper.description || '-'}</div>
+                    <div className="text-gray-600">{'Harga'}</div>
+                    <div className="">{displayMoney(paper.defaultPrice)}</div>
+                    <div className="text-gray-600">{'Harga Timbal Balik'}</div>
+                    <div className="">{displayMoney(paper.defaultPriceDuplex)}</div>
                     <div className="text-gray-600">{'Create By'}</div>
                     <div className="">{paper.createName}</div>
                     <div className="text-gray-600">{'Create Date'}</div>

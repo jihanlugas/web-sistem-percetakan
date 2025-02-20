@@ -11,6 +11,8 @@ import { PaperView } from "@/types/paper";
 import DropdownField from "@/components/formik/dropdown-field";
 import CheckboxField from "@/components/formik/checkbox-field";
 import { IoClose } from "react-icons/io5";
+import { displayMoney } from "@/utils/formater";
+import TextFieldNumber from "../formik/text-field-number";
 
 
 type Props = {
@@ -25,13 +27,12 @@ type Props = {
 
 const schema = Yup.object().shape({
   name: Yup.string().required('Required field'),
+  paperId: Yup.string().required('Required field'),
   description: Yup.string().max(200, 'Must be 200 characters or less'),
-  paperId: Yup.string(),
   isDuplex: Yup.boolean(),
-  pageCount: Yup.number(),
-  qty: Yup.number(),
-  price: Yup.number(),
-  total: Yup.number(),
+  pageCount: Yup.number().nullable().required('Required field'),
+  qty: Yup.number().nullable().required('Required field'),
+  price: Yup.number().nullable().required('Required field'),
 });
 
 const ModalCreateOrderPrint: NextPage<Props> = ({ show, onClickOverlay, formRef, dataPrintIndex, initFormikValue, papers, isLoadingPaper }) => {
@@ -40,7 +41,7 @@ const ModalCreateOrderPrint: NextPage<Props> = ({ show, onClickOverlay, formRef,
     values.pageCount = parseInt(values.pageCount as string)
     values.qty = parseInt(values.qty as string)
     values.price = parseInt(values.price as string)
-    values.total = parseInt(values.total as string)
+    values.total = (values.pageCount * values.qty * values.price) || 0
     if (dataPrintIndex !== -1) {
       formRef.current.setFieldValue('prints', formRef.current.values.prints.map((item, index) => index === dataPrintIndex ? values : item))
     } else {
@@ -55,7 +56,6 @@ const ModalCreateOrderPrint: NextPage<Props> = ({ show, onClickOverlay, formRef,
     if (paper) {
       const price = values.isDuplex ? paper.defaultPriceDuplex : paper.defaultPrice
       setFieldValue('price', price)
-      setFieldValue('total', price * values.qty * values.pageCount)
     }
   }
 
@@ -63,25 +63,8 @@ const ModalCreateOrderPrint: NextPage<Props> = ({ show, onClickOverlay, formRef,
     setFieldValue('isDuplex', e.target.checked)
     const paper = papers.find((paper) => paper.id === values.paperId)
     if (paper) {
-      const price = e.target.checked ? paper.defaultPriceDuplex : paper.defaultPrice
       setFieldValue('price', e.target.checked ? paper.defaultPriceDuplex : paper.defaultPrice)
-      setFieldValue('total', price * values.qty * values.pageCount)
     }
-  }
-
-  const handleChangePageCount = (e, values, setFieldValue) => {
-    setFieldValue('pageCount', e.target.value)
-    setFieldValue('total', values.price * values.qty * e.target.value)
-  }
-
-  const handleChangeQty = (e, values, setFieldValue) => {
-    setFieldValue('qty', e.target.value)
-    setFieldValue('total', values.price * values.pageCount * e.target.value)
-  }
-
-  const handleChangePrice = (e, values, setFieldValue) => {
-    setFieldValue('price', e.target.value)
-    setFieldValue('total', values.pageCount * values.qty * e.target.value)
   }
 
   return (
@@ -113,6 +96,13 @@ const ModalCreateOrderPrint: NextPage<Props> = ({ show, onClickOverlay, formRef,
                     />
                   </div>
                   <div className="mb-4">
+                    <TextAreaField
+                      label={'Keterangan'}
+                      name={'description'}
+                      placeholder={'Keterangan'}
+                    />
+                  </div>
+                  <div className="mb-4">
                     <DropdownField
                       label={"Kertas"}
                       name={"paperId"}
@@ -135,62 +125,38 @@ const ModalCreateOrderPrint: NextPage<Props> = ({ show, onClickOverlay, formRef,
                     />
                   </div>
                   <div className="mb-4">
-                    <TextField
+                    <TextFieldNumber
+                      label={'Harga'}
+                      name={'price'}
+                      placeholder={'Harga'}
+                      required
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <TextFieldNumber
                       label={'Jumlah Lembar'}
                       name={'pageCount'}
-                      type={'number'}
                       placeholder={'Jumlah Lembar'}
-                      field={true}
-                      onChange={(e) => handleChangePageCount(e, values, setFieldValue)}
+                      required
                     />
                   </div>
                   <div className="mb-4">
-                    <TextField
+                    <TextFieldNumber
                       label={'Qty'}
                       name={'qty'}
-                      type={'number'}
                       placeholder={'Qty'}
-                      field={true}
-                      onChange={(e) => handleChangeQty(e, values, setFieldValue)}
+                      required
                     />
                   </div>
-                  <div className="mb-4">
-                    <TextField
-                      label={'Price'}
-                      name={'price'}
-                      type={'number'}
-                      placeholder={'Price'}
-                      field={true}
-                      onChange={(e) => handleChangePrice(e, values, setFieldValue)}
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <TextField
-                      label={'Total'}
-                      name={'total'}
-                      type={'number'}
-                      placeholder={'Total'}
-                      field={true}
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <TextAreaField
-                      label={'Keterangan'}
-                      name={'description'}
-                      placeholder={'Keterangan'}
-                    />
+                  <div className="mb-4 flex justify-end font-bold">
+                    <div className="mr-4">Total Print</div>
+                    <div>{displayMoney((parseInt(values.qty as string) * parseInt(values.pageCount as string) * parseInt(values.price as string)) || 0)}</div>
                   </div>
                   <div className="mb-4">
                     <ButtonSubmit
                       label={'Simpan'}
                     />
                   </div>
-                  <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                    {JSON.stringify(values, null, 4)}
-                  </div>
-                  {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                    {JSON.stringify(errors, null, 4)}
-                  </div> */}
                 </Form>
               )
             }}

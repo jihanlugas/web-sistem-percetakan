@@ -382,7 +382,7 @@ const New: NextPage<Props> = () => {
                                     <div className="p-2 text-lg font-normal">Harga</div>
                                   </th>
                                   <th className="border-2 border-gray-400">
-                                    <div className="p-2 text-lg font-normal">Total</div>
+                                    <div className="p-2 text-lg font-normal">Total Design</div>
                                   </th>
                                   <th className="border-2 border-gray-400 w-32">
                                     <div className="p-2 text-lg font-normal">Action</div>
@@ -499,7 +499,7 @@ const New: NextPage<Props> = () => {
                                     <div className="p-2 text-lg font-normal">Harga</div>
                                   </th>
                                   <th className="border-2 border-gray-400">
-                                    <div className="p-2 text-lg font-normal">Total</div>
+                                    <div className="p-2 text-lg font-normal">Total Print</div>
                                   </th>
                                   <th className="border-2 border-gray-400 w-32">
                                     <div className="p-2 text-lg font-normal">Action</div>
@@ -630,7 +630,7 @@ const New: NextPage<Props> = () => {
                                     <div className="p-2 text-lg font-normal">Harga</div>
                                   </th>
                                   <th className="border-2 border-gray-400">
-                                    <div className="p-2 text-lg font-normal">Total</div>
+                                    <div className="p-2 text-lg font-normal">Total Finishing</div>
                                   </th>
                                   <th className="border-2 border-gray-400 w-32">
                                     <div className="p-2 text-lg font-normal">Action</div>
@@ -738,7 +738,7 @@ const New: NextPage<Props> = () => {
                                     <div className="p-2 text-lg font-normal">Harga</div>
                                   </th>
                                   <th className="border-2 border-gray-400">
-                                    <div className="p-2 text-lg font-normal">Total</div>
+                                    <div className="p-2 text-lg font-normal">Tota Other</div>
                                   </th>
                                   <th className="border-2 border-gray-400 w-32">
                                     <div className="p-2 text-lg font-normal">Action</div>
@@ -851,7 +851,7 @@ const New: NextPage<Props> = () => {
                         <hr className="my-4 border-2" />
                         <div className="grid grid-cols-3">
                           <div className=" col-span-3 flex justify-between items-center">
-                            <div>Total</div>
+                            <div>Total Order</div>
                             <div>{displayMoney(values.designs.reduce((total, design) => total + (design.total as number), 0) + values.prints.reduce((total, print) => total + (print.total as number), 0) + values.finishings.reduce((total, finishing) => total + (finishing.total as number), 0) + values.others.reduce((total, other) => total + (other.total as number), 0))}</div>
                           </div>
                         </div>

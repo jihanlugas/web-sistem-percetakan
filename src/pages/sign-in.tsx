@@ -103,7 +103,6 @@ const SingIn: NextPage<Props> = () => {
                           name={'passwd'}
                           placeholder={'Password'}
                           autoComplete={'off'}
-
                         />
                       </div>
                       <div className={''}>

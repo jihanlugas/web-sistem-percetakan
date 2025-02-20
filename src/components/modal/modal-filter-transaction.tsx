@@ -1,5 +1,5 @@
 import Modal from "@/components/modal/modal";
-import { PagePayment } from "@/types/payment";
+import { PageTransaction } from "@/types/transaction";
 import { NextPage } from "next/types";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
@@ -9,23 +9,25 @@ import ButtonSubmit from "@/components/formik/button-submit";
 import TextField from "@/components/formik/text-field";
 import TextAreaField from "@/components/formik/text-area-field";
 import DateField from "@/components/formik/date-field";
+import DropdownField from "@/components/formik/dropdown-field";
+import TextFieldNumber from "../formik/text-field-number";
 
 
 type Props = {
   show: boolean;
   onClickOverlay: () => void;
-  filter: PagePayment
-  setFilter: Dispatch<SetStateAction<PagePayment>>
+  filter: PageTransaction
+  setFilter: Dispatch<SetStateAction<PageTransaction>>
 }
 
 const schema = Yup.object().shape({
 });
 
-const ModalFilterPayment: NextPage<Props> = ({ show, onClickOverlay, filter, setFilter }) => {
+const ModalFilterTransaction: NextPage<Props> = ({ show, onClickOverlay, filter, setFilter }) => {
 
-  const [initFormikValue, setInitFormikValue] = useState<PagePayment>(filter)
+  const [initFormikValue, setInitFormikValue] = useState<PageTransaction>(filter)
 
-  const handleSubmit = async (values: PagePayment) => {
+  const handleSubmit = async (values: PageTransaction) => {
     setFilter(values)
     onClickOverlay()
   }
@@ -35,6 +37,7 @@ const ModalFilterPayment: NextPage<Props> = ({ show, onClickOverlay, filter, set
       orderName: '',
       name: '',
       description: '',
+      type: '',
       startAmount: '',
       endAmount: '',
       startDt: '',
@@ -62,7 +65,7 @@ const ModalFilterPayment: NextPage<Props> = ({ show, onClickOverlay, filter, set
     <Modal show={show} onClickOverlay={() => onClickOverlay()} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Filter Payment</div>
+          <div>Filter Transaction</div>
           <button type="button" onClick={() => onClickOverlay()} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -81,10 +84,10 @@ const ModalFilterPayment: NextPage<Props> = ({ show, onClickOverlay, filter, set
                   <Form noValidate={true}>
                     <div className="mb-4">
                       <TextField
-                        label={'Nama Payment'}
+                        label={'Nama Transaction'}
                         name={'name'}
                         type={'text'}
-                        placeholder={'Nama Payment'}
+                        placeholder={'Nama Transaction'}
                       />
                     </div>
                     <div className="mb-4">
@@ -102,17 +105,27 @@ const ModalFilterPayment: NextPage<Props> = ({ show, onClickOverlay, filter, set
                         placeholder={'Keterangan'}
                       />
                     </div>
+                    <div className="mb-4">
+                      <DropdownField
+                        label={"Type"}
+                        name={"type"}
+                        items={[{name: "Pemasukan", id: 1}, {name: "Pengeluaran", id: -1}]}
+                        keyValue={"id"}
+                        keyLabel={"name"}
+                        placeholder="Pilih Type"
+                        placeholderValue={""}
+                        field={true}
+                      />
+                    </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">
-                      <TextField
+                      <TextFieldNumber
                         label={'Harga Mulai Dari'}
                         name={'startAmount'}
-                        type={'number'}
                         placeholder={'Harga Mulai Dari'}
                       />
-                      <TextField
+                      <TextFieldNumber
                         label={'Hingga'}
                         name={'endAmount'}
-                        type={'number'}
                         placeholder={'Hingga'}
                       />
                     </div>
@@ -152,4 +165,4 @@ const ModalFilterPayment: NextPage<Props> = ({ show, onClickOverlay, filter, set
   )
 }
 
-export default ModalFilterPayment;
+export default ModalFilterTransaction;

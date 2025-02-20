@@ -4,7 +4,7 @@ import TextAreaField from '@/components/formik/text-area-field';
 import TextField from '@/components/formik/text-field';
 import MainAuth from '@/components/layout/main-auth';
 import { Api } from '@/lib/api';
-import { CreateDesign } from '@/types/design';
+import { CreateTransaction } from '@/types/transaction';
 import PageWithLayoutType from '@/types/layout';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
@@ -16,31 +16,30 @@ import notif from "@/utils/notif";
 import DropdownField from '@/components/formik/dropdown-field';
 import { OrderView, PageOrder } from '@/types/order';
 import { useEffect, useState } from 'react';
+import TextFieldNumber from '@/components/formik/text-field-number';
 
 
 type Props = object
 
 const schema = Yup.object().shape({
-  orderId: Yup.string().required('Required field'),
+  orderId: Yup.string(),
   name: Yup.string().required('Required field'),
   description: Yup.string().max(200, 'Must be 200 characters or less'),
-  qty: Yup.number().nullable().required('Required field'),
-  price: Yup.number().nullable().required('Required field'),
-  total: Yup.number().nullable().required('Required field'),
+  type: Yup.number().nullable().required('Required field'),
+  amount: Yup.number().nullable().required('Required field'),
 });
 
 const pageRequestOrder: PageOrder = {
   limit: -1,
 }
 
-const initFormikValue: CreateDesign = {
+const initFormikValue: CreateTransaction = {
   companyId: '',
   orderId: '',
   name: '',
   description: '',
-  qty: '',
-  price: '',
-  total: '',
+  type: 1,
+  amount: '',
 }
 
 const New: NextPage<Props> = () => {
@@ -59,22 +58,21 @@ const New: NextPage<Props> = () => {
   });
 
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['design', 'create'],
-    mutationFn: (val: FormikValues) => Api.post('/design', val),
+    mutationKey: ['transaction', 'create'],
+    mutationFn: (val: FormikValues) => Api.post('/transaction', val),
   });
 
-  const handleSubmit = async (values: CreateDesign, formikHelpers: FormikHelpers<CreateDesign>) => {
+  const handleSubmit = async (values: CreateTransaction, formikHelpers: FormikHelpers<CreateTransaction>) => {
     values.companyId = loginUser?.payload?.company?.id
-    values.qty = parseInt(values.qty as string)
-    values.price = parseInt(values.price as string)
-    values.total = parseInt(values.total as string)
+    values.amount = parseInt(values.amount as string)
+    values.type = parseInt(values.type as string)
 
     mutateSubmit(values, {
       onSuccess: ({ status, message, payload }) => {
         if (status) {
           notif.success(message);
           // formikHelpers.resetForm();
-          router.push('/design')
+          router.push('/transaction')
         } else if (payload?.listError) {
           formikHelpers.setErrors(payload.listError);
         } else {
@@ -87,16 +85,6 @@ const New: NextPage<Props> = () => {
     });
   }
 
-  const handleChangeQty = (e, values, setFieldValue) => {
-    setFieldValue('qty', e.target.value)
-    setFieldValue('total', values.price *e.target.value)
-  }
-
-  const handleChangePrice = (e, values, setFieldValue) => {
-    setFieldValue('price', e.target.value)
-    setFieldValue('total', values.qty * e.target.value)
-  }
-
   useEffect(() => {
     if (dataOrder?.status) {
       setOrders(dataOrder.payload.list);
@@ -106,18 +94,18 @@ const New: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Buat Design'}</title>
+        <title>{process.env.APP_NAME + ' - Buat Transaction'}</title>
       </Head>
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Design', path: '/design' },
+            { name: 'Transaction', path: '/transaction' },
             { name: 'Buat', path: '' },
           ]}
         />
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>Buat Design</div>
+            <div className='text-xl'>Buat Transaction</div>
           </div>
           <div>
             <Formik
@@ -126,7 +114,7 @@ const New: NextPage<Props> = () => {
               enableReinitialize={true}
               onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
             >
-              {({ values, setFieldValue }) => {
+              {({ values }) => {
                 return (
                   <Form noValidate={true}>
                     <div className="mb-4 max-w-xl">
@@ -140,47 +128,14 @@ const New: NextPage<Props> = () => {
                         placeholder="Pilih Order"
                         placeholderValue={""}
                         field={true}
-                        required
                       />
                     </div>
                     <div className="mb-4 max-w-xl">
                       <TextField
-                        label={'Nama Design'}
+                        label={'Nama Transaction'}
                         name={'name'}
                         type={'text'}
-                        placeholder={'Nama Design'}
-                        required
-                      />
-                    </div>
-                    <div className="mb-4 max-w-xl">
-                      <TextField
-                        label={'Qty'}
-                        name={'qty'}
-                        type={'number'}
-                        placeholder={'Qty'}
-                        field={true}
-                        onChange={(e) => handleChangeQty(e, values, setFieldValue)}
-                        required
-                      />
-                    </div>
-                    <div className="mb-4 max-w-xl">
-                      <TextField
-                        label={'Price'}
-                        name={'price'}
-                        type={'number'}
-                        placeholder={'Price'}
-                        field={true}
-                        onChange={(e) => handleChangePrice(e, values, setFieldValue)}
-                        required
-                      />
-                    </div>
-                    <div className="mb-4 max-w-xl">
-                      <TextField
-                        label={'Total'}
-                        name={'total'}
-                        type={'number'}
-                        placeholder={'Total'}
-                        field={true}
+                        placeholder={'Nama Transaction'}
                         required
                       />
                     </div>
@@ -189,6 +144,25 @@ const New: NextPage<Props> = () => {
                         label={'Keterangan'}
                         name={'description'}
                         placeholder={'Keterangan'}
+                      />
+                    </div>
+                    <div className="mb-4 max-w-xl">
+                      <DropdownField
+                        label={"Type"}
+                        name={"type"}
+                        items={[{name: "Pemasukan", id: 1}, {name: "Pengeluaran", id: -1}]}
+                        keyValue={"id"}
+                        keyLabel={"name"}
+                        field={true}
+                        required
+                      />
+                    </div>
+                    <div className="mb-4 max-w-xl">
+                      <TextFieldNumber
+                        label={'Harga'}
+                        name={'amount'}
+                        placeholder={'Harga'}
+                        required
                       />
                     </div>
                     <div className="mb-8 max-w-xl">

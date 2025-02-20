@@ -12,6 +12,7 @@ import ButtonSubmit from "@/components/formik/button-submit";
 import notif from "@/utils/notif";
 import TextField from "@/components/formik/text-field";
 import TextAreaField from "@/components/formik/text-area-field";
+import TextFieldNumber from "../formik/text-field-number";
 
 
 type Props = {
@@ -23,11 +24,15 @@ type Props = {
 const schema = Yup.object().shape({
   name: Yup.string().required('Required field'),
   description: Yup.string().max(200, 'Must be 200 characters or less'),
+  defaultPrice: Yup.number().nullable().required('Required field'),
+  defaultPriceDuplex: Yup.number().nullable().required('Required field'),
 });
 
 const defaultInitFormikValue: UpdatePaper = {
   name: '',
   description: '',
+  defaultPrice: '',
+  defaultPriceDuplex: '',
 }
 
 const ModalEditPaper: NextPage<Props> = ({ show, onClickOverlay, id }) => {
@@ -74,6 +79,8 @@ const ModalEditPaper: NextPage<Props> = ({ show, onClickOverlay, id }) => {
         setInitFormikValue({
           name: data.payload.name,
           description: data.payload.description,
+          defaultPrice: data.payload.defaultPrice,
+          defaultPriceDuplex: data.payload.defaultPriceDuplex,
         })
       }
     }
@@ -112,7 +119,7 @@ const ModalEditPaper: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                 enableReinitialize={true}
                 onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
               >
-                {({  }) => {
+                {({ }) => {
                   return (
                     <Form noValidate={true}>
 
@@ -130,6 +137,22 @@ const ModalEditPaper: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                           label={'Keterangan'}
                           name={'description'}
                           placeholder={'Keterangan'}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <TextFieldNumber
+                          label={'Harga'}
+                          name={'defaultPrice'}
+                          placeholder={'Harga'}
+                          required
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <TextFieldNumber
+                          label={'Harga Timbal Balik'}
+                          name={'defaultPriceDuplex'}
+                          placeholder={'Harga Timbal Balik'}
+                          required
                         />
                       </div>
                       <div className="mb-4">

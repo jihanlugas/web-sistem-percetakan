@@ -21,7 +21,7 @@ const body = {
   "totalPrint": 280700000,
   "totalFinishing": 12940000,
   "totalOther": 13200000,
-  "totalPayment": 10000000,
+  "totalTransaction": 10000000,
   "totalOrder": 306890000,
   "outstanding": 296890000,
   "companyName": "Demo Company",
@@ -342,7 +342,7 @@ const body = {
       "updateName": "Admin Demo"
     }
   ],
-  "payments": [
+  "transactions": [
     {
       "id": "7510200f-6895-4034-a32e-c9c54588d956",
       "companyId": "550468cd-5c79-4cb0-9b92-7cb63b83eaf7",

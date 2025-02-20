@@ -1,6 +1,6 @@
 import Modal from "@/components/modal/modal";
 import { Api } from "@/lib/api";
-import { AddPayment, OrderView } from "@/types/order";
+import { AddTransaction, OrderView } from "@/types/order";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NextPage } from "next/types";
 import { useEffect, useState } from "react";
@@ -15,6 +15,7 @@ import TextField from "@/components/formik/text-field";
 import TextAreaField from "@/components/formik/text-area-field";
 import CheckboxField from "@/components/formik/checkbox-field";
 import { Tooltip } from "react-tooltip";
+import TextFieldNumber from "../formik/text-field-number";
 
 
 type Props = {
@@ -26,25 +27,23 @@ type Props = {
 const schema = Yup.object().shape({
   name: Yup.string().required('Required field'),
   description: Yup.string().max(200, 'Must be 200 characters or less'),
-  qty: Yup.number(),
-  price: Yup.number(),
-  total: Yup.number(),
+  amount: Yup.number().nullable().required('Required field'),
 });
 
-const defaultInitFormikValue: AddPayment = {
+const defaultInitFormikValue: AddTransaction = {
   name: '',
   description: '',
   amount: '',
 }
 
-const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
+const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [selectedId, setSelectedId] = useState<string>('')
 
   const [order, setOrder] = useState<OrderView>({})
-  const [initFormikValue] = useState<AddPayment>(defaultInitFormikValue)
+  const [initFormikValue] = useState<AddTransaction>(defaultInitFormikValue)
 
-  const preloads = 'Company,Customer,Designs,Prints,Prints.Paper,Finishings,Others,Payments'
+  const preloads = 'Company,Customer,Designs,Prints,Prints.Paper,Finishings,Others,Transactions'
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['order', selectedId, preloads],
     queryFn: ({ queryKey }) => {
@@ -54,8 +53,8 @@ const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
   })
 
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['order', selectedId, 'add-payment'],
-    mutationFn: (val: FormikValues) => Api.post('/order/' + selectedId + "/add-payment", val),
+    mutationKey: ['order', selectedId, 'add-transaction'],
+    mutationFn: (val: FormikValues) => Api.post('/order/' + selectedId + "/add-transaction", val),
   });
 
   useEffect(() => {
@@ -75,7 +74,7 @@ const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     }
   }, [show, id])
 
-  const handleSubmit = async (values: AddPayment, formikHelpers: FormikHelpers<AddPayment>) => {
+  const handleSubmit = async (values: AddTransaction, formikHelpers: FormikHelpers<AddTransaction>) => {
     mutateSubmit(values, {
       onSuccess: ({ status, message, payload }) => {
         if (status) {
@@ -98,7 +97,7 @@ const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     <Modal show={show} onClickOverlay={() => onClickOverlay('', true)} layout={'sm:max-w-4xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Payment</div>
+          <div>Transaction</div>
           <button type="button" onClick={() => onClickOverlay('', true)} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -143,11 +142,11 @@ const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                                 <tr key={index} className="p-4 border-2 border-gray-400">
                                   <td className="border-2 border-gray-400 ">
                                     <div className="p-2">
-                                      <span data-tooltip-id={`tootltip-order-payment-designs-name-${design.id}`}>
+                                      <span data-tooltip-id={`tootltip-order-transaction-designs-name-${design.id}`}>
                                         {design.name}
                                       </span>
                                       {design.description && (
-                                        <Tooltip id={`tootltip-order-payment-designs-name-${design.id}`}>
+                                        <Tooltip id={`tootltip-order-transaction-designs-name-${design.id}`}>
                                           <div className="font-bold">Description</div>
                                           <div className="whitespace-pre-line">{design.description}</div>
                                         </Tooltip>
@@ -224,11 +223,11 @@ const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                                 <tr key={index} className="p-4 border-2 border-gray-400">
                                   <td className="border-2 border-gray-400 ">
                                     <div className="p-2">
-                                      <div data-tooltip-id={`tootltip-order-payment-prints-name-${print.id}`}>
+                                      <div data-tooltip-id={`tootltip-order-transaction-prints-name-${print.id}`}>
                                         {print.name}
                                       </div>
                                       {print.description && (
-                                        <Tooltip id={`tootltip-order-payment-prints-name-${print.id}`}>
+                                        <Tooltip id={`tootltip-order-transaction-prints-name-${print.id}`}>
                                           <div className="font-bold">Description</div>
                                           <div className="whitespace-pre-line">{print.description}</div>
                                         </Tooltip>
@@ -311,11 +310,11 @@ const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                                 <tr key={index} className="p-4 border-2 border-gray-400">
                                   <td className="border-2 border-gray-400 ">
                                     <div className="p-2">
-                                      <span data-tooltip-id={`tootltip-order-payment-finishings-name-${finishing.id}`}>
+                                      <span data-tooltip-id={`tootltip-order-transaction-finishings-name-${finishing.id}`}>
                                         {finishing.name}
                                       </span>
                                       {finishing.description && (
-                                        <Tooltip id={`tootltip-order-payment-finishings-name-${finishing.id}`}>
+                                        <Tooltip id={`tootltip-order-transaction-finishings-name-${finishing.id}`}>
                                           <div className="font-bold">Description</div>
                                           <div className="whitespace-pre-line">{finishing.description}</div>
                                         </Tooltip>
@@ -383,11 +382,11 @@ const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                                 <tr key={index} className="p-4 border-2 border-gray-400">
                                   <td className="border-2 border-gray-400 ">
                                     <div className="p-2">
-                                      <span data-tooltip-id={`tootltip-order-payment-others-name-${other.id}`}>
+                                      <span data-tooltip-id={`tootltip-order-transaction-others-name-${other.id}`}>
                                         {other.name}
                                       </span>
                                       {other.description && (
-                                        <Tooltip id={`tootltip-order-payment-others-name-${other.id}`}>
+                                        <Tooltip id={`tootltip-order-transaction-others-name-${other.id}`}>
                                           <div className="font-bold">Description</div>
                                           <div className="whitespace-pre-line">{other.description}</div>
                                         </Tooltip>
@@ -433,7 +432,7 @@ const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
               <hr className="mb-4" />
               <div className="mb-4">
                 <div className="mb-4 grid grid-cols-3 gap-4">
-                  <div className="text-lg">Payment</div>
+                  <div className="text-lg">Transaction</div>
                   <div className="col-span-2">
                     <div className="flex justify-between items-center mb-2">
                       <div>Design</div>
@@ -456,12 +455,12 @@ const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                       <div>Total Order</div>
                       <div>{displayMoney(order.totalDesign + order.totalPrint + order.totalFinishing + order.totalOther)}</div>
                     </div>
-                    {order.payments?.length > 0 && (
+                    {order.transactions?.length > 0 && (
                       <>
-                        {order.payments.map((payment, key) => (
+                        {order.transactions.map((transaction, key) => (
                           <div key={key} className="flex justify-between items-center mb-2 text-green-500">
-                            <div>{payment.name}</div>
-                            <div>{displayMoney(payment.amount)}</div>
+                            <div>{transaction.name}</div>
+                            <div>{displayMoney(transaction.amount)}</div>
                           </div>
                         ))}
                       </>
@@ -469,17 +468,17 @@ const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                     <hr className="mb-2" />
                     <div className="flex justify-between items-center mb-2 text-rose-500">
                       <div>Sisa Pembayaran</div>
-                      <div>{displayMoney(order.totalDesign + order.totalPrint + order.totalFinishing + order.totalOther - order.totalPayment)}</div>
+                      <div>{displayMoney(order.outstanding)}</div>
                     </div>
                   </div>
                 </div>
 
               </div>
-              {!order.isDone && (
+              {order.outstanding > 0 && (
                 <div className="mb-4">
                   <hr className="mb-4" />
                   <div className="mb-4 grid grid-cols-3 gap-4">
-                    <div className="text-lg">New Payment</div>
+                    <div className="text-lg">New Transaction</div>
                     <div className="col-span-2">
                       <Formik
                         initialValues={initFormikValue}
@@ -492,19 +491,10 @@ const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                             <Form noValidate={true}>
                               <div className="mb-4">
                                 <TextField
-                                  label={'Name Payment'}
+                                  label={'Name Transaction'}
                                   name={'name'}
                                   type={'text'}
                                   placeholder={'DP 1, DP 25%, DP 50%, Pelunsan, ...'}
-                                  required
-                                />
-                              </div>
-                              <div className="mb-4">
-                                <TextField
-                                  label={'Amount'}
-                                  name={'amount'}
-                                  type={"number"}
-                                  placeholder={'10.000.000...'}
                                   required
                                 />
                               </div>
@@ -513,6 +503,14 @@ const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                                   label={'Keterangan'}
                                   name={'description'}
                                   placeholder={'Keterangan'}
+                                />
+                              </div>
+                              <div className="mb-4">
+                                <TextFieldNumber
+                                  label={'Amount'}
+                                  name={'amount'}
+                                  placeholder={'10.000.000...'}
+                                  required
                                 />
                               </div>
                               <div className="mb-4">
@@ -538,4 +536,4 @@ const ModalOrderPaymnet: NextPage<Props> = ({ show, onClickOverlay, id }) => {
   )
 }
 
-export default ModalOrderPaymnet;
+export default ModalOrderTransaction;
