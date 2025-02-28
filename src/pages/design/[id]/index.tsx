@@ -21,7 +21,7 @@ type Props = {
 const Index: NextPage<Props> = ({ id }) => {
 
 
-  const [design, setDesign] = useState<DesignView>({})
+  const [design, setDesign] = useState<DesignView>(null)
   const [selectedId, setSelectedId] = useState<string>('')
 
   const [showModalEditDesign, setShowModalEditDesign] = useState<boolean>(false);
@@ -65,7 +65,7 @@ const Index: NextPage<Props> = ({ id }) => {
         <Breadcrumb
           links={[
             { name: 'Design', path: '/design' },
-            { name: design.name || id, path: '' },
+            { name: design?.name || id, path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -84,7 +84,7 @@ const Index: NextPage<Props> = ({ id }) => {
                     className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                     type="button"
                     title='Edit Design'
-                    onClick={() => toggleModalEditDesign(design.id)}
+                    onClick={() => toggleModalEditDesign(design?.id)}
                   >
                     <RiPencilLine className='text-amber-500' size={'1.2rem'} />
                   </button>
@@ -92,23 +92,23 @@ const Index: NextPage<Props> = ({ id }) => {
                 <div className="grid grid-cols-5 gap-4">
                   <div className="col-span-2 grid grid-cols-2 gap-4">
                     <div className="text-gray-600">{'Name'}</div>
-                    <div className="">{design.name}</div>
+                    <div className="">{design?.name}</div>
                     <div className="text-gray-600">{'Keterangan'}</div>
-                    <div className="whitespace-pre-wrap">{design.description || '-'}</div>
+                    <div className="whitespace-pre-wrap">{design?.description || '-'}</div>
                     <div className="text-gray-600">{'Qty'}</div>
-                    <div className="">{displayNumber(design.qty)}</div>
+                    <div className="">{displayNumber(design?.qty)}</div>
                     <div className="text-gray-600">{'Harga'}</div>
-                    <div className="">{displayMoney(design.price)}</div>
+                    <div className="">{displayMoney(design?.price)}</div>
                     <div className="text-gray-600">{'Total Harga'}</div>
-                    <div className="">{displayMoney(design.total)}</div>
+                    <div className="">{displayMoney(design?.total)}</div>
                     <div className="text-gray-600">{'Create By'}</div>
-                    <div className="">{design.createName}</div>
+                    <div className="">{design?.createName}</div>
                     <div className="text-gray-600">{'Create Date'}</div>
-                    <div className="">{displayDateTime(design.createDt)}</div>
+                    <div className="">{displayDateTime(design?.createDt)}</div>
                     <div className="text-gray-600">{'Last Update By'}</div>
-                    <div className="">{design.updateName}</div>
+                    <div className="">{design?.updateName}</div>
                     <div className="text-gray-600">{'Last Update Date'}</div>
-                    <div className="">{displayDateTime(design.updateDt)}</div>
+                    <div className="">{displayDateTime(design?.updateDt)}</div>
                   </div>
                 </div>
               </div>

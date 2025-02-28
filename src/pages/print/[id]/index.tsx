@@ -21,7 +21,7 @@ type Props = {
 const Index: NextPage<Props> = ({ id }) => {
 
 
-  const [print, setPrint] = useState<PrintView>({})
+  const [print, setPrint] = useState<PrintView>(null)
   const [selectedId, setSelectedId] = useState<string>('')
 
   const [showModalEditPrint, setShowModalEditPrint] = useState<boolean>(false);
@@ -65,7 +65,7 @@ const Index: NextPage<Props> = ({ id }) => {
         <Breadcrumb
           links={[
             { name: 'Print', path: '/print' },
-            { name: print.name || id, path: '' },
+            { name: print?.name || id, path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -84,7 +84,7 @@ const Index: NextPage<Props> = ({ id }) => {
                     className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                     type="button"
                     title='Edit Print'
-                    onClick={() => toggleModalEditPrint(print.id)}
+                    onClick={() => toggleModalEditPrint(print?.id)}
                   >
                     <RiPencilLine className='text-amber-500' size={'1.2rem'} />
                   </button>
@@ -92,29 +92,29 @@ const Index: NextPage<Props> = ({ id }) => {
                 <div className="grid grid-cols-5 gap-4">
                   <div className="col-span-2 grid grid-cols-2 gap-4">
                     <div className="text-gray-600">{'Name'}</div>
-                    <div className="">{print.name}</div>
+                    <div className="">{print?.name}</div>
                     <div className="text-gray-600">{'Keterangan'}</div>
-                    <div className="whitespace-pre-wrap">{print.description || '-'}</div>
+                    <div className="whitespace-pre-wrap">{print?.description || '-'}</div>
                     <div className="text-gray-600">{'Kertas'}</div>
-                    <div className="whitespace-pre-wrap">{print.paperName || '-'}</div>
+                    <div className="whitespace-pre-wrap">{print?.paperName || '-'}</div>
                     <div className="text-gray-600">{'Timbal Balik'}</div>
-                    <div className="">{displayBoolean(print.isDuplex, "Ya", "Tidak")}</div>
+                    <div className="">{displayBoolean(print?.isDuplex, "Ya", "Tidak")}</div>
                     <div className="text-gray-600">{'Jumlah Lembar'}</div>
-                    <div className="">{displayNumber(print.pageCount)}</div>
+                    <div className="">{displayNumber(print?.pageCount)}</div>
                     <div className="text-gray-600">{'Qty'}</div>
-                    <div className="">{displayNumber(print.qty)}</div>
+                    <div className="">{displayNumber(print?.qty)}</div>
                     <div className="text-gray-600">{'Harga'}</div>
-                    <div className="">{displayMoney(print.price)}</div>
+                    <div className="">{displayMoney(print?.price)}</div>
                     <div className="text-gray-600">{'Total Print'}</div>
-                    <div className="">{displayMoney(print.total)}</div>
+                    <div className="">{displayMoney(print?.total)}</div>
                     <div className="text-gray-600">{'Create By'}</div>
-                    <div className="">{print.createName}</div>
+                    <div className="">{print?.createName}</div>
                     <div className="text-gray-600">{'Create Date'}</div>
-                    <div className="">{displayDateTime(print.createDt)}</div>
+                    <div className="">{displayDateTime(print?.createDt)}</div>
                     <div className="text-gray-600">{'Last Update By'}</div>
-                    <div className="">{print.updateName}</div>
+                    <div className="">{print?.updateName}</div>
                     <div className="text-gray-600">{'Last Update Date'}</div>
-                    <div className="">{displayDateTime(print.updateDt)}</div>
+                    <div className="">{displayDateTime(print?.updateDt)}</div>
                   </div>
                 </div>
               </div>

@@ -1,7 +1,6 @@
-
-var stringConstructor = 'test'.constructor;
-var arrayConstructor = [].constructor;
-var objectConstructor = ({}).constructor;
+const stringConstructor = 'test'.constructor;
+const arrayConstructor = [].constructor;
+const objectConstructor = ({}).constructor;
 
 export function isEmpty(value: any) {
 	return (value === undefined || value === '' || value === null);

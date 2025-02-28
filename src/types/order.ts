@@ -15,7 +15,6 @@ export declare interface OrderView {
   customerId: string;
   name: string;
   description: string;
-  isDone: boolean;
   createBy: string;
   createDt: string;
   updateBy: string;
@@ -53,7 +52,6 @@ export declare interface PageOrder extends Paging {
   description?: string;
   companyName?: string;
   customerName?: string;
-  isDone?: boolean | string;
   createName?: string;
   preloads?: string;
   startTotalOrder?: string | number;

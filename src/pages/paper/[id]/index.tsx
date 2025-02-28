@@ -21,7 +21,7 @@ type Props = {
 const Index: NextPage<Props> = ({ id }) => {
 
 
-  const [paper, setPaper] = useState<PaperView>({})
+  const [paper, setPaper] = useState<PaperView>(null)
   const [selectedId, setSelectedId] = useState<string>('')
 
   const [showModalEditPaper, setShowModalEditPaper] = useState<boolean>(false);
@@ -65,7 +65,7 @@ const Index: NextPage<Props> = ({ id }) => {
         <Breadcrumb
           links={[
             { name: 'Paper', path: '/paper' },
-            { name: paper.name || id, path: '' },
+            { name: paper?.name || id, path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -84,7 +84,7 @@ const Index: NextPage<Props> = ({ id }) => {
                     className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                     type="button"
                     title='Edit Paper'
-                    onClick={() => toggleModalEditPaper(paper.id)}
+                    onClick={() => toggleModalEditPaper(paper?.id)}
                   >
                     <RiPencilLine className='text-amber-500' size={'1.2rem'} />
                   </button>
@@ -92,21 +92,21 @@ const Index: NextPage<Props> = ({ id }) => {
                 <div className="grid grid-cols-5 gap-4">
                   <div className="col-span-2 grid grid-cols-2 gap-4">
                     <div className="text-gray-600">{'Name'}</div>
-                    <div className="">{paper.name}</div>
+                    <div className="">{paper?.name}</div>
                     <div className="text-gray-600">{'Keterangan'}</div>
-                    <div className="whitespace-pre-wrap">{paper.description || '-'}</div>
+                    <div className="whitespace-pre-wrap">{paper?.description || '-'}</div>
                     <div className="text-gray-600">{'Harga'}</div>
-                    <div className="">{displayMoney(paper.defaultPrice)}</div>
+                    <div className="">{displayMoney(paper?.defaultPrice)}</div>
                     <div className="text-gray-600">{'Harga Timbal Balik'}</div>
-                    <div className="">{displayMoney(paper.defaultPriceDuplex)}</div>
+                    <div className="">{displayMoney(paper?.defaultPriceDuplex)}</div>
                     <div className="text-gray-600">{'Create By'}</div>
-                    <div className="">{paper.createName}</div>
+                    <div className="">{paper?.createName}</div>
                     <div className="text-gray-600">{'Create Date'}</div>
-                    <div className="">{displayDateTime(paper.createDt)}</div>
+                    <div className="">{displayDateTime(paper?.createDt)}</div>
                     <div className="text-gray-600">{'Last Update By'}</div>
-                    <div className="">{paper.updateName}</div>
+                    <div className="">{paper?.updateName}</div>
                     <div className="text-gray-600">{'Last Update Date'}</div>
-                    <div className="">{displayDateTime(paper.updateDt)}</div>
+                    <div className="">{displayDateTime(paper?.updateDt)}</div>
                   </div>
                 </div>
               </div>

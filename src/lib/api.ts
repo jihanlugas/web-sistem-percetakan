@@ -106,10 +106,14 @@ class Api {
 				if (error.response) {
 					if (error.response.data) {
 						const result = error.response.data;
-						if (!result.success) {
+						if (!result.status) {
 							// transform response to formik setError format
 							if (result.payload?.listError) {
 								result.payload.listError = toObjectKeyValue(Object.values(result.payload.listError), 'field', 'msg');
+							}
+							
+							if (!result.message) {
+								result.message = error.message
 							}
 							return result;
 						}
@@ -117,7 +121,7 @@ class Api {
 				}
 
 				return {
-					error: true,
+					status: false,
 					message: 'Please Check Your Connection',
 					payload: {}
 				};
@@ -179,56 +183,7 @@ class Api {
 	
 			// Clean up the Blob URL
 			window.URL.revokeObjectURL(url);
-		})
-			.catch(error => {
-
-				// console.log("headers ", headers);
-				// console.log("url ", url);
-				// if (error.response) {
-				// 	console.log("data ", error.response.data,);
-				// 	console.log("status ", error.response.status,);
-				// 	console.log("headers ", error.response.headers,);
-				// }
-				// if (error.request) {
-				// 	// console.log("request ", error.request,);
-				// 	// console.log("_response ", error.request._response,);
-				// }
-				// console.log('Error', error.message);
-				// // console.log(error.config);
-
-				// handle error forceLogout
-				if (error.response && error.response.data) {
-					const { payload } = error.response.data;
-					if (payload && payload.forceLogout) {
-						localStorage.clear();
-						Router.push({
-							pathname: '/sign-in',
-							// query: {
-							// 	redirect: Router.asPath && Router.asPath,
-							// }
-						});
-					}
-				}
-
-				if (error.response) {
-					if (error.response.data) {
-						const result = error.response.data;
-						if (!result.success) {
-							// transform response to formik setError format
-							if (result.payload?.listError) {
-								result.payload.listError = toObjectKeyValue(Object.values(result.payload.listError), 'field', 'msg');
-							}
-							return result;
-						}
-					}
-				}
-
-				return {
-					error: true,
-					message: 'Please Check Your Connection',
-					payload: {}
-				};
-			});
+		});
 		return request;
 	};
 }

@@ -17,6 +17,7 @@ import DropdownField from '@/components/formik/dropdown-field';
 import { OrderView, PageOrder } from '@/types/order';
 import { useEffect, useState } from 'react';
 import TextFieldNumber from '@/components/formik/text-field-number';
+import { TRANSACTION_TYPE_DEBIT, TRANSACTION_TYPE_KREDIT } from '@/utils/constant';
 
 
 type Props = object
@@ -38,7 +39,7 @@ const initFormikValue: CreateTransaction = {
   orderId: '',
   name: '',
   description: '',
-  type: 1,
+  type: TRANSACTION_TYPE_DEBIT,
   amount: '',
 }
 
@@ -150,7 +151,7 @@ const New: NextPage<Props> = () => {
                       <DropdownField
                         label={"Type"}
                         name={"type"}
-                        items={[{name: "Pemasukan", id: 1}, {name: "Pengeluaran", id: -1}]}
+                        items={[{name: "Pemasukan", id: TRANSACTION_TYPE_DEBIT}, {name: "Pengeluaran", id: TRANSACTION_TYPE_KREDIT}]}
                         keyValue={"id"}
                         keyLabel={"name"}
                         field={true}

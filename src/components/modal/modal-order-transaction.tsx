@@ -40,7 +40,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
 
   const [selectedId, setSelectedId] = useState<string>('')
 
-  const [order, setOrder] = useState<OrderView>({})
+  const [order, setOrder] = useState<OrderView>(null)
   const [initFormikValue] = useState<AddTransaction>(defaultInitFormikValue)
 
   const preloads = 'Company,Customer,Designs,Prints,Prints.Paper,Finishings,Others,Transactions'
@@ -115,7 +115,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
               <div className="mb-4">
                 <div className="mb-4 text-lg">Order</div>
                 <div className="text-sm">
-                  {order.designs && (
+                  {order?.designs && (
                     <div>
                       <div className="mb-2 text-lg">Design</div>
                       <table className="w-full table-auto">
@@ -136,9 +136,9 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                           </tr>
                         </thead>
                         <tbody>
-                          {order.designs?.length > 0 ? (
+                          {order?.designs?.length > 0 ? (
                             <>
-                              {order.designs.map((design, index) => (
+                              {order?.designs.map((design, index) => (
                                 <tr key={index} className="p-4 border-2 border-gray-400">
                                   <td className="border-2 border-gray-400 ">
                                     <div className="p-2">
@@ -172,7 +172,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                               ))}
                               <tr className="p-4 border-gray-400">
                                 <td colSpan={5} className="text-right font-bold">
-                                  <div className="p-2"><span className="mr-4">{"Total Design"}</span><span>{displayMoney(order.designs.reduce((total, design) => total + (design.total as number), 0))}</span></div>
+                                  <div className="p-2"><span className="mr-4">{"Total Design"}</span><span>{displayMoney(order?.designs.reduce((total, design) => total + (design.total as number), 0))}</span></div>
                                 </td>
                               </tr>
                             </>
@@ -187,7 +187,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                       </table>
                     </div>
                   )}
-                  {order.prints && (
+                  {order?.prints && (
                     <div>
                       <div className="mb-2 text-lg">Print</div>
                       <table className="w-full table-auto">
@@ -217,9 +217,9 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                           </tr>
                         </thead>
                         <tbody>
-                          {order.prints?.length > 0 ? (
+                          {order?.prints?.length > 0 ? (
                             <>
-                              {order.prints.map((print, index) => (
+                              {order?.prints.map((print, index) => (
                                 <tr key={index} className="p-4 border-2 border-gray-400">
                                   <td className="border-2 border-gray-400 ">
                                     <div className="p-2">
@@ -268,7 +268,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                               ))}
                               <tr className="p-4 border-gray-400">
                                 <td colSpan={7} className="text-right font-bold">
-                                  <div className="p-2"><span className="mr-4">{"Total Print"}</span><span>{displayMoney(order.prints.reduce((total, print) => total + (print.total as number), 0))}</span></div>
+                                  <div className="p-2"><span className="mr-4">{"Total Print"}</span><span>{displayMoney(order?.prints.reduce((total, print) => total + (print.total as number), 0))}</span></div>
                                 </td>
                               </tr>
                             </>
@@ -283,7 +283,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                       </table>
                     </div>
                   )}
-                  {order.finishings && (
+                  {order?.finishings && (
                     <div>
                       <div className="mb-2 text-lg">Finishing</div>
                       <table className="w-full table-auto">
@@ -304,9 +304,9 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                           </tr>
                         </thead>
                         <tbody>
-                          {order.finishings?.length > 0 ? (
+                          {order?.finishings?.length > 0 ? (
                             <>
-                              {order.finishings.map((finishing, index) => (
+                              {order?.finishings.map((finishing, index) => (
                                 <tr key={index} className="p-4 border-2 border-gray-400">
                                   <td className="border-2 border-gray-400 ">
                                     <div className="p-2">
@@ -340,7 +340,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                               ))}
                               <tr className="p-4 border-gray-400">
                                 <td colSpan={5} className="text-right font-bold">
-                                  <div className="p-2"><span className="mr-4">{"Total Finishing"}</span><span>{displayMoney(order.finishings.reduce((total, finishing) => total + (finishing.total as number), 0))}</span></div>
+                                  <div className="p-2"><span className="mr-4">{"Total Finishing"}</span><span>{displayMoney(order?.finishings.reduce((total, finishing) => total + (finishing.total as number), 0))}</span></div>
                                 </td>
                               </tr>
                             </>
@@ -355,7 +355,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                       </table>
                     </div>
                   )}
-                  {order.others && (
+                  {order?.others && (
                     <div>
                       <div className="mb-2 text-lg">Other</div>
                       <table className="w-full table-auto">
@@ -376,9 +376,9 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                           </tr>
                         </thead>
                         <tbody>
-                          {order.others?.length > 0 ? (
+                          {order?.others?.length > 0 ? (
                             <>
-                              {order.others.map((other, index) => (
+                              {order?.others.map((other, index) => (
                                 <tr key={index} className="p-4 border-2 border-gray-400">
                                   <td className="border-2 border-gray-400 ">
                                     <div className="p-2">
@@ -412,7 +412,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                               ))}
                               <tr className="p-4 border-gray-400">
                                 <td colSpan={5} className="text-right font-bold">
-                                  <div className="p-2"><span className="mr-4">{"Total Other"}</span><span>{displayMoney(order.others.reduce((total, other) => total + (other.total as number), 0))}</span></div>
+                                  <div className="p-2"><span className="mr-4">{"Total Other"}</span><span>{displayMoney(order?.others.reduce((total, other) => total + (other.total as number), 0))}</span></div>
                                 </td>
                               </tr>
                             </>
@@ -436,28 +436,28 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                   <div className="col-span-2">
                     <div className="flex justify-between items-center mb-2">
                       <div>Design</div>
-                      <div>{displayMoney(order.totalDesign)}</div>
+                      <div>{displayMoney(order?.totalDesign)}</div>
                     </div>
                     <div className="flex justify-between items-center mb-2">
                       <div>Print</div>
-                      <div>{displayMoney(order.totalPrint)}</div>
+                      <div>{displayMoney(order?.totalPrint)}</div>
                     </div>
                     <div className="flex justify-between items-center mb-2">
                       <div>Finishing</div>
-                      <div>{displayMoney(order.totalFinishing)}</div>
+                      <div>{displayMoney(order?.totalFinishing)}</div>
                     </div>
                     <div className="flex justify-between items-center mb-2">
                       <div>Other</div>
-                      <div>{displayMoney(order.totalOther)}</div>
+                      <div>{displayMoney(order?.totalOther)}</div>
                     </div>
                     <hr className="mb-2" />
                     <div className="flex justify-between items-center mb-2">
                       <div>Total Order</div>
-                      <div>{displayMoney(order.totalDesign + order.totalPrint + order.totalFinishing + order.totalOther)}</div>
+                      <div>{displayMoney(order?.totalDesign + order?.totalPrint + order?.totalFinishing + order?.totalOther)}</div>
                     </div>
-                    {order.transactions?.length > 0 && (
+                    {order?.transactions?.length > 0 && (
                       <>
-                        {order.transactions.map((transaction, key) => (
+                        {order?.transactions.map((transaction, key) => (
                           <div key={key} className="flex justify-between items-center mb-2 text-green-500">
                             <div>{transaction.name}</div>
                             <div>{displayMoney(transaction.amount)}</div>
@@ -468,13 +468,13 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                     <hr className="mb-2" />
                     <div className="flex justify-between items-center mb-2 text-rose-500">
                       <div>Sisa Pembayaran</div>
-                      <div>{displayMoney(order.outstanding)}</div>
+                      <div>{displayMoney(order?.outstanding)}</div>
                     </div>
                   </div>
                 </div>
 
               </div>
-              {order.outstanding > 0 && (
+              {order?.outstanding > 0 && (
                 <div className="mb-4">
                   <hr className="mb-4" />
                   <div className="mb-4 grid grid-cols-3 gap-4">

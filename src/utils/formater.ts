@@ -77,5 +77,5 @@ export const displayNumber = (value: number, locales: string = 'in-ID'): string 
 }
 
 export const displayMoney = (value: number, locales: string = 'in-ID'): string => {
-	return 'Rp ' + displayNumber(value);
+	return 'Rp ' + displayNumber(value, locales);
 }

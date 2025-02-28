@@ -33,7 +33,7 @@ type Props = {
 const Index: NextPage<Props> = ({ id }) => {
 
 
-  const [order, setOrder] = useState<OrderView>({})
+  const [order, setOrder] = useState<OrderView>(null)
   const [selectedId, setSelectedId] = useState<string>('')
   const [deleteId, setDeleteId] = useState<string>('')
 
@@ -369,7 +369,7 @@ const Index: NextPage<Props> = ({ id }) => {
         <Breadcrumb
           links={[
             { name: 'Order', path: '/order' },
-            { name: order.name || id, path: '' },
+            { name: order?.name || id, path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -388,55 +388,55 @@ const Index: NextPage<Props> = ({ id }) => {
                     className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                     type="button"
                     title='Edit Order'
-                    onClick={() => toggleModalEditOrder(order.id)}
+                    onClick={() => toggleModalEditOrder(order?.id)}
                   >
                     <RiPencilLine className='text-amber-500' size={'1.2rem'} />
                   </button>
                 </div>
                 <div className="grid grid-cols-5 gap-4">
                   <div className="text-gray-600">{'Name'}</div>
-                  <div className="col-span-4">{order.name}</div>
+                  <div className="col-span-4">{order?.name}</div>
                   <div className="text-gray-600">{'Description'}</div>
-                  <div className="col-span-4 whitespace-pre-wrap">{order.description || '-'}</div>
+                  <div className="col-span-4 whitespace-pre-wrap">{order?.description || '-'}</div>
                   <div className="text-gray-600">{'Total Design'}</div>
-                  <div className="col-span-4">{displayMoney(order.totalDesign)}</div>
+                  <div className="col-span-4">{displayMoney(order?.totalDesign)}</div>
                   <div className="text-gray-600">{'Total Print'}</div>
-                  <div className="col-span-4">{displayMoney(order.totalPrint)}</div>
+                  <div className="col-span-4">{displayMoney(order?.totalPrint)}</div>
                   <div className="text-gray-600">{'Total Finishing'}</div>
-                  <div className="col-span-4">{displayMoney(order.totalFinishing)}</div>
+                  <div className="col-span-4">{displayMoney(order?.totalFinishing)}</div>
                   <div className="text-gray-600">{'Total Other'}</div>
-                  <div className="col-span-4">{displayMoney(order.totalOther)}</div>
+                  <div className="col-span-4">{displayMoney(order?.totalOther)}</div>
                   <div className="text-gray-600 font-bold">{'Total Order'}</div>
-                  <div className="col-span-4 font-bold">{displayMoney(order.totalOrder)}</div>
+                  <div className="col-span-4 font-bold">{displayMoney(order?.totalOrder)}</div>
                   <div className="text-gray-600 font-bold">{'Total Transaction'}</div>
-                  <div className="col-span-4 text-green-500 font-bold">{displayMoney(order.totalTransaction)}</div>
+                  <div className="col-span-4 text-green-500 font-bold">{displayMoney(order?.totalTransaction)}</div>
                   <div className="text-gray-600 font-bold">{'Outstanding'}</div>
-                  <div className="col-span-4 text-rose-500 font-bold">{displayMoney(order.outstanding)}</div>
+                  <div className="col-span-4 text-rose-500 font-bold">{displayMoney(order?.outstanding)}</div>
                   <div className="text-gray-600">{'Transaction Status'}</div>
-                  {order.isDone ? (
-                    <div className="col-span-4 text-green-500 font-bold capitalize">{'Full Paid'}</div>
-                  ) : (
+                  {order?.outstanding > 0 ? (
                     <div className="col-span-4 text-rose-500 font-bold capitalize">{'Unpaid'}</div>
+                  ) : (
+                    <div className="col-span-4 text-green-500 font-bold capitalize">{'Full Paid'}</div>
                   )}
                   <div className="text-gray-600">{'Create By'}</div>
-                  <div className="col-span-4">{order.createName}</div>
+                  <div className="col-span-4">{order?.createName}</div>
                   <div className="text-gray-600">{'Create Date'}</div>
-                  <div className="col-span-4">{displayDateTime(order.createDt)}</div>
+                  <div className="col-span-4">{displayDateTime(order?.createDt)}</div>
                   <div className="text-gray-600">{'Last Update By'}</div>
-                  <div className="col-span-4">{order.updateName}</div>
+                  <div className="col-span-4">{order?.updateName}</div>
                   <div className="text-gray-600">{'Last Update Date'}</div>
-                  <div className="col-span-4">{displayDateTime(order.updateDt)}</div>
+                  <div className="col-span-4">{displayDateTime(order?.updateDt)}</div>
                 </div>
               </div>
               <div className="mb-4">
                 <div className="text-lg mb-4">Customer</div>
                 <div className="grid grid-cols-5 gap-4">
                   <div className="text-gray-600">{'Name'}</div>
-                  <div className="col-span-4">{order.customer?.name || '-'}</div>
+                  <div className="col-span-4">{order?.customer?.name || '-'}</div>
                   <div className="text-gray-600">{'Phone Number'}</div>
-                  <div className="col-span-4 whitespace-pre-wrap">{displayPhoneNumber(order.customer?.phoneNumber) || '-'}</div>
+                  <div className="col-span-4 whitespace-pre-wrap">{displayPhoneNumber(order?.customer?.phoneNumber) || '-'}</div>
                   <div className="text-gray-600">{'Description'}</div>
-                  <div className="col-span-4 whitespace-pre-wrap">{order.customer?.description || '-'}</div>
+                  <div className="col-span-4 whitespace-pre-wrap">{order?.customer?.description || '-'}</div>
                 </div>
               </div>
               <hr className="mb-4" />
@@ -447,14 +447,14 @@ const Index: NextPage<Props> = ({ id }) => {
                     className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                     type="button"
                     title='Delete'
-                    onClick={() => toggleModalOrderPhase(order.id)}
+                    onClick={() => toggleModalOrderPhase(order?.id)}
                   >
                     <BiPlus className='text-primary-500' size={'1.2rem'} />
                   </button>
                 </div>
                 <div>
                   <div className="flex overflow-x-auto mb-8">
-                    {order.orderphases?.map((orderphase, key) => {
+                    {order?.orderphases?.map((orderphase, key) => {
                       return (
                         <div key={key} className="flex items-center">
                           {key !== 0 && (
@@ -510,9 +510,9 @@ const Index: NextPage<Props> = ({ id }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {order.designs?.length > 0 ? (
+                        {order?.designs?.length > 0 ? (
                           <>
-                            {order.designs.map((design, index) => (
+                            {order?.designs.map((design, index) => (
                               <tr key={index} className="p-4 border-2 border-gray-400">
                                 <td className="border-2 border-gray-400 ">
                                   <div className="p-2">
@@ -566,7 +566,7 @@ const Index: NextPage<Props> = ({ id }) => {
                             ))}
                             <tr className="p-4 border-gray-400">
                               <td colSpan={4} className="text-right font-bold">
-                                <div className="p-2"><span className="mr-4">{"Total Design"}</span><span>{displayMoney(order.designs.reduce((total, design) => total + (design.total as number), 0))}</span></div>
+                                <div className="p-2"><span className="mr-4">{"Total Design"}</span><span>{displayMoney(order?.designs.reduce((total, design) => total + (design.total as number), 0))}</span></div>
                               </td>
                             </tr>
                           </>
@@ -622,9 +622,9 @@ const Index: NextPage<Props> = ({ id }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {order.prints?.length > 0 ? (
+                        {order?.prints?.length > 0 ? (
                           <>
-                            {order.prints.map((print, index) => (
+                            {order?.prints.map((print, index) => (
                               <tr key={index} className="p-4 border-2 border-gray-400">
                                 <td className="border-2 border-gray-400 ">
                                   <div className="p-2">
@@ -701,7 +701,7 @@ const Index: NextPage<Props> = ({ id }) => {
                             ))}
                             <tr className="p-4 border-gray-400">
                               <td colSpan={7} className="text-right font-bold">
-                                <div className="p-2"><span className="mr-4">{"Total Print"}</span><span>{displayMoney(order.prints.reduce((total, print) => total + (print.total as number), 0))}</span></div>
+                                <div className="p-2"><span className="mr-4">{"Total Print"}</span><span>{displayMoney(order?.prints.reduce((total, print) => total + (print.total as number), 0))}</span></div>
                               </td>
                             </tr>
                           </>
@@ -748,9 +748,9 @@ const Index: NextPage<Props> = ({ id }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {order.finishings?.length > 0 ? (
+                        {order?.finishings?.length > 0 ? (
                           <>
-                            {order.finishings.map((finishing, index) => (
+                            {order?.finishings.map((finishing, index) => (
                               <tr key={index} className="p-4 border-2 border-gray-400">
                                 <td className="border-2 border-gray-400 ">
                                   <div className="p-2">
@@ -804,7 +804,7 @@ const Index: NextPage<Props> = ({ id }) => {
                             ))}
                             <tr className="p-4 border-gray-400">
                               <td colSpan={4} className="text-right font-bold">
-                                <div className="p-2"><span className="mr-4">{"Total Finishing"}</span><span>{displayMoney(order.finishings.reduce((total, finishing) => total + (finishing.total as number), 0))}</span></div>
+                                <div className="p-2"><span className="mr-4">{"Total Finishing"}</span><span>{displayMoney(order?.finishings.reduce((total, finishing) => total + (finishing.total as number), 0))}</span></div>
                               </td>
                             </tr>
                           </>
@@ -851,9 +851,9 @@ const Index: NextPage<Props> = ({ id }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {order.others?.length > 0 ? (
+                        {order?.others?.length > 0 ? (
                           <>
-                            {order.others.map((other, index) => (
+                            {order?.others.map((other, index) => (
                               <tr key={index} className="p-4 border-2 border-gray-400">
                                 <td className="border-2 border-gray-400 ">
                                   <div className="p-2">
@@ -907,7 +907,7 @@ const Index: NextPage<Props> = ({ id }) => {
                             ))}
                             <tr className="p-4 border-gray-400">
                               <td colSpan={4} className="text-right font-bold">
-                                <div className="p-2"><span className="mr-4">{"Total Other"}</span><span>{displayMoney(order.others.reduce((total, other) => total + (other.total as number), 0))}</span></div>
+                                <div className="p-2"><span className="mr-4">{"Total Other"}</span><span>{displayMoney(order?.others.reduce((total, other) => total + (other.total as number), 0))}</span></div>
                               </td>
                             </tr>
                           </>
@@ -954,9 +954,9 @@ const Index: NextPage<Props> = ({ id }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {order.transactions?.length > 0 ? (
+                        {order?.transactions?.length > 0 ? (
                           <>
-                            {order.transactions.map((transaction, index) => (
+                            {order?.transactions.map((transaction, index) => (
                               <tr key={index} className="p-4 border-2 border-gray-400">
                                 <td className="border-2 border-gray-400">
                                   <div className="p-2">
@@ -1010,7 +1010,7 @@ const Index: NextPage<Props> = ({ id }) => {
                             ))}
                             <tr className="p-4 border-gray-400">
                               <td colSpan={5} className="text-right font-bold">
-                                <div className="p-2"><span className="mr-4">{"Total Transaction"}</span><span>{displayMoney(order.transactions.reduce((total, transaction) => total + (transaction.amount as number), 0))}</span></div>
+                                <div className="p-2"><span className="mr-4">{"Total Transaction"}</span><span>{displayMoney(order?.transactions.reduce((total, transaction) => total + (transaction.amount as number), 0))}</span></div>
                               </td>
                             </tr>
                           </>

@@ -62,7 +62,6 @@ const ModalFilterOrder: NextPage<Props> = ({ show, onClickOverlay, filter, setFi
       phaseId: '',
       name: '',
       description: '',
-      isDone: '',
       startTotalOrder: '',
       endTotalOrder: '',
       startDt: '',
@@ -132,17 +131,6 @@ const ModalFilterOrder: NextPage<Props> = ({ show, onClickOverlay, filter, setFi
                         label={'Keterangan'}
                         name={'description'}
                         placeholder={'Keterangan'}
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <DropdownField
-                        label={"Pembayaran"}
-                        name={"isDone"}
-                        items={[{name: "Lunas", id: true}, {name: "Belum Lunas", id: false}]}
-                        keyValue={"id"}
-                        keyLabel={"name"}
-                        placeholder="Pilih Pembayaran"
-                        placeholderValue={""}
                       />
                     </div>
                     <div className="mb-4">

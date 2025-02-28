@@ -21,7 +21,7 @@ type Props = {
 const Index: NextPage<Props> = ({ id }) => {
 
 
-  const [customer, setCustomer] = useState<CustomerView>({})
+  const [customer, setCustomer] = useState<CustomerView>(null)
   const [selectedId, setSelectedId] = useState<string>('')
 
   const [showModalEditCustomer, setShowModalEditCustomer] = useState<boolean>(false);

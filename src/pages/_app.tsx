@@ -11,7 +11,7 @@ import { ReactNotifications } from 'react-notifications-component'
 
 type AppLayoutProps = {
   Component: PageWithLayoutType
-  pageProps: unknown
+  pageProps: any
 }
 
 const MyApp: NextPage<AppLayoutProps> = ({ Component, pageProps }) => {

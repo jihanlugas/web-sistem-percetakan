@@ -34,7 +34,7 @@ const ModalOrderPhase: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [selectedId, setSelectedId] = useState<string>('')
 
-  const [order, setOrder] = useState<OrderView>({})
+  const [order, setOrder] = useState<OrderView>(null)
   const [phases, setPhases] = useState<PhaseView[]>([]);
   const [initFormikValue] = useState<AddPhase>({ orderphaseId: '' })
 
@@ -116,10 +116,10 @@ const ModalOrderPhase: NextPage<Props> = ({ show, onClickOverlay, id }) => {
           </div>
         ) : (
           <div>
-            {order.orderphases && (
+            {order?.orderphases && (
               <div>
                 <div className="flex overflow-x-auto mb-8">
-                  {order.orderphases?.map((orderphase, key) => {
+                  {order?.orderphases?.map((orderphase, key) => {
                     return (
                       <div key={key} className="flex items-center">
                         {key !== 0 && (

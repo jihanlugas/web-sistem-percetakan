@@ -61,23 +61,26 @@ const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore
     };
   }, [moreBar]);
 
-
-
-  // const { mutate: mutateSubmit, isPending } = useMutation({
-  //   mutationKey: ['order', 'update', selectedId],
-  //   mutationFn: (val: FormikValues) => Api.put('/order/' + selectedId, val),
-  // });
-
   const { mutate: mutateSpk, isPending: isPendingSpk } = useMutation({
     mutationKey: ['order', 'spk'],
     mutationFn: (id: string) => Api.getpdf('/order/' + id + "/spk"),
   })
 
+  const { mutate: mutateInvoice, isPending: isPendingInvoice } = useMutation({
+    mutationKey: ['order', 'invoice'],
+    mutationFn: (id: string) => Api.getpdf('/order/' + id + "/invoice"),
+  })
+
   const generateSpk = async (id: string) => {
     mutateSpk(id, {
-      onSuccess: () => {
+      onError: () => {
+        notif.error('Please cek you connection');
+      }
+    })
+  }
 
-      },
+  const generateInvoice = async (id: string) => {
+    mutateInvoice(id, {
       onError: () => {
         notif.error('Please cek you connection');
       }
@@ -120,8 +123,11 @@ const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore
             </div>
             {isPendingSpk && <AiOutlineLoading3Quarters className={'animate-spin text-primary-500'} size={'1rem'} />}
           </button>
-          <button onClick={() => { }} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
-            {'Nota'}
+          <button onClick={() => generateInvoice(row.original.id)} className={'px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left flex '}>
+            <div className="mr-2">
+              {'Invoice'}
+            </div>
+            {isPendingInvoice && <AiOutlineLoading3Quarters className={'animate-spin text-primary-500'} size={'1rem'} />}
           </button>
           <hr />
           <Link href={{ pathname: '/order/[id]', query: { id: row.original.id } }}>
@@ -159,7 +165,6 @@ const Index: NextPage<Props> = () => {
     phaseId: '',
     name: '',
     description: '',
-    isDone: '',
     startTotalOrder: '',
     endTotalOrder: '',
     startDt: '',
@@ -348,7 +353,7 @@ const Index: NextPage<Props> = () => {
         return (
           <div className='w-full capitalize text-right'>
             <div className="" style={{ display: "ruby" }} data-tooltip-id={`tootltip-transactions-${row.original.id}`}>
-              {row.original.outstanding > 0 && (
+              {row.original.outstanding === 0 && (
                 <span className="h-8 w-8 mr-2">
                   <FaCheck className="text-green-500" size={"1.2rem"} />
                 </span>

@@ -15,7 +15,7 @@ interface Props {
 
 const Header: React.FC<Props> = ({ sidebar, setSidebar }) => {
 
-  const refProfile = useRef<HTMLDivElement>();
+  const refProfile = useRef<HTMLDivElement>(null);
   const [profileBar, setProfileBar] = useState(false);
   // const { login, setLogin } = useContext(LoginContext);
   const [user, setUser] = useState(null);

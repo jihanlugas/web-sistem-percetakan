@@ -11,6 +11,7 @@ import TextAreaField from "@/components/formik/text-area-field";
 import DateField from "@/components/formik/date-field";
 import DropdownField from "@/components/formik/dropdown-field";
 import TextFieldNumber from "../formik/text-field-number";
+import { TRANSACTION_TYPE_DEBIT, TRANSACTION_TYPE_KREDIT } from "@/utils/constant";
 
 
 type Props = {
@@ -109,7 +110,7 @@ const ModalFilterTransaction: NextPage<Props> = ({ show, onClickOverlay, filter,
                       <DropdownField
                         label={"Type"}
                         name={"type"}
-                        items={[{name: "Pemasukan", id: 1}, {name: "Pengeluaran", id: -1}]}
+                        items={[{name: "Pemasukan", id: TRANSACTION_TYPE_DEBIT}, {name: "Pengeluaran", id: TRANSACTION_TYPE_KREDIT}]}
                         keyValue={"id"}
                         keyLabel={"name"}
                         placeholder="Pilih Type"

@@ -1,8 +1,8 @@
-import { isEmpty, isEmptyObject, typeCheck } from '@/utils/validate';
+import { typeCheck } from '@/utils/validate';
 import { v4 as uuidv4 } from 'uuid';
 
 export const convertJsonData = (json) => {
-	var datePattern = new RegExp(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d*)?Z/);
+	const datePattern = new RegExp(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d*)?Z/);
 	// var moneyPattern = new RegExp(/^\d+\.\d{4}$/);
 
 	Object.keys(json).forEach((jsonKey) => {
@@ -34,7 +34,7 @@ export const getRandomKanji = (): string => {
 };
 
 export const toObjectKeyValue = (data: any[], key: string, value: string) => {
-	var res = {};
+	const res = {};
 
 	data.forEach(dataobeject => {
 		res[dataobeject[key]] = dataobeject[value];
@@ -60,6 +60,6 @@ export const getUuid = (): string => {
 
 export const removeEmptyValues = (obj) => {
   return Object.fromEntries(
-    Object.entries(obj).filter(([_, value]) => value !== null && value !== undefined && value !== '')
+    Object.entries(obj).filter(([, value]) => value !== null && value !== undefined && value !== '')
   );
 }
