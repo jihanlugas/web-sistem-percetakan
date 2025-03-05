@@ -159,8 +159,6 @@ const ModalOrderPhase: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                               items={phases}
                               keyValue={"id"}
                               keyLabel={"name"}
-                              placeholder="Pilih Phase"
-                              placeholderValue={""}
                               isLoading={isLoadingPhase}
                               field={true}
                               required

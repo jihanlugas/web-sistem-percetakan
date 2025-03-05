@@ -32,7 +32,6 @@ type Props = object
 
 const schema = Yup.object().shape({
   name: Yup.string().required('Required field'),
-  orderphaseId: Yup.string().required('Required field'),
 });
 
 const pageRequestCustomer: PageCustomer = {
@@ -201,6 +200,9 @@ const New: NextPage<Props> = () => {
 
   const handleSubmit = async (values: CreateOrder, formikHelpers: FormikHelpers<CreateOrder>) => {
     values.companyId = loginUser?.payload?.company?.id
+    if (values.orderphaseId === "") {
+      values.orderphaseId = phases[0]?.id
+    }
 
     mutateSubmit(values, {
       onSuccess: ({ status, message, payload }) => {
@@ -346,8 +348,6 @@ const New: NextPage<Props> = () => {
                         items={phases}
                         keyValue={"id"}
                         keyLabel={"name"}
-                        placeholder="Pilih Phase"
-                        placeholderValue={""}
                         isLoading={isLoadingPhase}
                         field={true}
                         required

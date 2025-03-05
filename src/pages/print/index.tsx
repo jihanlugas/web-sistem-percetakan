@@ -21,6 +21,7 @@ import { CgChevronDown } from "react-icons/cg";
 import { TbFilter, TbFilterFilled } from "react-icons/tb";
 import { Tooltip } from "react-tooltip";
 import ModalFilter from "@/components/modal/modal-filter-print";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 type Props = object
 
@@ -52,6 +53,19 @@ const DropdownMore: NextPage<CellContext<PrintView, unknown> & PropsDropdownMore
     };
   }, [moreBar]);
 
+  const { mutate: mutateSpk, isPending: isPendingSpk } = useMutation({
+    mutationKey: ['print', 'spk'],
+    mutationFn: (id: string) => Api.getpdf('/print/' + id + "/spk"),
+  })
+
+  const generateSpk = async (id: string) => {
+    mutateSpk(id, {
+      onError: () => {
+        notif.error('Please cek you connection');
+      }
+    })
+  }
+
   const handleClickDelete = (id, name) => {
     setMoreBar(false);
     toggleModalDelete(id, name)
@@ -65,6 +79,13 @@ const DropdownMore: NextPage<CellContext<PrintView, unknown> & PropsDropdownMore
       </button>
       <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
         <div className="" role="none">
+          <button onClick={() => generateSpk(row.original.id)} className={'px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left flex '}>
+            <div className="mr-2">
+              {'SPK'}
+            </div>
+            {isPendingSpk && <AiOutlineLoading3Quarters className={'animate-spin text-primary-500'} size={'1rem'} />}
+          </button>
+          <hr />
           <Link href={{ pathname: '/print/[id]', query: { id: row.original.id } }}>
             <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'} title='Edit'>
               {'Detail'}

@@ -23,6 +23,7 @@ import { FaLongArrowAltRight } from "react-icons/fa";
 import { RiPencilLine } from "react-icons/ri";
 import { VscTrash } from "react-icons/vsc";
 import { Tooltip } from "react-tooltip";
+import { FaFilePdf } from "react-icons/fa6";
 
 
 
@@ -71,6 +72,11 @@ const Index: NextPage<Props> = ({ id }) => {
     mutationFn: (id: string) => Api.delete('/print/' + id)
   });
 
+  const { mutate: mutateSpk, isPending: isPendingSpk } = useMutation({
+    mutationKey: ['print', 'spk'],
+    mutationFn: (id: string) => Api.getpdf('/print/' + id + "/spk"),
+  })
+
   const { mutate: mutateDeleteFinishing, isPending: isPendingDeleteFinishing } = useMutation({
     mutationKey: ['finishing', 'delete', deleteId],
     mutationFn: (id: string) => Api.delete('/finishing/' + id)
@@ -85,6 +91,14 @@ const Index: NextPage<Props> = ({ id }) => {
     mutationKey: ['transaction', 'delete', deleteId],
     mutationFn: (id: string) => Api.delete('/transaction/' + id)
   });
+
+  const generateSpk = async (id: string) => {
+    mutateSpk(id, {
+      onError: () => {
+        notif.error('Please cek you connection');
+      }
+    })
+  }
 
   const toggleModalEditOrder = (id = '', refresh = false) => {
     if (refresh) {
@@ -489,7 +503,7 @@ const Index: NextPage<Props> = ({ id }) => {
                         <BiPlus className='text-primary-500' size={'1.2rem'} />
                       </button>
                     </div>
-                    <table className="w-full table-auto">
+                    <table className="w-full table-auto mb-12">
                       <thead className="">
                         <tr className="text-left border-2 border-gray-400">
                           <th className="border-2 border-gray-400">
@@ -592,7 +606,7 @@ const Index: NextPage<Props> = ({ id }) => {
                         <BiPlus className='text-primary-500' size={'1.2rem'} />
                       </button>
                     </div>
-                    <table className="w-full table-auto">
+                    <table className="w-full table-auto mb-12">
                       <thead className="">
                         <tr className="text-left border-2 border-gray-400">
                           <th className="border-2 border-gray-400">
@@ -682,6 +696,15 @@ const Index: NextPage<Props> = ({ id }) => {
                                     <button
                                       className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                                       type="button"
+                                      title={'SPK Print ' + print.name}
+                                      disabled={isPendingSpk}
+                                      onClick={() => generateSpk(print.id)}
+                                    >
+                                      <FaFilePdf className={'text-primary-500'} size={'1rem'} />
+                                    </button>
+                                    <button
+                                      className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
+                                      type="button"
                                       title='Edit'
                                       onClick={() => toogleModalEditOrderPrint(print.id)}
                                     >
@@ -727,7 +750,7 @@ const Index: NextPage<Props> = ({ id }) => {
                         <BiPlus className='text-primary-500' size={'1.2rem'} />
                       </button>
                     </div>
-                    <table className="w-full table-auto">
+                    <table className="w-full table-auto mb-12">
                       <thead className="">
                         <tr className="text-left border-2 border-gray-400">
                           <th className="border-2 border-gray-400">
@@ -830,7 +853,7 @@ const Index: NextPage<Props> = ({ id }) => {
                         <BiPlus className='text-primary-500' size={'1.2rem'} />
                       </button>
                     </div>
-                    <table className="w-full table-auto">
+                    <table className="w-full table-auto mb-12">
                       <thead className="">
                         <tr className="text-left border-2 border-gray-400">
                           <th className="border-2 border-gray-400">
@@ -933,7 +956,7 @@ const Index: NextPage<Props> = ({ id }) => {
                         <BiPlus className='text-primary-500' size={'1.2rem'} />
                       </button>
                     </div>
-                    <table className="w-full table-auto">
+                    <table className="w-full table-auto mb-12">
                       <thead className="">
                         <tr className="text-left border-2 border-gray-400">
                           <th className="border-2 border-gray-400">
