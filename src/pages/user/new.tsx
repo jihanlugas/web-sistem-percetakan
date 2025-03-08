@@ -15,6 +15,7 @@ import * as Yup from 'yup';
 import notif from "@/utils/notif";
 import PasswordField from '@/components/formik/password-field';
 import DateField from '@/components/formik/date-field';
+import { displayDateForm } from '@/utils/formater';
 
 
 type Props = object
@@ -58,6 +59,7 @@ const New: NextPage<Props> = () => {
 
   const handleSubmit = async (values: CreateUser, formikHelpers: FormikHelpers<CreateUser>) => {
     values.companyId = loginUser?.payload?.company?.id
+    values.username = values.username.toLowerCase()
     values.birthDt = (values.birthDt ? new Date(values.birthDt as string).toISOString() : null)
 
     mutateSubmit(values, {
@@ -67,6 +69,11 @@ const New: NextPage<Props> = () => {
           // formikHelpers.resetForm();
           router.push('/user')
         } else if (payload?.listError) {
+          if (values.birthDt) {
+            values.birthDt = displayDateForm(values.birthDt)
+          } else {
+            values.birthDt = ''
+          }
           formikHelpers.setErrors(payload.listError);
         } else {
           notif.error(message);

@@ -70,6 +70,11 @@ const ModalEditUser: NextPage<Props> = ({ show, onClickOverlay, id }) => {
           notif.success(message);
           onClickOverlay('', true)
         } else if (payload?.listError) {
+          if (values.birthDt) {
+            values.birthDt = displayDateForm(values.birthDt)
+          } else {
+            values.birthDt = ''
+          }
           formikHelpers.setErrors(payload.listError);
         } else {
           notif.error(message);
