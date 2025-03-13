@@ -2,9 +2,7 @@ import { CompanyView } from "@/types/company";
 import { CustomerView } from "@/types/customer";
 import { Paging } from "@/types/pagination";
 import { OrderphaseView } from "@/types/orderphase";
-import { DesignView } from "@/types/design";
 import { PrintView } from "@/types/print";
-import { FinishingView } from "@/types/finishing";
 import { OtherView } from "@/types/other";
 import { TransactionView } from "./transaction";
 
@@ -36,9 +34,7 @@ export declare interface OrderView {
   updateName: string;
   company?: CompanyView;
   customer?: CustomerView;
-  designs?: DesignView[];
   prints?: PrintView[];
-  finishings?: FinishingView[];
   others?: OtherView[];
   orderphases?: OrderphaseView[];
   transactions?: TransactionView[]
@@ -68,18 +64,8 @@ export declare interface CreateOrder {
   description: string;
   newCustomer: string;
   newCustomerPhone: string;
-  designs: CreateOrderDesign[];
   prints: CreateOrderPrint[];
-  finishings: CreateOrderFinishing[];
   others: CreateOrderOther[];
-}
-
-export declare interface CreateOrderDesign {
-  name: string;
-  description: string;
-  qty: number | string;
-  price: number | string;
-  total: number | string;
 }
 
 export declare interface CreateOrderPrint {
@@ -88,15 +74,6 @@ export declare interface CreateOrderPrint {
   paperId: string;
   isDuplex: boolean;
   pageCount: number | string;
-  qty: number | string;
-  price: number | string;
-  total: number | string;
-
-}
-
-export declare interface CreateOrderFinishing {
-  name: string;
-  description: string;
   qty: number | string;
   price: number | string;
   total: number | string;

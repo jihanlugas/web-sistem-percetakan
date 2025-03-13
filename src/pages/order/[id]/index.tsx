@@ -3,8 +3,6 @@ import MainAuth from "@/components/layout/main-auth";
 import ModalDelete from "@/components/modal/modal-delete";
 import ModalEditOrder from "@/components/modal/modal-edit-order";
 import ModalOrderPhase from "@/components/modal/modal-order-phase";
-import ModalEditOrderDesign from "@/components/modal/modal-edit-order-design";
-import ModalEditOrderFinishing from "@/components/modal/modal-edit-order-finishing";
 import ModalEditOrderOther from "@/components/modal/modal-edit-order-other";
 import ModalEditOrderTransaction from "@/components/modal/modal-edit-order-transaction";
 import ModalEditOrderPrint from "@/components/modal/modal-edit-order-print";
@@ -74,7 +72,7 @@ const Index: NextPage<Props> = ({ id }) => {
 
   const { mutate: mutateSpk, isPending: isPendingSpk } = useMutation({
     mutationKey: ['print', 'spk'],
-    mutationFn: (id: string) => Api.getpdf('/print/' + id + "/spk"),
+    mutationFn: (id: string) => Api.getpdfdisplay('/print/' + id + "/spk"),
   })
 
   const { mutate: mutateDeleteFinishing, isPending: isPendingDeleteFinishing } = useMutation({
@@ -294,21 +292,9 @@ const Index: NextPage<Props> = ({ id }) => {
         onClickOverlay={toggleModalOrderPhase}
         id={selectedId}
       />
-      <ModalEditOrderDesign
-        show={showModalEditOrderDesign}
-        onClickOverlay={toogleModalEditOrderDesign}
-        id={selectedId}
-        order={order}
-      />
       <ModalEditOrderPrint
         show={showModalEditOrderPrint}
         onClickOverlay={toogleModalEditOrderPrint}
-        id={selectedId}
-        order={order}
-      />
-      <ModalEditOrderFinishing
-        show={showModalEditOrderFinishing}
-        onClickOverlay={toogleModalEditOrderFinishing}
         id={selectedId}
         order={order}
       />
@@ -412,19 +398,15 @@ const Index: NextPage<Props> = ({ id }) => {
                   <div className="col-span-4">{order?.name}</div>
                   <div className="text-gray-600">{'Description'}</div>
                   <div className="col-span-4 whitespace-pre-wrap">{order?.description || '-'}</div>
-                  <div className="text-gray-600">{'Total Design'}</div>
-                  <div className="col-span-4">{displayMoney(order?.totalDesign)}</div>
                   <div className="text-gray-600">{'Total Print'}</div>
                   <div className="col-span-4">{displayMoney(order?.totalPrint)}</div>
-                  <div className="text-gray-600">{'Total Finishing'}</div>
-                  <div className="col-span-4">{displayMoney(order?.totalFinishing)}</div>
                   <div className="text-gray-600">{'Total Other'}</div>
                   <div className="col-span-4">{displayMoney(order?.totalOther)}</div>
                   <div className="text-gray-600 font-bold">{'Total Order'}</div>
                   <div className="col-span-4 font-bold">{displayMoney(order?.totalOrder)}</div>
-                  <div className="text-gray-600 font-bold">{'Total Transaction'}</div>
+                  <div className="text-gray-600 font-bold">{'Total Pembayaran'}</div>
                   <div className="col-span-4 text-green-500 font-bold">{displayMoney(order?.totalTransaction)}</div>
-                  <div className="text-gray-600 font-bold">{'Outstanding'}</div>
+                  <div className="text-gray-600 font-bold">{'Sisa Pembayaran'}</div>
                   <div className="col-span-4 text-rose-500 font-bold">{displayMoney(order?.outstanding)}</div>
                   <div className="text-gray-600">{'Transaction Status'}</div>
                   {order?.outstanding > 0 ? (
@@ -491,109 +473,6 @@ const Index: NextPage<Props> = ({ id }) => {
               <div className="mb-4">
                 <div className="text-xl mb-4">Detail</div>
                 <div className="text-sm">
-                  <div>
-                    <div className="text-xl flex justify-between items-center mb-2">
-                      <div>Design</div>
-                      <button
-                        className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
-                        type="button"
-                        title='Delete'
-                        onClick={() => toogleModalEditOrderDesign()}
-                      >
-                        <BiPlus className='text-primary-500' size={'1.2rem'} />
-                      </button>
-                    </div>
-                    <table className="w-full table-auto mb-12">
-                      <thead className="">
-                        <tr className="text-left border-2 border-gray-400">
-                          <th className="border-2 border-gray-400">
-                            <div className="p-2 text-base font-normal">Name</div>
-                          </th>
-                          <th className="border-2 border-gray-400">
-                            <div className="p-2 text-base font-normal">Qty</div>
-                          </th>
-                          <th className="border-2 border-gray-400">
-                            <div className="p-2 text-base font-normal">Harga</div>
-                          </th>
-                          <th className="border-2 border-gray-400">
-                            <div className="p-2 text-base font-normal">Total</div>
-                          </th>
-                          <th className="border-2 border-gray-400 w-32">
-                            <div className="p-2 text-base font-normal">Action</div>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {order?.designs?.length > 0 ? (
-                          <>
-                            {order?.designs.map((design, index) => (
-                              <tr key={index} className="p-4 border-2 border-gray-400">
-                                <td className="border-2 border-gray-400 ">
-                                  <div className="p-2">
-                                    <span data-tooltip-id={`tootltip-order-detail-transaction-designs-name-${design.id}`}>
-                                      {design.name}
-                                    </span>
-                                    {design.description && (
-                                      <Tooltip id={`tootltip-order-detail-transaction-designs-name-${design.id}`}>
-                                        <div className="font-bold">Description</div>
-                                        <div className="whitespace-pre-line">{design.description}</div>
-                                      </Tooltip>
-                                    )}
-                                  </div>
-                                </td>
-                                <td className="border-2 border-gray-400 text-right">
-                                  <div className="p-2">
-                                    {displayNumber(design.qty as number)}
-                                  </div>
-                                </td>
-                                <td className="border-2 border-gray-400 text-right">
-                                  <div className="p-2">
-                                    {displayMoney(design.price as number)}
-                                  </div>
-                                </td>
-                                <td className="border-2 border-gray-400 text-right">
-                                  <div className="p-2">
-                                    {displayMoney(design.total as number)}
-                                  </div>
-                                </td>
-                                <td className="border-2 border-gray-400 text-center">
-                                  <div className="p-2 w-full flex justify-center items-center">
-                                    <button
-                                      className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
-                                      type="button"
-                                      title='Edit'
-                                      onClick={() => toogleModalEditOrderDesign(design.id)}
-                                    >
-                                      <RiPencilLine className='text-amber-500' size={'1.2rem'} />
-                                    </button>
-                                    <button
-                                      className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
-                                      type="button"
-                                      title='Delete'
-                                      onClick={() => toggleModalDeleteDesign(design.id)}
-                                    >
-                                      <VscTrash className='text-rose-500' size={'1.2rem'} />
-                                    </button>
-                                  </div>
-                                </td>
-                              </tr>
-                            ))}
-                            <tr className="p-4 border-gray-400">
-                              <td colSpan={4} className="text-right font-bold">
-                                <div className="p-2"><span className="mr-4">{"Total Design"}</span><span>{displayMoney(order?.designs.reduce((total, design) => total + (design.total as number), 0))}</span></div>
-                              </td>
-                            </tr>
-                          </>
-                        ) : (
-                          <tr className="border-2 border-gray-400">
-                            <td colSpan={5} className="">
-                              <div className="w-full flex justify-center items-center p-4">No Data</div>
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
                   <div>
                     <div className="text-xl flex justify-between items-center mb-2">
                       <div>Print</div>
@@ -731,109 +610,6 @@ const Index: NextPage<Props> = ({ id }) => {
                         ) : (
                           <tr className="border-2 border-gray-400">
                             <td colSpan={8} className="">
-                              <div className="w-full flex justify-center items-center p-4">No Data</div>
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                  <div>
-                    <div className="text-xl flex justify-between items-center mb-2">
-                      <div>Finishing</div>
-                      <button
-                        className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
-                        type="button"
-                        title='Delete'
-                        onClick={() => toogleModalEditOrderFinishing()}
-                      >
-                        <BiPlus className='text-primary-500' size={'1.2rem'} />
-                      </button>
-                    </div>
-                    <table className="w-full table-auto mb-12">
-                      <thead className="">
-                        <tr className="text-left border-2 border-gray-400">
-                          <th className="border-2 border-gray-400">
-                            <div className="p-2 text-base font-normal">Name</div>
-                          </th>
-                          <th className="border-2 border-gray-400">
-                            <div className="p-2 text-base font-normal">Qty</div>
-                          </th>
-                          <th className="border-2 border-gray-400">
-                            <div className="p-2 text-base font-normal">Harga</div>
-                          </th>
-                          <th className="border-2 border-gray-400">
-                            <div className="p-2 text-base font-normal">Total</div>
-                          </th>
-                          <th className="border-2 border-gray-400 w-32">
-                            <div className="p-2 text-base font-normal">Action</div>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {order?.finishings?.length > 0 ? (
-                          <>
-                            {order?.finishings.map((finishing, index) => (
-                              <tr key={index} className="p-4 border-2 border-gray-400">
-                                <td className="border-2 border-gray-400 ">
-                                  <div className="p-2">
-                                    <span data-tooltip-id={`tootltip-order-detail-transaction-finishings-name-${finishing.id}`}>
-                                      {finishing.name}
-                                    </span>
-                                    {finishing.description && (
-                                      <Tooltip id={`tootltip-order-detail-transaction-finishings-name-${finishing.id}`}>
-                                        <div className="font-bold">Description</div>
-                                        <div className="whitespace-pre-line">{finishing.description}</div>
-                                      </Tooltip>
-                                    )}
-                                  </div>
-                                </td>
-                                <td className="border-2 border-gray-400 text-right">
-                                  <div className="p-2">
-                                    {displayNumber(finishing.qty as number)}
-                                  </div>
-                                </td>
-                                <td className="border-2 border-gray-400 text-right">
-                                  <div className="p-2">
-                                    {displayMoney(finishing.price as number)}
-                                  </div>
-                                </td>
-                                <td className="border-2 border-gray-400 text-right">
-                                  <div className="p-2">
-                                    {displayMoney(finishing.total as number)}
-                                  </div>
-                                </td>
-                                <td className="border-2 border-gray-400 text-center">
-                                  <div className="p-2 w-full flex justify-center items-center">
-                                    <button
-                                      className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
-                                      type="button"
-                                      title='Edit'
-                                      onClick={() => toogleModalEditOrderFinishing(finishing.id)}
-                                    >
-                                      <RiPencilLine className='text-amber-500' size={'1.2rem'} />
-                                    </button>
-                                    <button
-                                      className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
-                                      type="button"
-                                      title='Delete'
-                                      onClick={() => toggleModalDeleteFinishing(finishing.id)}
-                                    >
-                                      <VscTrash className='text-rose-500' size={'1.2rem'} />
-                                    </button>
-                                  </div>
-                                </td>
-                              </tr>
-                            ))}
-                            <tr className="p-4 border-gray-400">
-                              <td colSpan={4} className="text-right font-bold">
-                                <div className="p-2"><span className="mr-4">{"Total Finishing"}</span><span>{displayMoney(order?.finishings.reduce((total, finishing) => total + (finishing.total as number), 0))}</span></div>
-                              </td>
-                            </tr>
-                          </>
-                        ) : (
-                          <tr className="border-2 border-gray-400">
-                            <td colSpan={5} className="">
                               <div className="w-full flex justify-center items-center p-4">No Data</div>
                             </td>
                           </tr>

@@ -115,78 +115,6 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
               <div className="mb-4">
                 <div className="mb-4 text-lg">Order</div>
                 <div className="text-sm">
-                  {order?.designs && (
-                    <div>
-                      <div className="mb-2 text-lg">Design</div>
-                      <table className="w-full table-auto">
-                        <thead className="">
-                          <tr className="text-left border-2 border-gray-400">
-                            <th className="border-2 border-gray-400">
-                              <div className="p-2 text-base font-normal">Name</div>
-                            </th>
-                            <th className="border-2 border-gray-400">
-                              <div className="p-2 text-base font-normal">Qty</div>
-                            </th>
-                            <th className="border-2 border-gray-400">
-                              <div className="p-2 text-base font-normal">Harga</div>
-                            </th>
-                            <th className="border-2 border-gray-400">
-                              <div className="p-2 text-base font-normal">Total</div>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {order?.designs?.length > 0 ? (
-                            <>
-                              {order?.designs.map((design, index) => (
-                                <tr key={index} className="p-4 border-2 border-gray-400">
-                                  <td className="border-2 border-gray-400 ">
-                                    <div className="p-2">
-                                      <span data-tooltip-id={`tootltip-order-transaction-designs-name-${design.id}`}>
-                                        {design.name}
-                                      </span>
-                                      {design.description && (
-                                        <Tooltip id={`tootltip-order-transaction-designs-name-${design.id}`}>
-                                          <div className="font-bold">Description</div>
-                                          <div className="whitespace-pre-line">{design.description}</div>
-                                        </Tooltip>
-                                      )}
-                                    </div>
-                                  </td>
-                                  <td className="border-2 border-gray-400 text-right">
-                                    <div className="p-2">
-                                      {displayNumber(design.qty as number)}
-                                    </div>
-                                  </td>
-                                  <td className="border-2 border-gray-400 text-right">
-                                    <div className="p-2">
-                                      {displayMoney(design.price as number)}
-                                    </div>
-                                  </td>
-                                  <td className="border-2 border-gray-400 text-right">
-                                    <div className="p-2">
-                                      {displayMoney(design.total as number)}
-                                    </div>
-                                  </td>
-                                </tr>
-                              ))}
-                              <tr className="p-4 border-gray-400">
-                                <td colSpan={5} className="text-right font-bold">
-                                  <div className="p-2"><span className="mr-4">{"Total Design"}</span><span>{displayMoney(order?.designs.reduce((total, design) => total + (design.total as number), 0))}</span></div>
-                                </td>
-                              </tr>
-                            </>
-                          ) : (
-                            <tr className="border-2 border-gray-400">
-                              <td colSpan={6} className="">
-                                <div className="w-full flex justify-center items-center p-4">No Data</div>
-                              </td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
                   {order?.prints && (
                     <div>
                       <div className="mb-2 text-lg">Print</div>
@@ -283,78 +211,6 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                       </table>
                     </div>
                   )}
-                  {order?.finishings && (
-                    <div>
-                      <div className="mb-2 text-lg">Finishing</div>
-                      <table className="w-full table-auto">
-                        <thead className="">
-                          <tr className="text-left border-2 border-gray-400">
-                            <th className="border-2 border-gray-400">
-                              <div className="p-2 text-base font-normal">Name</div>
-                            </th>
-                            <th className="border-2 border-gray-400">
-                              <div className="p-2 text-base font-normal">Qty</div>
-                            </th>
-                            <th className="border-2 border-gray-400">
-                              <div className="p-2 text-base font-normal">Harga</div>
-                            </th>
-                            <th className="border-2 border-gray-400">
-                              <div className="p-2 text-base font-normal">Total</div>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {order?.finishings?.length > 0 ? (
-                            <>
-                              {order?.finishings.map((finishing, index) => (
-                                <tr key={index} className="p-4 border-2 border-gray-400">
-                                  <td className="border-2 border-gray-400 ">
-                                    <div className="p-2">
-                                      <span data-tooltip-id={`tootltip-order-transaction-finishings-name-${finishing.id}`}>
-                                        {finishing.name}
-                                      </span>
-                                      {finishing.description && (
-                                        <Tooltip id={`tootltip-order-transaction-finishings-name-${finishing.id}`}>
-                                          <div className="font-bold">Description</div>
-                                          <div className="whitespace-pre-line">{finishing.description}</div>
-                                        </Tooltip>
-                                      )}
-                                    </div>
-                                  </td>
-                                  <td className="border-2 border-gray-400 text-right">
-                                    <div className="p-2">
-                                      {displayNumber(finishing.qty as number)}
-                                    </div>
-                                  </td>
-                                  <td className="border-2 border-gray-400 text-right">
-                                    <div className="p-2">
-                                      {displayMoney(finishing.price as number)}
-                                    </div>
-                                  </td>
-                                  <td className="border-2 border-gray-400 text-right">
-                                    <div className="p-2">
-                                      {displayMoney(finishing.total as number)}
-                                    </div>
-                                  </td>
-                                </tr>
-                              ))}
-                              <tr className="p-4 border-gray-400">
-                                <td colSpan={5} className="text-right font-bold">
-                                  <div className="p-2"><span className="mr-4">{"Total Finishing"}</span><span>{displayMoney(order?.finishings.reduce((total, finishing) => total + (finishing.total as number), 0))}</span></div>
-                                </td>
-                              </tr>
-                            </>
-                          ) : (
-                            <tr className="border-2 border-gray-400">
-                              <td colSpan={6} className="">
-                                <div className="w-full flex justify-center items-center p-4">No Data</div>
-                              </td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
                   {order?.others && (
                     <div>
                       <div className="mb-2 text-lg">Other</div>
@@ -435,16 +291,8 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                   <div className="text-lg">Transaction</div>
                   <div className="col-span-2">
                     <div className="flex justify-between items-center mb-2">
-                      <div>Design</div>
-                      <div>{displayMoney(order?.totalDesign)}</div>
-                    </div>
-                    <div className="flex justify-between items-center mb-2">
                       <div>Print</div>
                       <div>{displayMoney(order?.totalPrint)}</div>
-                    </div>
-                    <div className="flex justify-between items-center mb-2">
-                      <div>Finishing</div>
-                      <div>{displayMoney(order?.totalFinishing)}</div>
                     </div>
                     <div className="flex justify-between items-center mb-2">
                       <div>Other</div>
@@ -453,7 +301,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                     <hr className="mb-2" />
                     <div className="flex justify-between items-center mb-2">
                       <div>Total Order</div>
-                      <div>{displayMoney(order?.totalDesign + order?.totalPrint + order?.totalFinishing + order?.totalOther)}</div>
+                      <div>{displayMoney( order?.totalPrint + order?.totalOther)}</div>
                     </div>
                     {order?.transactions?.length > 0 && (
                       <>

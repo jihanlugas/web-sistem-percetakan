@@ -45,19 +45,9 @@ const defaultMenu = [
     path: '/order',
   },
   {
-    name: 'Design',
-    icon: 'MdOutlineDesignServices',
-    path: '/design',
-  },
-  {
     name: 'Print',
     icon: 'FaPrint',
     path: '/print',
-  },
-  {
-    name: 'Finishing',
-    icon: 'LuBookCheck',
-    path: '/finishing',
   },
   {
     name: 'Other',

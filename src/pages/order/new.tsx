@@ -3,14 +3,12 @@ import DropdownField from "@/components/formik/dropdown-field";
 import TextAreaField from "@/components/formik/text-area-field";
 import TextField from "@/components/formik/text-field";
 import MainAuth from "@/components/layout/main-auth";
-import ModalCreateOrderDesign from "@/components/modal/modal-create-order-design";
 import ModalCreateOrderPrint from "@/components/modal/modal-create-order-print";
-import ModalCreateOrderFinishing from "@/components/modal/modal-create-order-finishing";
 import ModalCreateOrderOther from "@/components/modal/modal-create-order-other";
 import { Api } from "@/lib/api";
 import { CustomerView, PageCustomer } from "@/types/customer";
 import PageWithLayoutType from "@/types/layout";
-import { CreateOrder, CreateOrderDesign, CreateOrderPrint, CreateOrderFinishing, CreateOrderOther } from "@/types/order";
+import { CreateOrder, CreateOrderPrint, CreateOrderOther } from "@/types/order";
 import { displayMoney, displayNumber, displayBoolean } from "@/utils/formater";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Form, Formik, FormikHelpers, FieldArray, FormikProps, FormikValues } from "formik";
@@ -46,28 +44,12 @@ const pageRequestPhase: PagePhase = {
   limit: -1,
 }
 
-const defaultInitFormikValueDesign: CreateOrderDesign = {
-  name: '',
-  description: '',
-  qty: '',
-  price: '',
-  total: '',
-}
-
 const defaultInitFormikValuePrint: CreateOrderPrint = {
   name: '',
   description: '',
   paperId: '',
   isDuplex: false,
   pageCount: '',
-  qty: '',
-  price: '',
-  total: ''
-}
-
-const defaultInitFormikValueFinishing: CreateOrderFinishing = {
-  name: '',
-  description: '',
   qty: '',
   price: '',
   total: ''
@@ -89,9 +71,7 @@ const initFormikValue: CreateOrder = {
   description: '',
   newCustomer: '',
   newCustomerPhone: '',
-  designs: [],
   prints: [],
-  finishings: [],
   others: [],
 }
 
@@ -106,17 +86,9 @@ const New: NextPage<Props> = () => {
   const [phases, setPhases] = useState<PhaseView[]>([]);
 
 
-  const [showModalCreateOrderDesign, setShowModalCreateOrderDesign] = useState<boolean>(false);
-  const [initFormikValueDesign, setInitFormikValueDesign] = useState<CreateOrderDesign>(defaultInitFormikValueDesign);
-  const [dataDesignIndex, setDataDesignIndex] = useState<number>(-1);
-
   const [showModalCreateOrderPrint, setShowModalCreateOrderPrint] = useState<boolean>(false);
   const [initFormikValuePrint, setInitFormikValuePrint] = useState<CreateOrderPrint>(defaultInitFormikValuePrint);
   const [dataPrintIndex, setDataPrintIndex] = useState<number>(-1);
-
-  const [showModalCreateOrderFinishing, setShowModalCreateOrderFinishing] = useState<boolean>(false);
-  const [initFormikValueFinishing, setInitFormikValueFinishing] = useState<CreateOrderFinishing>(defaultInitFormikValueFinishing);
-  const [dataFinishingIndex, setDataFinishingIndex] = useState<number>(-1);
 
   const [showModalCreateOrderOther, setShowModalCreateOrderOther] = useState<boolean>(false);
   const [initFormikValueOther, setInitFormikValueOther] = useState<CreateOrderOther>(defaultInitFormikValueOther);
@@ -167,22 +139,10 @@ const New: NextPage<Props> = () => {
     }
   }, [dataPhase]);
 
-  const toggleModalCreateOrderDesign = (index: number = -1, initFormikValueDesign: CreateOrderDesign = defaultInitFormikValueDesign) => {
-    setDataDesignIndex(index);
-    setInitFormikValueDesign(initFormikValueDesign);
-    setShowModalCreateOrderDesign(!showModalCreateOrderDesign);
-  }
-
   const toggleModalCreateOrderPrint = (index: number = -1, initFormikValuePrint: CreateOrderPrint = defaultInitFormikValuePrint) => {
     setDataPrintIndex(index);
     setInitFormikValuePrint(initFormikValuePrint);
     setShowModalCreateOrderPrint(!showModalCreateOrderPrint);
-  }
-
-  const toggleModalCreateOrderFinishing = (index: number = -1, initFormikValueFinishing: CreateOrderFinishing = defaultInitFormikValueFinishing) => {
-    setDataFinishingIndex(index);
-    setInitFormikValueFinishing(initFormikValueFinishing);
-    setShowModalCreateOrderFinishing(!showModalCreateOrderFinishing);
   }
 
   const toggleModalCreateOrderOther = (index: number = -1, initFormikValueOther: CreateOrderOther = defaultInitFormikValueOther) => {
@@ -227,13 +187,6 @@ const New: NextPage<Props> = () => {
       <Head>
         <title>{process.env.APP_NAME + ' - Buat Order'}</title>
       </Head>
-      <ModalCreateOrderDesign
-        show={showModalCreateOrderDesign}
-        onClickOverlay={toggleModalCreateOrderDesign}
-        formRef={formRef}
-        dataDesignIndex={dataDesignIndex}
-        initFormikValue={initFormikValueDesign}
-      />
       <ModalCreateOrderPrint
         show={showModalCreateOrderPrint}
         onClickOverlay={toggleModalCreateOrderPrint}
@@ -242,13 +195,6 @@ const New: NextPage<Props> = () => {
         initFormikValue={initFormikValuePrint}
         papers={papers}
         isLoadingPaper={isLoadingPaper}
-      />
-      <ModalCreateOrderFinishing
-        show={showModalCreateOrderFinishing}
-        onClickOverlay={toggleModalCreateOrderFinishing}
-        formRef={formRef}
-        dataFinishingIndex={dataFinishingIndex}
-        initFormikValue={initFormikValueFinishing}
       />
       <ModalCreateOrderOther
         show={showModalCreateOrderOther}
@@ -355,114 +301,6 @@ const New: NextPage<Props> = () => {
                     </div>
                     <div className="mt-8 mb-8">
                       <FieldArray
-                        name={'designs'}
-                        render={(arrayHelpers) => (
-                          <div className="mb-12">
-                            <div className="text-xl flex justify-between items-center mb-2">
-                              <div>Design</div>
-                              <button
-                                className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
-                                type="button"
-                                title='Delete'
-                                onClick={() => toggleModalCreateOrderDesign()}
-                              >
-                                <BiPlus className='text-primary-500' size={'1.2rem'} />
-                              </button>
-                            </div>
-                            <table className="w-full table-auto">
-                              <thead className="">
-                                <tr className="text-left border-2 border-gray-400">
-                                  <th className="border-2 border-gray-400">
-                                    <div className="p-2 text-lg font-normal">Name</div>
-                                  </th>
-                                  <th className="border-2 border-gray-400">
-                                    <div className="p-2 text-lg font-normal">Qty</div>
-                                  </th>
-                                  <th className="border-2 border-gray-400">
-                                    <div className="p-2 text-lg font-normal">Harga</div>
-                                  </th>
-                                  <th className="border-2 border-gray-400">
-                                    <div className="p-2 text-lg font-normal">Total Design</div>
-                                  </th>
-                                  <th className="border-2 border-gray-400 w-32">
-                                    <div className="p-2 text-lg font-normal">Action</div>
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {values.designs.length > 0 ? (
-                                  <>
-                                    {values.designs.map((item, index) => (
-                                      <tr key={index} className="p-4 border-2 border-gray-400">
-                                        <td className="border-2 border-gray-400 ">
-                                          <div className="p-2">
-                                            <span data-tooltip-id={`tootltip-order-new-designs-name-${index}`}>
-                                              {item.name}
-                                            </span>
-                                            {item.description && (
-                                              <Tooltip id={`tootltip-order-new-designs-name-${index}`}>
-                                                <div className="font-bold">Description</div>
-                                                <div className="whitespace-pre-line">{item.description}</div>
-                                              </Tooltip>
-                                            )}
-                                          </div>
-                                        </td>
-                                        <td className="border-2 border-gray-400 text-right">
-                                          <div className="p-2">
-                                            {displayNumber(item.qty as number)}
-                                          </div>
-                                        </td>
-                                        <td className="border-2 border-gray-400 text-right">
-                                          <div className="p-2">
-                                            {displayMoney(item.price as number)}
-                                          </div>
-                                        </td>
-                                        <td className="border-2 border-gray-400 text-right">
-                                          <div className="p-2">
-                                            {displayMoney(item.total as number)}
-                                          </div>
-                                        </td>
-                                        <td className="border-2 border-gray-400 text-center">
-                                          <div className="p-2 w-full flex justify-center items-center">
-                                            <button
-                                              className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
-                                              type="button"
-                                              title='Edit'
-                                              onClick={() => toggleModalCreateOrderDesign(index, item)}
-                                            >
-                                              <RiPencilLine className='text-amber-500' size={'1.2rem'} />
-                                            </button>
-                                            <button
-                                              className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
-                                              type="button"
-                                              title='Delete'
-                                              onClick={() => arrayHelpers.remove(index)}
-                                            >
-                                              <VscTrash className='text-rose-500' size={'1.2rem'} />
-                                            </button>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                    ))}
-                                    <tr className="p-4 border-gray-400 border-b-2">
-                                      <td colSpan={4} className="text-right font-bold">
-                                        <div className="p-2"><span className="mr-4">{"Total Design"}</span><span>{displayMoney(values.designs.reduce((total, design) => total + (design.total as number), 0))}</span></div>
-                                      </td>
-                                    </tr>
-                                  </>
-                                ) : (
-                                  <tr className="border-2 border-gray-400">
-                                    <td colSpan={5} className="">
-                                      <div className="w-full flex justify-center items-center p-8">No Data</div>
-                                    </td>
-                                  </tr>
-                                )}
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-                      />
-                      <FieldArray
                         name={'prints'}
                         render={(arrayHelpers) => (
                           <div className="mb-12">
@@ -471,7 +309,7 @@ const New: NextPage<Props> = () => {
                               <button
                                 className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                                 type="button"
-                                title='Delete'
+                                title='Tambah Print'
                                 onClick={() => toggleModalCreateOrderPrint()}
                               >
                                 <BiPlus className='text-primary-500' size={'1.2rem'} />
@@ -603,114 +441,6 @@ const New: NextPage<Props> = () => {
                         )}
                       />
                       <FieldArray
-                        name={'finishings'}
-                        render={(arrayHelpers) => (
-                          <div className="mb-12">
-                            <div className="text-xl flex justify-between items-center mb-2">
-                              <div>Finishing</div>
-                              <button
-                                className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
-                                type="button"
-                                title='Delete'
-                                onClick={() => toggleModalCreateOrderFinishing()}
-                              >
-                                <BiPlus className='text-primary-500' size={'1.2rem'} />
-                              </button>
-                            </div>
-                            <table className="w-full table-auto">
-                              <thead className="">
-                                <tr className="text-left border-2 border-gray-400">
-                                  <th className="border-2 border-gray-400">
-                                    <div className="p-2 text-lg font-normal">Name</div>
-                                  </th>
-                                  <th className="border-2 border-gray-400">
-                                    <div className="p-2 text-lg font-normal">Qty</div>
-                                  </th>
-                                  <th className="border-2 border-gray-400">
-                                    <div className="p-2 text-lg font-normal">Harga</div>
-                                  </th>
-                                  <th className="border-2 border-gray-400">
-                                    <div className="p-2 text-lg font-normal">Total Finishing</div>
-                                  </th>
-                                  <th className="border-2 border-gray-400 w-32">
-                                    <div className="p-2 text-lg font-normal">Action</div>
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {values.finishings.length > 0 ? (
-                                  <>
-                                    {values.finishings.map((item, index) => (
-                                      <tr key={index} className="p-4 border-2 border-gray-400">
-                                        <td className="border-2 border-gray-400 ">
-                                          <div className="p-2">
-                                            <span data-tooltip-id={`tootltip-order-new-finishings-name-${index}`}>
-                                              {item.name}
-                                            </span>
-                                            {item.description && (
-                                              <Tooltip id={`tootltip-order-new-finishings-name-${index}`}>
-                                                <div className="font-bold">Description</div>
-                                                <div className="whitespace-pre-line">{item.description}</div>
-                                              </Tooltip>
-                                            )}
-                                          </div>
-                                        </td>
-                                        <td className="border-2 border-gray-400 text-right">
-                                          <div className="p-2">
-                                            {displayNumber(item.qty as number)}
-                                          </div>
-                                        </td>
-                                        <td className="border-2 border-gray-400 text-right">
-                                          <div className="p-2">
-                                            {displayMoney(item.price as number)}
-                                          </div>
-                                        </td>
-                                        <td className="border-2 border-gray-400 text-right">
-                                          <div className="p-2">
-                                            {displayMoney(item.total as number)}
-                                          </div>
-                                        </td>
-                                        <td className="border-2 border-gray-400 text-center">
-                                          <div className="p-2 w-full flex justify-center items-center">
-                                            <button
-                                              type="button"
-                                              className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
-                                              title='Edit'
-                                              onClick={() => toggleModalCreateOrderFinishing(index, item)}
-                                            >
-                                              <RiPencilLine className='text-amber-500' size={'1.2rem'} />
-                                            </button>
-                                            <button
-                                              type="button"
-                                              className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
-                                              title='Delete'
-                                              onClick={() => arrayHelpers.remove(index)}
-                                            >
-                                              <VscTrash className='text-rose-500' size={'1.2rem'} />
-                                            </button>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                    ))}
-                                    <tr className="p-4 border-gray-400 border-b-2">
-                                      <td colSpan={4} className="text-right font-bold">
-                                        <div className="p-2"><span className="mr-4">{"Total Finishing"}</span><span>{displayMoney(values.finishings.reduce((total, finishing) => total + (finishing.total as number), 0))}</span></div>
-                                      </td>
-                                    </tr>
-                                  </>
-                                ) : (
-                                  <tr className="border-2 border-gray-400">
-                                    <td colSpan={5} className="">
-                                      <div className="w-full flex justify-center items-center p-8">No Data</div>
-                                    </td>
-                                  </tr>
-                                )}
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-                      />
-                      <FieldArray
                         name={'others'}
                         render={(arrayHelpers) => (
                           <div className="mb-12">
@@ -719,7 +449,7 @@ const New: NextPage<Props> = () => {
                               <button
                                 className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                                 type="button"
-                                title='Delete'
+                                title='Tambah Other'
                                 onClick={() => toggleModalCreateOrderOther()}
                               >
                                 <BiPlus className='text-primary-500' size={'1.2rem'} />
@@ -826,20 +556,8 @@ const New: NextPage<Props> = () => {
                       <div className="text-lg font-bold">
                         <div className="grid grid-cols-3">
                           <div className=" col-span-3 flex justify-between items-center">
-                            <div>Total Design</div>
-                            <div>{displayMoney(values.designs.reduce((total, design) => total + (design.total as number), 0))}</div>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-3">
-                          <div className=" col-span-3 flex justify-between items-center">
                             <div>Total Print</div>
                             <div>{displayMoney(values.prints.reduce((total, print) => total + (print.total as number), 0))}</div>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-3">
-                          <div className=" col-span-3 flex justify-between items-center">
-                            <div>Total Finishing</div>
-                            <div>{displayMoney(values.finishings.reduce((total, finishing) => total + (finishing.total as number), 0))}</div>
                           </div>
                         </div>
                         <div className="grid grid-cols-3">
@@ -852,7 +570,7 @@ const New: NextPage<Props> = () => {
                         <div className="grid grid-cols-3">
                           <div className=" col-span-3 flex justify-between items-center">
                             <div>Total Order</div>
-                            <div>{displayMoney(values.designs.reduce((total, design) => total + (design.total as number), 0) + values.prints.reduce((total, print) => total + (print.total as number), 0) + values.finishings.reduce((total, finishing) => total + (finishing.total as number), 0) + values.others.reduce((total, other) => total + (other.total as number), 0))}</div>
+                            <div>{displayMoney(values.prints.reduce((total, print) => total + (print.total as number), 0) + values.others.reduce((total, other) => total + (other.total as number), 0))}</div>
                           </div>
                         </div>
                       </div>

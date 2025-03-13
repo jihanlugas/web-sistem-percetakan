@@ -19,6 +19,7 @@ const Header: React.FC<Props> = ({ sidebar, setSidebar }) => {
   const [profileBar, setProfileBar] = useState(false);
   // const { login, setLogin } = useContext(LoginContext);
   const [user, setUser] = useState(null);
+  const [company, setCompany] = useState(null);
 
 
 
@@ -67,6 +68,7 @@ const Header: React.FC<Props> = ({ sidebar, setSidebar }) => {
 
   useEffect(() => {
     setUser(loginUser.payload.user)
+    setCompany(loginUser.payload.company)
   }, [loginUser])
 
   return (
@@ -76,8 +78,18 @@ const Header: React.FC<Props> = ({ sidebar, setSidebar }) => {
           <button className="p-2 rounded-full duration-300 hover:bg-primary-600" onClick={() => setSidebar(!sidebar)}>
             <BsList className="" size={'1.2rem'} />
           </button>
+          {company?.photoUrl && (
+            <div className="text-2xl px-2">
+              <Image
+                src={company.photoUrl}
+                width={60}
+                height={60}
+                alt={'logo'}
+              />
+            </div>
+          )}
           <div className="text-2xl px-2">
-            <span className=''>{process.env.APP_NAME}</span>
+            <span className=''>{company ? company.name : process.env.APP_NAME}</span>
           </div>
         </div>
         {user && (

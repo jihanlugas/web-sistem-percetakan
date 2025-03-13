@@ -63,12 +63,12 @@ const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore
 
   const { mutate: mutateSpk, isPending: isPendingSpk } = useMutation({
     mutationKey: ['order', 'spk'],
-    mutationFn: (id: string) => Api.getpdf('/order/' + id + "/spk"),
+    mutationFn: (id: string) => Api.getpdfdisplay('/order/' + id + "/spk"),
   })
 
   const { mutate: mutateInvoice, isPending: isPendingInvoice } = useMutation({
     mutationKey: ['order', 'invoice'],
-    mutationFn: (id: string) => Api.getpdf('/order/' + id + "/invoice"),
+    mutationFn: (id: string) => Api.getpdfdisplay('/order/' + id + "/invoice"),
   })
 
   const generateSpk = async (id: string) => {
@@ -312,16 +312,8 @@ const Index: NextPage<Props> = () => {
               <Tooltip id={`tootltip-totalOrder-${row.original.id}`} clickable>
                 <div>
                   <div className="flex justify-between mb-1">
-                    <div className="mr-2">Total Design</div>
-                    <div className="ml-2 font-bold">{displayMoney(row.original.totalDesign as number)}</div>
-                  </div>
-                  <div className="flex justify-between mb-1">
                     <div className="mr-2">Total Print</div>
                     <div className="ml-2 font-bold">{displayMoney(row.original.totalPrint as number)}</div>
-                  </div>
-                  <div className="flex justify-between mb-1">
-                    <div className="mr-2">Total Finishing</div>
-                    <div className="ml-2 font-bold">{displayMoney(row.original.totalFinishing as number)}</div>
                   </div>
                   <div className="flex justify-between mb-1">
                     <div className="mr-2">Total Other</div>
