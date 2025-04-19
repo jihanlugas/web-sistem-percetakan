@@ -110,9 +110,9 @@ const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore
       </button>
       <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
         <div className="" role="none">
-          <button onClick={() => handleClickPhase(row.original.id)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+          {/* <button onClick={() => handleClickPhase(row.original.id)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
             {'Phase'}
-          </button>
+          </button> */}
           <button onClick={() => handleClickTransaction(row.original.id)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
             {'Transaction'}
           </button>
@@ -258,42 +258,42 @@ const Index: NextPage<Props> = () => {
         )
       },
     },
-    {
-      id: 'orderphase_name',
-      accessorKey: 'orderphaseName',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Phase"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <div className="w-full capitalize">
-            <span data-tooltip-id={`tootltip-orderphases-${row.original.id}`}>{getValue() as string}</span>
-            <Tooltip id={`tootltip-orderphases-${row.original.id}`} clickable>
-              <div className="flex">
-                {row.original.orderphases?.map((orderphase, key) => (
-                  <div key={key} className="flex items-center">
-                    {key !== 0 && (
-                      <div className="w-8 flex justify-center items-center">
-                        <FaLongArrowAltRight className="" size={"0.8rem"} />
-                      </div>
-                    )}
-                    <div className="p-1 mx-2 w-30">
-                      <div className="flex justify-center font-bold mb-2">{orderphase.name}</div>
-                      <div className="flex justify-center">{orderphase.createName}</div>
-                      <div className="flex justify-center text-xs">{displayDateTime(orderphase.createDt)}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Tooltip>
-          </div>
-        );
-      },
-    },
+    // {
+    //   id: 'orderphase_name',
+    //   accessorKey: 'orderphaseName',
+    //   header: () => {
+    //     return (
+    //       <div className='whitespace-nowrap'>
+    //         {"Phase"}
+    //       </div>
+    //     );
+    //   },
+    //   cell: ({ getValue, row }) => {
+    //     return (
+    //       <div className="w-full capitalize">
+    //         <span data-tooltip-id={`tootltip-orderphases-${row.original.id}`}>{getValue() as string}</span>
+    //         <Tooltip id={`tootltip-orderphases-${row.original.id}`} clickable>
+    //           <div className="flex">
+    //             {row.original.orderphases?.map((orderphase, key) => (
+    //               <div key={key} className="flex items-center">
+    //                 {key !== 0 && (
+    //                   <div className="w-8 flex justify-center items-center">
+    //                     <FaLongArrowAltRight className="" size={"0.8rem"} />
+    //                   </div>
+    //                 )}
+    //                 <div className="p-1 mx-2 w-30">
+    //                   <div className="flex justify-center font-bold mb-2">{orderphase.name}</div>
+    //                   <div className="flex justify-center">{orderphase.createName}</div>
+    //                   <div className="flex justify-center text-xs">{displayDateTime(orderphase.createDt)}</div>
+    //                 </div>
+    //               </div>
+    //             ))}
+    //           </div>
+    //         </Tooltip>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       id: 'total_order',
       accessorKey: 'totalOrder',
@@ -316,7 +316,7 @@ const Index: NextPage<Props> = () => {
                     <div className="ml-2 font-bold">{displayMoney(row.original.totalPrint as number)}</div>
                   </div>
                   <div className="flex justify-between mb-1">
-                    <div className="mr-2">Total Other</div>
+                    <div className="mr-2">Total Finishing</div>
                     <div className="ml-2 font-bold">{displayMoney(row.original.totalOther as number)}</div>
                   </div>
                   <hr className="mb-1" />

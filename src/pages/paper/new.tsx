@@ -95,10 +95,10 @@ const New: NextPage<Props> = () => {
                   <Form noValidate={true}>
                     <div className="mb-4 max-w-xl">
                       <TextField
-                        label={'Nama Paper'}
+                        label={'Nama Kertas'}
                         name={'name'}
                         type={'text'}
-                        placeholder={'Nama Paper'}
+                        placeholder={'Nama Kertas'}
                         required
                       />
                     </div>

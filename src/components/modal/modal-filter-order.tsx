@@ -145,7 +145,7 @@ const ModalFilterOrder: NextPage<Props> = ({ show, onClickOverlay, filter, setFi
                         placeholderValue={""}
                       />
                     </div>
-                    <div className="mb-4">
+                    {/* <div className="mb-4">
                       <DropdownField
                         label={"Phase"}
                         name={"phaseId"}
@@ -156,7 +156,7 @@ const ModalFilterOrder: NextPage<Props> = ({ show, onClickOverlay, filter, setFi
                         placeholderValue={""}
                         isLoading={isLoadingPhase}
                       />
-                    </div>
+                    </div> */}
                     <div className="mb-4 grid grid-cols-2 gap-2">
                       <TextFieldNumber
                         label={'Total Order Mulai Dari'}

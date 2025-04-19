@@ -50,7 +50,7 @@ const defaultMenu = [
     path: '/print',
   },
   {
-    name: 'Other',
+    name: 'Finishing',
     icon: 'BsMotherboard',
     path: '/other',
   },

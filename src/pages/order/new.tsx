@@ -287,7 +287,7 @@ const New: NextPage<Props> = () => {
                         placeholder={'Keterangan'}
                       />
                     </div>
-                    <div className="mb-4 max-w-xl">
+                    {/* <div className="mb-4 max-w-xl">
                       <DropdownField
                         label={"Phase"}
                         name={"orderphaseId"}
@@ -298,7 +298,7 @@ const New: NextPage<Props> = () => {
                         field={true}
                         required
                       />
-                    </div>
+                    </div> */}
                     <div className="mt-8 mb-8">
                       <FieldArray
                         name={'prints'}
@@ -445,11 +445,11 @@ const New: NextPage<Props> = () => {
                         render={(arrayHelpers) => (
                           <div className="mb-12">
                             <div className="text-xl flex justify-between items-center mb-2">
-                              <div>Other</div>
+                              <div>Finishing</div>
                               <button
                                 className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                                 type="button"
-                                title='Tambah Other'
+                                title='Tambah Finishing'
                                 onClick={() => toggleModalCreateOrderOther()}
                               >
                                 <BiPlus className='text-primary-500' size={'1.2rem'} />
@@ -468,7 +468,7 @@ const New: NextPage<Props> = () => {
                                     <div className="p-2 text-lg font-normal">Harga</div>
                                   </th>
                                   <th className="border-2 border-gray-400">
-                                    <div className="p-2 text-lg font-normal">Tota Other</div>
+                                    <div className="p-2 text-lg font-normal">Total Finishing</div>
                                   </th>
                                   <th className="border-2 border-gray-400 w-32">
                                     <div className="p-2 text-lg font-normal">Action</div>
@@ -532,7 +532,7 @@ const New: NextPage<Props> = () => {
                                     ))}
                                     <tr className="p-4 border-gray-400 border-b-2">
                                       <td colSpan={4} className="text-right font-bold">
-                                        <div className="p-2"><span className="mr-4">{"Total Other"}</span><span>{displayMoney(values.others.reduce((total, other) => total + (other.total as number), 0))}</span></div>
+                                        <div className="p-2"><span className="mr-4">{"Total Finishing"}</span><span>{displayMoney(values.others.reduce((total, other) => total + (other.total as number), 0))}</span></div>
                                       </td>
                                     </tr>
                                   </>
@@ -562,7 +562,7 @@ const New: NextPage<Props> = () => {
                         </div>
                         <div className="grid grid-cols-3">
                           <div className=" col-span-3 flex justify-between items-center">
-                            <div>Total Other</div>
+                            <div>Total Finishing</div>
                             <div>{displayMoney(values.others.reduce((total, other) => total + (other.total as number), 0))}</div>
                           </div>
                         </div>

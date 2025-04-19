@@ -435,7 +435,7 @@ const Index: NextPage<Props> = ({ id }) => {
                   <div className="col-span-4 whitespace-pre-wrap">{order?.customer?.description || '-'}</div>
                 </div>
               </div>
-              <hr className="mb-4" />
+              {/* <hr className="mb-4" />
               <div className="mb-4">
                 <div className="text-xl flex justify-between items-center mb-2">
                   <div>Phase</div>
@@ -468,7 +468,7 @@ const Index: NextPage<Props> = ({ id }) => {
                     })}
                   </div>
                 </div>
-              </div>
+              </div> */}
               <hr className="mb-4" />
               <div className="mb-4">
                 <div className="text-xl mb-4">Detail</div>
@@ -479,7 +479,7 @@ const Index: NextPage<Props> = ({ id }) => {
                       <button
                         className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                         type="button"
-                        title='Delete'
+                        title='New Print'
                         onClick={() => toogleModalEditOrderPrint()}
                       >
                         <BiPlus className='text-primary-500' size={'1.2rem'} />
@@ -619,11 +619,11 @@ const Index: NextPage<Props> = ({ id }) => {
                   </div>
                   <div>
                     <div className="text-xl flex justify-between items-center mb-2">
-                      <div>Other</div>
+                      <div>Finishing</div>
                       <button
                         className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                         type="button"
-                        title='Delete'
+                        title='New Finishing'
                         onClick={() => toogleModalEditOrderOther()}
                       >
                         <BiPlus className='text-primary-500' size={'1.2rem'} />
@@ -726,7 +726,7 @@ const Index: NextPage<Props> = ({ id }) => {
                       <button
                         className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                         type="button"
-                        title='Delete'
+                        title='New Transaction'
                         onClick={() => toogleModalEditOrderTransaction()}
                       >
                         <BiPlus className='text-primary-500' size={'1.2rem'} />
