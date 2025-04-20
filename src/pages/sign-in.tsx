@@ -26,8 +26,8 @@ const SingIn: NextPage<Props> = () => {
   const router = useRouter();
 
   const initFormikValue = {
-    username: 'admindemo',
-    passwd: '123456',
+    username: '',
+    passwd: '',
   };
 
   const { mutate, isPending } = useMutation({
