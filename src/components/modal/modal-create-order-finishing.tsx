@@ -1,6 +1,6 @@
 import { NextPage } from "next/types";
 import Modal from "@/components/modal/modal";
-import { CreateOrder, CreateOrderOther } from "@/types/order";
+import { CreateOrder, CreateOrderFinishing } from "@/types/order";
 import { Form, Formik, FormikProps } from "formik";
 import TextAreaField from "@/components/formik/text-area-field";
 import TextField from "@/components/formik/text-field";
@@ -8,16 +8,16 @@ import ButtonSubmit from "@/components/formik/button-submit";
 import * as Yup from 'yup';
 import { RefObject } from "react";
 import { IoClose } from "react-icons/io5";
-import { displayMoney } from "@/utils/formater";
 import TextFieldNumber from "../formik/text-field-number";
+import { displayMoney } from "@/utils/formater";
 
 
 type Props = {
   show: boolean;
-  onClickOverlay: (index?: number, initFormikValueOther?: CreateOrderOther) => void;
+  onClickOverlay: (index?: number, initFormikValueFinishing?: CreateOrderFinishing) => void;
   formRef: RefObject<FormikProps<CreateOrder>>
-  dataOtherIndex: number
-  initFormikValue: CreateOrderOther
+  dataFinishingIndex: number
+  initFormikValue: CreateOrderFinishing
 }
 
 const schema = Yup.object().shape({
@@ -27,16 +27,16 @@ const schema = Yup.object().shape({
   price: Yup.number().nullable().required('Required field'),
 });
 
-const ModalCreateOrderOther: NextPage<Props> = ({ show, onClickOverlay, formRef, dataOtherIndex, initFormikValue }) => {
+const ModalCreateOrderFinishing: NextPage<Props> = ({ show, onClickOverlay, formRef, dataFinishingIndex, initFormikValue }) => {
 
-  const handleSubmit = (values: CreateOrderOther) => {
+  const handleSubmit = (values: CreateOrderFinishing) => {
     values.qty = parseInt(values.qty as string)
     values.price = parseInt(values.price as string)
-    values.total = (values.qty * values.price) || 0
-    if (dataOtherIndex !== -1) {
-      formRef.current.setFieldValue('others', formRef.current.values.others.map((item, index) => index === dataOtherIndex ? values : item))
+    values.total = ( values.qty * values.price) || 0
+    if (dataFinishingIndex !== -1) {
+      formRef.current.setFieldValue('finishings', formRef.current.values.finishings.map((item, index) => index === dataFinishingIndex ? values : item))
     } else {
-      formRef.current.setFieldValue('others', [...formRef.current.values.others, values])
+      formRef.current.setFieldValue('finishings', [...formRef.current.values.finishings, values])
     }
     onClickOverlay()
   }
@@ -45,7 +45,7 @@ const ModalCreateOrderOther: NextPage<Props> = ({ show, onClickOverlay, formRef,
     <Modal show={show} onClickOverlay={onClickOverlay} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Create Other</div>
+          <div>Create Finishing</div>
           <button type="button" onClick={() => onClickOverlay()} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -62,10 +62,10 @@ const ModalCreateOrderOther: NextPage<Props> = ({ show, onClickOverlay, formRef,
                 <Form noValidate={true}>
                   <div className="mb-4">
                     <TextField
-                      label={'Nama Other'}
+                      label={'Nama Finishing'}
                       name={'name'}
                       type={'text'}
-                      placeholder={'Nama Other'}
+                      placeholder={'Nama Finishing'}
                       required
                     />
                   </div>
@@ -93,7 +93,7 @@ const ModalCreateOrderOther: NextPage<Props> = ({ show, onClickOverlay, formRef,
                     />
                   </div>
                   <div className="mb-4 flex justify-end font-bold">
-                    <div className="mr-4">Total Other</div>
+                    <div className="mr-4">Total Finishing</div>
                     <div>{displayMoney((parseInt(values.qty as string) * parseInt(values.price as string)) || 0)}</div>
                   </div>
                   <div className="mb-4">
@@ -111,4 +111,4 @@ const ModalCreateOrderOther: NextPage<Props> = ({ show, onClickOverlay, formRef,
   )
 }
 
-export default ModalCreateOrderOther;
+export default ModalCreateOrderFinishing;

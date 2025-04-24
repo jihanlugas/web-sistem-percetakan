@@ -43,7 +43,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
   const [order, setOrder] = useState<OrderView>(null)
   const [initFormikValue] = useState<AddTransaction>(defaultInitFormikValue)
 
-  const preloads = 'Company,Customer,Designs,Prints,Prints.Paper,Finishings,Others,Transactions'
+  const preloads = 'Company,Customer,Prints,Prints.Paper,Finishings,Transactions'
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['order', selectedId, preloads],
     queryFn: ({ queryKey }) => {
@@ -211,9 +211,9 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                       </table>
                     </div>
                   )}
-                  {order?.others && (
+                  {order?.finishings && (
                     <div>
-                      <div className="mb-2 text-lg">Other</div>
+                      <div className="mb-2 text-lg">Finishing</div>
                       <table className="w-full table-auto">
                         <thead className="">
                           <tr className="text-left border-2 border-gray-400">
@@ -232,43 +232,43 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                           </tr>
                         </thead>
                         <tbody>
-                          {order?.others?.length > 0 ? (
+                          {order?.finishings?.length > 0 ? (
                             <>
-                              {order?.others.map((other, index) => (
+                              {order?.finishings.map((finishing, index) => (
                                 <tr key={index} className="p-4 border-2 border-gray-400">
                                   <td className="border-2 border-gray-400 ">
                                     <div className="p-2">
-                                      <span data-tooltip-id={`tootltip-order-transaction-others-name-${other.id}`}>
-                                        {other.name}
+                                      <span data-tooltip-id={`tootltip-order-transaction-finishings-name-${finishing.id}`}>
+                                        {finishing.name}
                                       </span>
-                                      {other.description && (
-                                        <Tooltip id={`tootltip-order-transaction-others-name-${other.id}`}>
+                                      {finishing.description && (
+                                        <Tooltip id={`tootltip-order-transaction-finishings-name-${finishing.id}`}>
                                           <div className="font-bold">Description</div>
-                                          <div className="whitespace-pre-line">{other.description}</div>
+                                          <div className="whitespace-pre-line">{finishing.description}</div>
                                         </Tooltip>
                                       )}
                                     </div>
                                   </td>
                                   <td className="border-2 border-gray-400 text-right">
                                     <div className="p-2">
-                                      {displayNumber(other.qty as number)}
+                                      {displayNumber(finishing.qty as number)}
                                     </div>
                                   </td>
                                   <td className="border-2 border-gray-400 text-right">
                                     <div className="p-2">
-                                      {displayMoney(other.price as number)}
+                                      {displayMoney(finishing.price as number)}
                                     </div>
                                   </td>
                                   <td className="border-2 border-gray-400 text-right">
                                     <div className="p-2">
-                                      {displayMoney(other.total as number)}
+                                      {displayMoney(finishing.total as number)}
                                     </div>
                                   </td>
                                 </tr>
                               ))}
                               <tr className="p-4 border-gray-400">
                                 <td colSpan={5} className="text-right font-bold">
-                                  <div className="p-2"><span className="mr-4">{"Total Other"}</span><span>{displayMoney(order?.others.reduce((total, other) => total + (other.total as number), 0))}</span></div>
+                                  <div className="p-2"><span className="mr-4">{"Total Finishing"}</span><span>{displayMoney(order?.finishings.reduce((total, finishing) => total + (finishing.total as number), 0))}</span></div>
                                 </td>
                               </tr>
                             </>
@@ -295,13 +295,13 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                       <div>{displayMoney(order?.totalPrint)}</div>
                     </div>
                     <div className="flex justify-between items-center mb-2">
-                      <div>Other</div>
-                      <div>{displayMoney(order?.totalOther)}</div>
+                      <div>Finishing</div>
+                      <div>{displayMoney(order?.totalFinishing)}</div>
                     </div>
                     <hr className="mb-2" />
                     <div className="flex justify-between items-center mb-2">
                       <div>Total Order</div>
-                      <div>{displayMoney( order?.totalPrint + order?.totalOther)}</div>
+                      <div>{displayMoney(order?.totalPrint + order?.totalFinishing)}</div>
                     </div>
                     {order?.transactions?.length > 0 && (
                       <>

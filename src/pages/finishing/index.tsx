@@ -3,7 +3,7 @@ import MainAuth from "@/components/layout/main-auth";
 import ModalDeleteVerify from "@/components/modal/modal-delete-verify";
 import Table from "@/components/table/table";
 import { Api } from "@/lib/api";
-import { OtherView, PageOther } from "@/types/other";
+import { FinishingView, PageFinishing } from "@/types/finishing";
 import PageWithLayoutType from "@/types/layout";
 import { PageInfo } from "@/types/pagination";
 import { displayDateTime, displayMoney, displayNumber } from "@/utils/formater";
@@ -20,7 +20,7 @@ import { BiPlus } from "react-icons/bi";
 import { CgChevronDown } from "react-icons/cg";
 import { TbFilter, TbFilterFilled } from "react-icons/tb";
 import { Tooltip } from "react-tooltip";
-import ModalFilter from "@/components/modal/modal-filter-other";
+import ModalFilter from "@/components/modal/modal-filter-finishing";
 
 type Props = object
 
@@ -28,7 +28,7 @@ type PropsDropdownMore = {
   toggleModalDelete: (id: string, name: string) => void
 }
 
-const DropdownMore: NextPage<CellContext<OtherView, unknown> & PropsDropdownMore> = ({
+const DropdownMore: NextPage<CellContext<FinishingView, unknown> & PropsDropdownMore> = ({
   row,
   toggleModalDelete,
 }) => {
@@ -65,7 +65,7 @@ const DropdownMore: NextPage<CellContext<OtherView, unknown> & PropsDropdownMore
       </button>
       <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
         <div className="" role="none">
-          <Link href={{ pathname: '/other/[id]', query: { id: row.original.id } }}>
+          <Link href={{ pathname: '/finishing/[id]', query: { id: row.original.id } }}>
             <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'} title='Edit'>
               {'Detail'}
             </div>
@@ -81,17 +81,17 @@ const DropdownMore: NextPage<CellContext<OtherView, unknown> & PropsDropdownMore
 
 const Index: NextPage<Props> = () => {
 
-  const [other, setOther] = useState<OtherView[]>([]);
+  const [finishing, setFinishing] = useState<FinishingView[]>([]);
   const [showModalFilter, setShowModalFilter] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<string>('');
   const [deleteVerify, setDeleteVerify] = useState<string>('');
 
-  const [filter, setFilter] = useState<PageOther>({
+  const [filter, setFilter] = useState<PageFinishing>({
     name: '',
     description: '',
-    startTotalOther: '',
-    endTotalOther: '',
+    startTotalFinishing: '',
+    endTotalFinishing: '',
     startDt: '',
     endDt: '',
   })
@@ -103,20 +103,20 @@ const Index: NextPage<Props> = () => {
     page: 0,
   });
 
-  const [pageRequest, setPageRequest] = useState<PageOther>({
+  const [pageRequest, setPageRequest] = useState<PageFinishing>({
     limit: 10,
     page: 1,
     preloads: "Company,Order",
   });
 
-  const column: ColumnDef<OtherView>[] = [
+  const column: ColumnDef<FinishingView>[] = [
     {
       id: 'name',
       accessorKey: 'name',
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Nama Other"}
+            {"Nama Finishing"}
           </div>
         );
       },
@@ -202,7 +202,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Total Other"}
+            {"Total Finishing"}
           </div>
         );
       },
@@ -255,13 +255,13 @@ const Index: NextPage<Props> = () => {
   ]
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['other', pageRequest],
-    queryFn: ({ queryKey }) => Api.get('/other', queryKey[1] as object),
+    queryKey: ['finishing', pageRequest],
+    queryFn: ({ queryKey }) => Api.get('/finishing', queryKey[1] as object),
   });
 
   const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
-    mutationKey: ['other', 'delete', deleteId],
-    mutationFn: (id: string) => Api.delete('/other/' + id)
+    mutationKey: ['finishing', 'delete', deleteId],
+    mutationFn: (id: string) => Api.delete('/finishing/' + id)
   });
 
   const toggleModalFilter = () => {
@@ -294,7 +294,7 @@ const Index: NextPage<Props> = () => {
 
   useEffect(() => {
     if (data?.status) {
-      setOther(data.payload.list);
+      setFinishing(data.payload.list);
       setPageInfo({
         pageCount: data.payload.totalPage,
         pageSize: data.payload.dataPerPage,
@@ -316,7 +316,7 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Other'}</title>
+        <title>{process.env.APP_NAME + ' - Finishing'}</title>
       </Head>
       <ModalFilter
         show={showModalFilter}
@@ -339,7 +339,7 @@ const Index: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Other', path: '' },
+            { name: 'Finishing', path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -355,7 +355,7 @@ const Index: NextPage<Props> = () => {
                   </button>
                 </div>
                 <div className='ml-2'>
-                  <Link href={{ pathname: '/other/new' }}>
+                  <Link href={{ pathname: '/finishing/new' }}>
                     <div className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 shadow hover:scale-110'>
                       <BiPlus className='text-primary-500' size={'1.2rem'} />
                     </div>
@@ -366,7 +366,7 @@ const Index: NextPage<Props> = () => {
             <div className=''>
               <Table
                 columns={column}
-                data={other}
+                data={finishing}
                 setPageRequest={setPageRequest}
                 pageRequest={pageRequest}
                 pageInfo={pageInfo}

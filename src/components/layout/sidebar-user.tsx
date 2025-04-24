@@ -51,8 +51,8 @@ const defaultMenu = [
   },
   {
     name: 'Finishing',
-    icon: 'BsMotherboard',
-    path: '/other',
+    icon: 'LuBookCheck',
+    path: '/finishing',
   },
   {
     name: 'Transaction',

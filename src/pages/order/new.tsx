@@ -4,11 +4,11 @@ import TextAreaField from "@/components/formik/text-area-field";
 import TextField from "@/components/formik/text-field";
 import MainAuth from "@/components/layout/main-auth";
 import ModalCreateOrderPrint from "@/components/modal/modal-create-order-print";
-import ModalCreateOrderOther from "@/components/modal/modal-create-order-other";
+import ModalCreateOrderFinishing from "@/components/modal/modal-create-order-finishing";
 import { Api } from "@/lib/api";
 import { CustomerView, PageCustomer } from "@/types/customer";
 import PageWithLayoutType from "@/types/layout";
-import { CreateOrder, CreateOrderPrint, CreateOrderOther } from "@/types/order";
+import { CreateOrder, CreateOrderPrint, CreateOrderFinishing } from "@/types/order";
 import { displayMoney, displayNumber, displayBoolean } from "@/utils/formater";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Form, Formik, FormikHelpers, FieldArray, FormikProps, FormikValues } from "formik";
@@ -55,7 +55,7 @@ const defaultInitFormikValuePrint: CreateOrderPrint = {
   total: ''
 }
 
-const defaultInitFormikValueOther: CreateOrderOther = {
+const defaultInitFormikValueFinishing: CreateOrderFinishing = {
   name: '',
   description: '',
   qty: '',
@@ -72,7 +72,7 @@ const initFormikValue: CreateOrder = {
   newCustomer: '',
   newCustomerPhone: '',
   prints: [],
-  others: [],
+  finishings: [],
 }
 
 const New: NextPage<Props> = () => {
@@ -85,14 +85,13 @@ const New: NextPage<Props> = () => {
   const [papers, setPapers] = useState<PaperView[]>([]);
   const [phases, setPhases] = useState<PhaseView[]>([]);
 
-
   const [showModalCreateOrderPrint, setShowModalCreateOrderPrint] = useState<boolean>(false);
   const [initFormikValuePrint, setInitFormikValuePrint] = useState<CreateOrderPrint>(defaultInitFormikValuePrint);
   const [dataPrintIndex, setDataPrintIndex] = useState<number>(-1);
 
-  const [showModalCreateOrderOther, setShowModalCreateOrderOther] = useState<boolean>(false);
-  const [initFormikValueOther, setInitFormikValueOther] = useState<CreateOrderOther>(defaultInitFormikValueOther);
-  const [dataOtherIndex, setDataOtherIndex] = useState<number>(-1);
+  const [showModalCreateOrderFinishing, setShowModalCreateOrderFinishing] = useState<boolean>(false);
+  const [initFormikValueFinishing, setInitFormikValueFinishing] = useState<CreateOrderFinishing>(defaultInitFormikValueFinishing);
+  const [dataFinishingIndex, setDataFinishingIndex] = useState<number>(-1);
 
   const { data: loginUser } = useQuery({
     queryKey: ['init'],
@@ -145,10 +144,10 @@ const New: NextPage<Props> = () => {
     setShowModalCreateOrderPrint(!showModalCreateOrderPrint);
   }
 
-  const toggleModalCreateOrderOther = (index: number = -1, initFormikValueOther: CreateOrderOther = defaultInitFormikValueOther) => {
-    setDataOtherIndex(index);
-    setInitFormikValueOther(initFormikValueOther);
-    setShowModalCreateOrderOther(!showModalCreateOrderOther);
+  const toggleModalCreateOrderFinishing = (index: number = -1, initFormikValueFinishing: CreateOrderFinishing = defaultInitFormikValueFinishing) => {
+    setDataFinishingIndex(index);
+    setInitFormikValueFinishing(initFormikValueFinishing);
+    setShowModalCreateOrderFinishing(!showModalCreateOrderFinishing);
   }
 
   const handleChangeCustomerType = (setFieldValue, val: boolean) => {
@@ -196,12 +195,12 @@ const New: NextPage<Props> = () => {
         papers={papers}
         isLoadingPaper={isLoadingPaper}
       />
-      <ModalCreateOrderOther
-        show={showModalCreateOrderOther}
-        onClickOverlay={toggleModalCreateOrderOther}
+      <ModalCreateOrderFinishing
+        show={showModalCreateOrderFinishing}
+        onClickOverlay={toggleModalCreateOrderFinishing}
         formRef={formRef}
-        dataOtherIndex={dataOtherIndex}
-        initFormikValue={initFormikValueOther}
+        dataFinishingIndex={dataFinishingIndex}
+        initFormikValue={initFormikValueFinishing}
       />
       <div className='p-4'>
         <Breadcrumb
@@ -309,7 +308,7 @@ const New: NextPage<Props> = () => {
                               <button
                                 className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                                 type="button"
-                                title='Tambah Print'
+                                title='Delete'
                                 onClick={() => toggleModalCreateOrderPrint()}
                               >
                                 <BiPlus className='text-primary-500' size={'1.2rem'} />
@@ -441,7 +440,7 @@ const New: NextPage<Props> = () => {
                         )}
                       />
                       <FieldArray
-                        name={'others'}
+                        name={'finishings'}
                         render={(arrayHelpers) => (
                           <div className="mb-12">
                             <div className="text-xl flex justify-between items-center mb-2">
@@ -449,8 +448,8 @@ const New: NextPage<Props> = () => {
                               <button
                                 className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                                 type="button"
-                                title='Tambah Finishing'
-                                onClick={() => toggleModalCreateOrderOther()}
+                                title='Delete'
+                                onClick={() => toggleModalCreateOrderFinishing()}
                               >
                                 <BiPlus className='text-primary-500' size={'1.2rem'} />
                               </button>
@@ -476,17 +475,17 @@ const New: NextPage<Props> = () => {
                                 </tr>
                               </thead>
                               <tbody>
-                                {values.others.length > 0 ? (
+                                {values.finishings.length > 0 ? (
                                   <>
-                                    {values.others.map((item, index) => (
+                                    {values.finishings.map((item, index) => (
                                       <tr key={index} className="p-4 border-2 border-gray-400">
                                         <td className="border-2 border-gray-400 ">
                                           <div className="p-2">
-                                            <span data-tooltip-id={`tootltip-order-new-others-name-${index}`}>
+                                            <span data-tooltip-id={`tootltip-order-new-finishings-name-${index}`}>
                                               {item.name}
                                             </span>
                                             {item.description && (
-                                              <Tooltip id={`tootltip-order-new-others-name-${index}`}>
+                                              <Tooltip id={`tootltip-order-new-finishings-name-${index}`}>
                                                 <div className="font-bold">Description</div>
                                                 <div className="whitespace-pre-line">{item.description}</div>
                                               </Tooltip>
@@ -514,7 +513,7 @@ const New: NextPage<Props> = () => {
                                               type="button"
                                               className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                                               title='Edit'
-                                              onClick={() => toggleModalCreateOrderOther(index, item)}
+                                              onClick={() => toggleModalCreateOrderFinishing(index, item)}
                                             >
                                               <RiPencilLine className='text-amber-500' size={'1.2rem'} />
                                             </button>
@@ -532,7 +531,7 @@ const New: NextPage<Props> = () => {
                                     ))}
                                     <tr className="p-4 border-gray-400 border-b-2">
                                       <td colSpan={4} className="text-right font-bold">
-                                        <div className="p-2"><span className="mr-4">{"Total Finishing"}</span><span>{displayMoney(values.others.reduce((total, other) => total + (other.total as number), 0))}</span></div>
+                                        <div className="p-2"><span className="mr-4">{"Total Finishing"}</span><span>{displayMoney(values.finishings.reduce((total, finishing) => total + (finishing.total as number), 0))}</span></div>
                                       </td>
                                     </tr>
                                   </>
@@ -563,14 +562,14 @@ const New: NextPage<Props> = () => {
                         <div className="grid grid-cols-3">
                           <div className=" col-span-3 flex justify-between items-center">
                             <div>Total Finishing</div>
-                            <div>{displayMoney(values.others.reduce((total, other) => total + (other.total as number), 0))}</div>
+                            <div>{displayMoney(values.finishings.reduce((total, finishing) => total + (finishing.total as number), 0))}</div>
                           </div>
                         </div>
                         <hr className="my-4 border-2" />
                         <div className="grid grid-cols-3">
                           <div className=" col-span-3 flex justify-between items-center">
                             <div>Total Order</div>
-                            <div>{displayMoney(values.prints.reduce((total, print) => total + (print.total as number), 0) + values.others.reduce((total, other) => total + (other.total as number), 0))}</div>
+                            <div>{displayMoney(values.prints.reduce((total, print) => total + (print.total as number), 0) + values.finishings.reduce((total, finishing) => total + (finishing.total as number), 0))}</div>
                           </div>
                         </div>
                       </div>

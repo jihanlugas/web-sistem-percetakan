@@ -1,6 +1,6 @@
 import Modal from "@/components/modal/modal";
 import { Api } from "@/lib/api";
-import { UpdateOther } from "@/types/other";
+import { UpdateFinishing } from "@/types/finishing";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NextPage } from "next/types";
 import { useEffect, useState } from "react";
@@ -29,7 +29,7 @@ const schema = Yup.object().shape({
   price: Yup.number().nullable().required('Required field'),
 });
 
-const defaultInitFormikValue: UpdateOther = {
+const defaultInitFormikValue: UpdateFinishing = {
   name: '',
   description: '',
   qty: '',
@@ -37,27 +37,27 @@ const defaultInitFormikValue: UpdateOther = {
   total: '',
 }
 
-const ModalEditOther: NextPage<Props> = ({ show, onClickOverlay, id }) => {
+const ModalEditFinishing: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [selectedId, setSelectedId] = useState<string>('')
 
-  const [initFormikValue, setInitFormikValue] = useState<UpdateOther>(defaultInitFormikValue)
+  const [initFormikValue, setInitFormikValue] = useState<UpdateFinishing>(defaultInitFormikValue)
 
   const preloads = 'Company'
   const { data, isLoading } = useQuery({
-    queryKey: ['other', selectedId, preloads],
+    queryKey: ['finishing', selectedId, preloads],
     queryFn: ({ queryKey }) => {
       const [, selectedId] = queryKey;
-      return selectedId ? Api.get('/other/' + selectedId, { preloads }) : null
+      return selectedId ? Api.get('/finishing/' + selectedId, { preloads }) : null
     },
   })
 
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['other', 'update', selectedId],
-    mutationFn: (val: FormikValues) => Api.put('/other/' + selectedId, val),
+    mutationKey: ['finishing', 'update', selectedId],
+    mutationFn: (val: FormikValues) => Api.put('/finishing/' + selectedId, val),
   });
 
-  const handleSubmit = async (values: UpdateOther, formikHelpers: FormikHelpers<UpdateOther>) => {
+  const handleSubmit = async (values: UpdateFinishing, formikHelpers: FormikHelpers<UpdateFinishing>) => {
     values.qty = parseInt(values.qty as string)
     values.price = parseInt(values.price as string)
     values.total = (values.qty * values.price) || 0
@@ -105,7 +105,7 @@ const ModalEditOther: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     <Modal show={show} onClickOverlay={() => onClickOverlay('', true)} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Edit Other</div>
+          <div>Edit Finishing</div>
           <button type="button" onClick={() => onClickOverlay('', true)} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -132,40 +132,40 @@ const ModalEditOther: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
                       <div className="mb-4">
                         <TextField
-                          label={'Nama Other'}
+                          label={'Nama Finishing'}
                           name={'name'}
                           type={'text'}
-                          placeholder={'Nama Other'}
+                          placeholder={'Nama Finishing'}
                           required
                         />
                       </div>
-                    <div className="mb-4">
-                      <TextAreaField
-                        label={'Keterangan'}
-                        name={'description'}
-                        placeholder={'Keterangan'}
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <TextFieldNumber
-                        label={'Harga'}
-                        name={'price'}
-                        placeholder={'Harga'}
-                        required
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <TextFieldNumber
-                        label={'Qty'}
-                        name={'qty'}
-                        placeholder={'Qty'}
-                        required
-                      />
-                    </div>
-                    <div className="mb-4 flex justify-end font-bold">
-                      <div className="mr-4">Total Design</div>
-                      <div>{displayMoney((parseInt(values.qty as string) * parseInt(values.price as string)) || 0)}</div>
-                    </div>
+                      <div className="mb-4">
+                        <TextAreaField
+                          label={'Keterangan'}
+                          name={'description'}
+                          placeholder={'Keterangan'}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <TextFieldNumber
+                          label={'Harga'}
+                          name={'price'}
+                          placeholder={'Harga'}
+                          required
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <TextFieldNumber
+                          label={'Qty'}
+                          name={'qty'}
+                          placeholder={'Qty'}
+                          required
+                        />
+                      </div>
+                      <div className="mb-4 flex justify-end font-bold">
+                        <div className="mr-4">Total Finishing</div>
+                        <div>{displayMoney((parseInt(values.qty as string) * parseInt(values.price as string)) || 0)}</div>
+                      </div>
                       <div className="mb-4">
                         <ButtonSubmit
                           label={'Simpan'}
@@ -185,4 +185,4 @@ const ModalEditOther: NextPage<Props> = ({ show, onClickOverlay, id }) => {
   )
 }
 
-export default ModalEditOther;
+export default ModalEditFinishing;

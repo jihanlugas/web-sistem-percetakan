@@ -4,7 +4,7 @@ import TextAreaField from '@/components/formik/text-area-field';
 import TextField from '@/components/formik/text-field';
 import MainAuth from '@/components/layout/main-auth';
 import { Api } from '@/lib/api';
-import { CreateOther } from '@/types/other';
+import { CreateFinishing } from '@/types/finishing';
 import PageWithLayoutType from '@/types/layout';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
@@ -16,8 +16,8 @@ import notif from "@/utils/notif";
 import DropdownField from '@/components/formik/dropdown-field';
 import { OrderView, PageOrder } from '@/types/order';
 import { useEffect, useState } from 'react';
-import { displayMoney } from '@/utils/formater';
 import TextFieldNumber from '@/components/formik/text-field-number';
+import { displayMoney } from '@/utils/formater';
 
 
 type Props = object
@@ -34,7 +34,7 @@ const pageRequestOrder: PageOrder = {
   limit: -1,
 }
 
-const initFormikValue: CreateOther = {
+const initFormikValue: CreateFinishing = {
   companyId: '',
   orderId: '',
   name: '',
@@ -60,11 +60,11 @@ const New: NextPage<Props> = () => {
   });
 
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['other', 'create'],
-    mutationFn: (val: FormikValues) => Api.post('/other', val),
+    mutationKey: ['finishing', 'create'],
+    mutationFn: (val: FormikValues) => Api.post('/finishing', val),
   });
 
-  const handleSubmit = async (values: CreateOther, formikHelpers: FormikHelpers<CreateOther>) => {
+  const handleSubmit = async (values: CreateFinishing, formikHelpers: FormikHelpers<CreateFinishing>) => {
     values.companyId = loginUser?.payload?.company?.id
     values.qty = parseInt(values.qty as string)
     values.price = parseInt(values.price as string)
@@ -75,7 +75,7 @@ const New: NextPage<Props> = () => {
         if (status) {
           notif.success(message);
           // formikHelpers.resetForm();
-          router.push('/other')
+          router.push('/finishing')
         } else if (payload?.listError) {
           formikHelpers.setErrors(payload.listError);
         } else {
@@ -87,7 +87,9 @@ const New: NextPage<Props> = () => {
       }
     });
   }
-  
+
+
+
   useEffect(() => {
     if (dataOrder?.status) {
       setOrders(dataOrder.payload.list);
@@ -97,18 +99,18 @@ const New: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Buat Other'}</title>
+        <title>{process.env.APP_NAME + ' - Buat Finishing'}</title>
       </Head>
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Other', path: '/other' },
+            { name: 'Finishing', path: '/finishing' },
             { name: 'Buat', path: '' },
           ]}
         />
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>Buat Other</div>
+            <div className='text-xl'>Buat Finishing</div>
           </div>
           <div>
             <Formik
@@ -136,10 +138,10 @@ const New: NextPage<Props> = () => {
                     </div>
                     <div className="mb-4 max-w-xl">
                       <TextField
-                        label={'Nama Other'}
+                        label={'Nama Finishing'}
                         name={'name'}
                         type={'text'}
-                        placeholder={'Nama Other'}
+                        placeholder={'Nama Finishing'}
                         required
                       />
                     </div>
@@ -167,7 +169,7 @@ const New: NextPage<Props> = () => {
                       />
                     </div>
                     <div className="mb-4 max-w-xl flex justify-end font-bold">
-                      <div className="mr-4">Total Other</div>
+                      <div className="mr-4">Total Finishing</div>
                       <div>{displayMoney((parseInt(values.qty as string) * parseInt(values.price as string)) || 0)}</div>
                     </div>
                     <div className="mb-8 max-w-xl">
@@ -177,9 +179,9 @@ const New: NextPage<Props> = () => {
                         loading={isPending}
                       />
                     </div>
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                    <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                       {JSON.stringify(values, null, 4)}
-                    </div> */}
+                    </div>
                     {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                       {JSON.stringify(errors, null, 4)}
                     </div> */}

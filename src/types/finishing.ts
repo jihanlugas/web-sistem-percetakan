@@ -2,7 +2,7 @@ import { CompanyView } from "@/types/company";
 import { OrderView } from "@/types/order";
 import { Paging } from "./pagination";
 
-export declare interface OtherView {
+export declare interface FinishingView {
   id: string;
   companyId: string;
   orderId: string;
@@ -24,7 +24,7 @@ export declare interface OtherView {
   order?: OrderView;
 }
 
-export declare interface PageOther extends Paging {
+export declare interface PageFinishing extends Paging {
   companyId?: string;
   orderId?: string;
   name?: string;
@@ -33,13 +33,13 @@ export declare interface PageOther extends Paging {
   orderName?: string;
   createName?: string;
   preloads?: string;
-  startTotalOther?: string | number;
-  endTotalOther?: string | number;
+  startTotalFinishing?: string | number;
+  endTotalFinishing?: string | number;
   startDt?: string | DateConstructor;
   endDt?: string | DateConstructor;
-}
+} 
 
-export declare interface CreateOther {
+export declare interface CreateFinishing {
   companyId: string;
   orderId: string;
   name: string;
@@ -49,7 +49,7 @@ export declare interface CreateOther {
   total: number | string;
 }
 
-export declare interface UpdateOther {
+export declare interface UpdateFinishing {
   name: string;
   description: string;
   qty: number | string;

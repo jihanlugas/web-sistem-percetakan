@@ -63,12 +63,12 @@ const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore
 
   const { mutate: mutateSpk, isPending: isPendingSpk } = useMutation({
     mutationKey: ['order', 'spk'],
-    mutationFn: (id: string) => Api.getpdfdisplay('/order/' + id + "/spk"),
+    mutationFn: (id: string) => Api.getpdf('/order/' + id + "/spk"),
   })
 
   const { mutate: mutateInvoice, isPending: isPendingInvoice } = useMutation({
     mutationKey: ['order', 'invoice'],
-    mutationFn: (id: string) => Api.getpdfdisplay('/order/' + id + "/invoice"),
+    mutationFn: (id: string) => Api.getpdf('/order/' + id + "/invoice"),
   })
 
   const generateSpk = async (id: string) => {
@@ -317,7 +317,7 @@ const Index: NextPage<Props> = () => {
                   </div>
                   <div className="flex justify-between mb-1">
                     <div className="mr-2">Total Finishing</div>
-                    <div className="ml-2 font-bold">{displayMoney(row.original.totalOther as number)}</div>
+                    <div className="ml-2 font-bold">{displayMoney(row.original.totalFinishing as number)}</div>
                   </div>
                   <hr className="mb-1" />
                   <div className="flex justify-between mb-1">

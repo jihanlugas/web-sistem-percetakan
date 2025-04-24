@@ -3,7 +3,7 @@ import MainAuth from "@/components/layout/main-auth";
 import ModalDelete from "@/components/modal/modal-delete";
 import ModalEditOrder from "@/components/modal/modal-edit-order";
 import ModalOrderPhase from "@/components/modal/modal-order-phase";
-import ModalEditOrderOther from "@/components/modal/modal-edit-order-other";
+import ModalEditOrderFinishing from "@/components/modal/modal-edit-order-finishing";
 import ModalEditOrderTransaction from "@/components/modal/modal-edit-order-transaction";
 import ModalEditOrderPrint from "@/components/modal/modal-edit-order-print";
 import { Api } from "@/lib/api";
@@ -39,19 +39,15 @@ const Index: NextPage<Props> = ({ id }) => {
   const [showModalEditOrder, setShowModalEditOrder] = useState<boolean>(false);
   const [showModalOrderPhase, setShowModalOrderPhase] = useState<boolean>(false);
 
-  const [showModalEditOrderDesign, setShowModalEditOrderDesign] = useState<boolean>(false);
   const [showModalEditOrderPrint, setShowModalEditOrderPrint] = useState<boolean>(false);
   const [showModalEditOrderFinishing, setShowModalEditOrderFinishing] = useState<boolean>(false);
-  const [showModalEditOrderOther, setShowModalEditOrderOther] = useState<boolean>(false);
   const [showModalEditOrderTransaction, setShowModalEditOrderTransaction] = useState<boolean>(false);
 
-  const [showModalDeleteDesign, setShowModalDeleteDesign] = useState<boolean>(false);
   const [showModalDeletePrint, setShowModalDeletePrint] = useState<boolean>(false);
   const [showModalDeleteFinishing, setShowModalDeleteFinishing] = useState<boolean>(false);
-  const [showModalDeleteOther, setShowModalDeleteOther] = useState<boolean>(false);
   const [showModalDeleteTransaction, setShowModalDeleteTransaction] = useState<boolean>(false);
 
-  const preloads = 'Customer,Orderphases,Transactions,Designs,Prints,Prints.Paper,Finishings,Others'
+  const preloads = 'Customer,Orderphases,Transactions,Prints,Prints.Paper,Finishings'
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['order', id, preloads],
     queryFn: ({ queryKey }) => {
@@ -60,11 +56,6 @@ const Index: NextPage<Props> = ({ id }) => {
     },
   })
 
-  const { mutate: mutateDeleteDesign, isPending: isPendingDeleteDesign } = useMutation({
-    mutationKey: ['design', 'delete', deleteId],
-    mutationFn: (id: string) => Api.delete('/design/' + id)
-  });
-
   const { mutate: mutateDeletePrint, isPending: isPendingDeletePrint } = useMutation({
     mutationKey: ['print', 'delete', deleteId],
     mutationFn: (id: string) => Api.delete('/print/' + id)
@@ -72,17 +63,12 @@ const Index: NextPage<Props> = ({ id }) => {
 
   const { mutate: mutateSpk, isPending: isPendingSpk } = useMutation({
     mutationKey: ['print', 'spk'],
-    mutationFn: (id: string) => Api.getpdfdisplay('/print/' + id + "/spk"),
+    mutationFn: (id: string) => Api.getpdf('/print/' + id + "/spk"),
   })
 
   const { mutate: mutateDeleteFinishing, isPending: isPendingDeleteFinishing } = useMutation({
     mutationKey: ['finishing', 'delete', deleteId],
     mutationFn: (id: string) => Api.delete('/finishing/' + id)
-  });
-
-  const { mutate: mutateDeleteOther, isPending: isPendingDeleteOther } = useMutation({
-    mutationKey: ['other', 'delete', deleteId],
-    mutationFn: (id: string) => Api.delete('/other/' + id)
   });
 
   const { mutate: mutateDeleteTransaction, isPending: isPendingDeleteTransaction } = useMutation({
@@ -114,14 +100,6 @@ const Index: NextPage<Props> = ({ id }) => {
     setShowModalOrderPhase(!showModalOrderPhase);
   };
 
-  const toogleModalEditOrderDesign = (id = '', refresh = false) => {
-    if (refresh) {
-      refetch()
-    }
-    setSelectedId(id)
-    setShowModalEditOrderDesign(!showModalEditOrderDesign)
-  }
-
   const toogleModalEditOrderPrint = (id = '', refresh = false) => {
     if (refresh) {
       refetch()
@@ -138,14 +116,6 @@ const Index: NextPage<Props> = ({ id }) => {
     setShowModalEditOrderFinishing(!showModalEditOrderFinishing)
   }
 
-  const toogleModalEditOrderOther = (id = '', refresh = false) => {
-    if (refresh) {
-      refetch()
-    }
-    setSelectedId(id)
-    setShowModalEditOrderOther(!showModalEditOrderOther)
-  }
-
   const toogleModalEditOrderTransaction = (id = '', refresh = false) => {
     if (refresh) {
       refetch()
@@ -153,11 +123,6 @@ const Index: NextPage<Props> = ({ id }) => {
     setSelectedId(id)
     setShowModalEditOrderTransaction(!showModalEditOrderTransaction)
   }
-
-  const toggleModalDeleteDesign = (id = '') => {
-    setDeleteId(id);
-    setShowModalDeleteDesign(!showModalDeleteDesign);
-  };
 
   const toggleModalDeletePrint = (id = '') => {
     setDeleteId(id);
@@ -169,32 +134,9 @@ const Index: NextPage<Props> = ({ id }) => {
     setShowModalDeleteFinishing(!showModalDeleteFinishing);
   };
 
-  const toggleModalDeleteOther = (id = '') => {
-    setDeleteId(id);
-    setShowModalDeleteOther(!showModalDeleteOther);
-  };
-
   const toggleModalDeleteTransaction = (id = '') => {
     setDeleteId(id);
     setShowModalDeleteTransaction(!showModalDeleteTransaction);
-  };
-
-  const handleDeleteDesign = () => {
-    mutateDeleteDesign(deleteId, {
-      onSuccess: ({ status, message }) => {
-        if (status) {
-          notif.success(message);
-          setDeleteId('');
-          toggleModalDeleteDesign();
-          refetch();
-        } else {
-          notif.error(message);
-        }
-      },
-      onError: () => {
-        notif.error('Please cek you connection');
-      },
-    });
   };
 
   const handleDeletePrint = () => {
@@ -222,24 +164,6 @@ const Index: NextPage<Props> = ({ id }) => {
           notif.success(message);
           setDeleteId('');
           toggleModalDeleteFinishing();
-          refetch();
-        } else {
-          notif.error(message);
-        }
-      },
-      onError: () => {
-        notif.error('Please cek you connection');
-      },
-    });
-  };
-
-  const handleDeleteOther = () => {
-    mutateDeleteOther(deleteId, {
-      onSuccess: ({ status, message }) => {
-        if (status) {
-          notif.success(message);
-          setDeleteId('');
-          toggleModalDeleteOther();
           refetch();
         } else {
           notif.error(message);
@@ -298,9 +222,9 @@ const Index: NextPage<Props> = ({ id }) => {
         id={selectedId}
         order={order}
       />
-      <ModalEditOrderOther
-        show={showModalEditOrderOther}
-        onClickOverlay={toogleModalEditOrderOther}
+      <ModalEditOrderFinishing
+        show={showModalEditOrderFinishing}
+        onClickOverlay={toogleModalEditOrderFinishing}
         id={selectedId}
         order={order}
       />
@@ -310,17 +234,6 @@ const Index: NextPage<Props> = ({ id }) => {
         id={selectedId}
         order={order}
       />
-      <ModalDelete
-        show={showModalDeleteDesign}
-        onClickOverlay={toggleModalDeleteDesign}
-        onDelete={handleDeleteDesign}
-        isLoading={isPendingDeleteDesign}
-      >
-        <div>
-          <div className='mb-4'>Are you sure ?</div>
-          <div className='text-sm mb-4 text-gray-700'>Data related to this will also be deleted</div>
-        </div>
-      </ModalDelete>
       <ModalDelete
         show={showModalDeletePrint}
         onClickOverlay={toggleModalDeletePrint}
@@ -337,17 +250,6 @@ const Index: NextPage<Props> = ({ id }) => {
         onClickOverlay={toggleModalDeleteFinishing}
         onDelete={handleDeleteFinishing}
         isLoading={isPendingDeleteFinishing}
-      >
-        <div>
-          <div className='mb-4'>Are you sure ?</div>
-          <div className='text-sm mb-4 text-gray-700'>Data related to this will also be deleted</div>
-        </div>
-      </ModalDelete>
-      <ModalDelete
-        show={showModalDeleteOther}
-        onClickOverlay={toggleModalDeleteOther}
-        onDelete={handleDeleteOther}
-        isLoading={isPendingDeleteOther}
       >
         <div>
           <div className='mb-4'>Are you sure ?</div>
@@ -400,13 +302,13 @@ const Index: NextPage<Props> = ({ id }) => {
                   <div className="col-span-4 whitespace-pre-wrap">{order?.description || '-'}</div>
                   <div className="text-gray-600">{'Total Print'}</div>
                   <div className="col-span-4">{displayMoney(order?.totalPrint)}</div>
-                  <div className="text-gray-600">{'Total Other'}</div>
-                  <div className="col-span-4">{displayMoney(order?.totalOther)}</div>
+                  <div className="text-gray-600">{'Total Finishing'}</div>
+                  <div className="col-span-4">{displayMoney(order?.totalFinishing)}</div>
                   <div className="text-gray-600 font-bold">{'Total Order'}</div>
                   <div className="col-span-4 font-bold">{displayMoney(order?.totalOrder)}</div>
-                  <div className="text-gray-600 font-bold">{'Total Pembayaran'}</div>
+                  <div className="text-gray-600 font-bold">{'Total Transaction'}</div>
                   <div className="col-span-4 text-green-500 font-bold">{displayMoney(order?.totalTransaction)}</div>
-                  <div className="text-gray-600 font-bold">{'Sisa Pembayaran'}</div>
+                  <div className="text-gray-600 font-bold">{'Outstanding'}</div>
                   <div className="col-span-4 text-rose-500 font-bold">{displayMoney(order?.outstanding)}</div>
                   <div className="text-gray-600">{'Transaction Status'}</div>
                   {order?.outstanding > 0 ? (
@@ -623,8 +525,8 @@ const Index: NextPage<Props> = ({ id }) => {
                       <button
                         className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                         type="button"
-                        title='New Finishing'
-                        onClick={() => toogleModalEditOrderOther()}
+                        title='Delete'
+                        onClick={() => toogleModalEditOrderFinishing()}
                       >
                         <BiPlus className='text-primary-500' size={'1.2rem'} />
                       </button>
@@ -650,36 +552,36 @@ const Index: NextPage<Props> = ({ id }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {order?.others?.length > 0 ? (
+                        {order?.finishings?.length > 0 ? (
                           <>
-                            {order?.others.map((other, index) => (
+                            {order?.finishings.map((finishing, index) => (
                               <tr key={index} className="p-4 border-2 border-gray-400">
                                 <td className="border-2 border-gray-400 ">
                                   <div className="p-2">
-                                    <span data-tooltip-id={`tootltip-order-detail-transaction-others-name-${other.id}`}>
-                                      {other.name}
+                                    <span data-tooltip-id={`tootltip-order-detail-transaction-finishings-name-${finishing.id}`}>
+                                      {finishing.name}
                                     </span>
-                                    {other.description && (
-                                      <Tooltip id={`tootltip-order-detail-transaction-others-name-${other.id}`}>
+                                    {finishing.description && (
+                                      <Tooltip id={`tootltip-order-detail-transaction-finishings-name-${finishing.id}`}>
                                         <div className="font-bold">Description</div>
-                                        <div className="whitespace-pre-line">{other.description}</div>
+                                        <div className="whitespace-pre-line">{finishing.description}</div>
                                       </Tooltip>
                                     )}
                                   </div>
                                 </td>
                                 <td className="border-2 border-gray-400 text-right">
                                   <div className="p-2">
-                                    {displayNumber(other.qty as number)}
+                                    {displayNumber(finishing.qty as number)}
                                   </div>
                                 </td>
                                 <td className="border-2 border-gray-400 text-right">
                                   <div className="p-2">
-                                    {displayMoney(other.price as number)}
+                                    {displayMoney(finishing.price as number)}
                                   </div>
                                 </td>
                                 <td className="border-2 border-gray-400 text-right">
                                   <div className="p-2">
-                                    {displayMoney(other.total as number)}
+                                    {displayMoney(finishing.total as number)}
                                   </div>
                                 </td>
                                 <td className="border-2 border-gray-400 text-center">
@@ -688,7 +590,7 @@ const Index: NextPage<Props> = ({ id }) => {
                                       className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                                       type="button"
                                       title='Edit'
-                                      onClick={() => toogleModalEditOrderOther(other.id)}
+                                      onClick={() => toogleModalEditOrderFinishing(finishing.id)}
                                     >
                                       <RiPencilLine className='text-amber-500' size={'1.2rem'} />
                                     </button>
@@ -696,7 +598,7 @@ const Index: NextPage<Props> = ({ id }) => {
                                       className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                                       type="button"
                                       title='Delete'
-                                      onClick={() => toggleModalDeleteOther(other.id)}
+                                      onClick={() => toggleModalDeleteFinishing(finishing.id)}
                                     >
                                       <VscTrash className='text-rose-500' size={'1.2rem'} />
                                     </button>
@@ -706,7 +608,7 @@ const Index: NextPage<Props> = ({ id }) => {
                             ))}
                             <tr className="p-4 border-gray-400">
                               <td colSpan={4} className="text-right font-bold">
-                                <div className="p-2"><span className="mr-4">{"Total Other"}</span><span>{displayMoney(order?.others.reduce((total, other) => total + (other.total as number), 0))}</span></div>
+                                <div className="p-2"><span className="mr-4">{"Total Finishing"}</span><span>{displayMoney(order?.finishings.reduce((total, finishing) => total + (finishing.total as number), 0))}</span></div>
                               </td>
                             </tr>
                           </>

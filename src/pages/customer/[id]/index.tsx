@@ -65,7 +65,7 @@ const Index: NextPage<Props> = ({ id }) => {
         <Breadcrumb
           links={[
             { name: 'Customer', path: '/customer' },
-            { name: customer.name || id, path: '' },
+            { name: customer?.name || id, path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -84,30 +84,30 @@ const Index: NextPage<Props> = ({ id }) => {
                     className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                     type="button"
                     title='Edit Customer'
-                    onClick={() => toggleModalEditCustomer(customer.id)}
+                    onClick={() => toggleModalEditCustomer(customer?.id)}
                   >
                     <RiPencilLine className='text-amber-500' size={'1.2rem'} />
                   </button>
                 </div>
                 <div className="grid grid-cols-5 gap-4">
                   <div className="text-gray-600">{'Name'}</div>
-                  <div className="col-span-4">{customer.name}</div>
+                  <div className="col-span-4">{customer?.name}</div>
                   <div className="text-gray-600">{'Email'}</div>
-                  <div className="col-span-4">{customer.email}</div>
+                  <div className="col-span-4">{customer?.email}</div>
                   <div className="text-gray-600">{'No. Handphone'}</div>
-                  <div className="col-span-4">{displayPhoneNumber(customer.phoneNumber)}</div>
+                  <div className="col-span-4">{displayPhoneNumber(customer?.phoneNumber)}</div>
                   <div className="text-gray-600">{'Keterangan'}</div>
-                  <div className="col-span-4 whitespace-pre-wrap">{customer.description || '-'}</div>
+                  <div className="col-span-4 whitespace-pre-wrap">{customer?.description || '-'}</div>
                   <div className="text-gray-600">{'Alamat'}</div>
-                  <div className="col-span-4 whitespace-pre-wrap">{customer.address || '-'}</div>
+                  <div className="col-span-4 whitespace-pre-wrap">{customer?.address || '-'}</div>
                   <div className="text-gray-600">{'Create By'}</div>
-                  <div className="col-span-4">{customer.createName}</div>
+                  <div className="col-span-4">{customer?.createName}</div>
                   <div className="text-gray-600">{'Create Date'}</div>
-                  <div className="col-span-4">{displayDateTime(customer.createDt)}</div>
+                  <div className="col-span-4">{displayDateTime(customer?.createDt)}</div>
                   <div className="text-gray-600">{'Last Update By'}</div>
-                  <div className="col-span-4">{customer.updateName}</div>
+                  <div className="col-span-4">{customer?.updateName}</div>
                   <div className="text-gray-600">{'Last Update Date'}</div>
-                  <div className="col-span-4">{displayDateTime(customer.updateDt)}</div>
+                  <div className="col-span-4">{displayDateTime(customer?.updateDt)}</div>
                 </div>
               </div>
               {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">

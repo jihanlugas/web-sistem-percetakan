@@ -7,7 +7,7 @@ import ButtonSubmit from "@/components/formik/button-submit";
 import * as Yup from 'yup';
 import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { CreateOther, UpdateOther } from "@/types/other";
+import { CreateFinishing, UpdateFinishing } from "@/types/finishing";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Api } from "@/lib/api";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -25,12 +25,12 @@ type Props = {
 
 const schema = Yup.object().shape({
   name: Yup.string().required('Required field'),
-  description: Yup.string().max(200, 'Must be 200 characters or less'),
-  qty: Yup.number().nullable().required('Required field'),
-  price: Yup.number().nullable().required('Required field'),
+    description: Yup.string().max(200, 'Must be 200 characters or less'),
+    qty: Yup.number().nullable().required('Required field'),
+    price: Yup.number().nullable().required('Required field'),
 });
 
-const defaultInitFormikValue: CreateOther = {
+const defaultInitFormikValue: CreateFinishing = {
   companyId: '',
   orderId: '',
   name: '',
@@ -40,36 +40,36 @@ const defaultInitFormikValue: CreateOther = {
   total: '',
 }
 
-const ModalEditOrderOther: NextPage<Props> = ({ show, onClickOverlay, id, order }) => {
+const ModalEditOrderFinishing: NextPage<Props> = ({ show, onClickOverlay, id, order }) => {
 
   const [selectedId, setSelectedId] = useState<string>('');
   const [initFormikValue, setInitFormikValue] = useState(defaultInitFormikValue)
 
   const preloads = 'Company'
   const { data, isLoading } = useQuery({
-    queryKey: ['other', selectedId, preloads],
+    queryKey: ['finishing', selectedId, preloads],
     queryFn: ({ queryKey }) => {
       const [, selectedId] = queryKey;
-      return selectedId ? Api.get('/other/' + selectedId, { preloads }) : null
+      return selectedId ? Api.get('/finishing/' + selectedId, { preloads }) : null
     },
   })
 
   const { mutate: mutateSubmit, isPending: isPendingSubmit } = useMutation({
-    mutationKey: ['other', 'create'],
-    mutationFn: (val: FormikValues) => Api.post('/other', val),
+    mutationKey: ['finishing', 'create'],
+    mutationFn: (val: FormikValues) => Api.post('/finishing', val),
   });
 
   const { mutate: mutateUpdate, isPending: isPendingUpdate } = useMutation({
-    mutationKey: ['other', 'update', selectedId],
-    mutationFn: (val: FormikValues) => Api.put('/other/' + selectedId, val),
+    mutationKey: ['finishing', 'update', selectedId],
+    mutationFn: (val: FormikValues) => Api.put('/finishing/' + selectedId, val),
   });
 
-  const handleSubmit = (values: CreateOther | UpdateOther, formikHelpers: FormikHelpers<CreateOther | UpdateOther>) => {
+  const handleSubmit = (values: CreateFinishing | UpdateFinishing, formikHelpers: FormikHelpers<CreateFinishing | UpdateFinishing>) => {
     values.qty = parseInt(values.qty as string)
     values.price = parseInt(values.price as string)
     values.total = (values.qty * values.price) || 0
     if (selectedId) {
-      const newData: UpdateOther = {
+      const newData: UpdateFinishing = {
         name: values.name,
         description: values.description,
         qty: values.qty,
@@ -93,7 +93,7 @@ const ModalEditOrderOther: NextPage<Props> = ({ show, onClickOverlay, id, order 
         }
       });
     } else {
-      const newData: CreateOther = {
+      const newData: CreateFinishing = {
         companyId: order.companyId,
         orderId: order.id,
         name: values.name,
@@ -120,6 +120,8 @@ const ModalEditOrderOther: NextPage<Props> = ({ show, onClickOverlay, id, order 
       });
     }
   }
+
+
 
   useEffect(() => {
     if (show) {
@@ -150,7 +152,7 @@ const ModalEditOrderOther: NextPage<Props> = ({ show, onClickOverlay, id, order 
     <Modal show={show} onClickOverlay={onClickOverlay} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>{selectedId ? 'Edit Other' : 'Create Other'}</div>
+          <div>{selectedId ? 'Edit Finishing' : 'Create Finishing'}</div>
           <button type="button" onClick={() => onClickOverlay('')} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -175,14 +177,13 @@ const ModalEditOrderOther: NextPage<Props> = ({ show, onClickOverlay, id, order 
                   <Form noValidate={true}>
                     <div className="mb-4">
                       <TextField
-                        label={'Nama Other'}
+                        label={'Nama Finishing'}
                         name={'name'}
                         type={'text'}
-                        placeholder={'Nama Other'}
+                        placeholder={'Nama Finishing'}
                         required
                       />
                     </div>
-
                     <div className="mb-4">
                       <TextAreaField
                         label={'Keterangan'}
@@ -207,7 +208,7 @@ const ModalEditOrderOther: NextPage<Props> = ({ show, onClickOverlay, id, order 
                       />
                     </div>
                     <div className="mb-4 flex justify-end font-bold">
-                      <div className="mr-4">Total Other</div>
+                      <div className="mr-4">Total Finishing</div>
                       <div>{displayMoney((parseInt(values.qty as string) * parseInt(values.price as string)) || 0)}</div>
                     </div>
                     <div className="mb-4">
@@ -217,12 +218,6 @@ const ModalEditOrderOther: NextPage<Props> = ({ show, onClickOverlay, id, order 
                         loading={isPendingSubmit || isPendingUpdate}
                       />
                     </div>
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                    {JSON.stringify(values, null, 4)}
-                  </div>
-                  <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                    {JSON.stringify(errors, null, 4)}
-                  </div> */}
                   </Form>
                 )
               }}
@@ -234,4 +229,4 @@ const ModalEditOrderOther: NextPage<Props> = ({ show, onClickOverlay, id, order 
   )
 }
 
-export default ModalEditOrderOther;
+export default ModalEditOrderFinishing;

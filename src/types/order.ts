@@ -3,7 +3,7 @@ import { CustomerView } from "@/types/customer";
 import { Paging } from "@/types/pagination";
 import { OrderphaseView } from "@/types/orderphase";
 import { PrintView } from "@/types/print";
-import { OtherView } from "@/types/other";
+import { FinishingView } from "@/types/finishing";
 import { TransactionView } from "./transaction";
 
 
@@ -21,10 +21,8 @@ export declare interface OrderView {
   orderphaseId: string;
   phaseId: string;
   orderphaseName: string;
-  totalDesign: number;
   totalPrint: number;
   totalFinishing: number;
-  totalOther: number;
   totalTransaction: number;
   totalOrder: number;
   outstanding: number;
@@ -35,7 +33,7 @@ export declare interface OrderView {
   company?: CompanyView;
   customer?: CustomerView;
   prints?: PrintView[];
-  others?: OtherView[];
+  finishings?: FinishingView[];
   orderphases?: OrderphaseView[];
   transactions?: TransactionView[]
 }
@@ -65,7 +63,7 @@ export declare interface CreateOrder {
   newCustomer: string;
   newCustomerPhone: string;
   prints: CreateOrderPrint[];
-  others: CreateOrderOther[];
+  finishings: CreateOrderFinishing[];
 }
 
 export declare interface CreateOrderPrint {
@@ -80,12 +78,13 @@ export declare interface CreateOrderPrint {
 
 }
 
-export declare interface CreateOrderOther {
+export declare interface CreateOrderFinishing {
   name: string;
   description: string;
   qty: number | string;
   price: number | string;
   total: number | string;
+
 }
 
 export declare interface AddPhase {

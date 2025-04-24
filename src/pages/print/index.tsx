@@ -55,7 +55,7 @@ const DropdownMore: NextPage<CellContext<PrintView, unknown> & PropsDropdownMore
 
   const { mutate: mutateSpk, isPending: isPendingSpk } = useMutation({
     mutationKey: ['print', 'spk'],
-    mutationFn: (id: string) => Api.getpdfdisplay('/print/' + id + "/spk"),
+    mutationFn: (id: string) => Api.getpdf('/print/' + id + "/spk"),
   })
 
   const generateSpk = async (id: string) => {
