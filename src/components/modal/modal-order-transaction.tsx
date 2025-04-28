@@ -16,6 +16,7 @@ import TextAreaField from "@/components/formik/text-area-field";
 import CheckboxField from "@/components/formik/checkbox-field";
 import { Tooltip } from "react-tooltip";
 import TextFieldNumber from "../formik/text-field-number";
+import { FiCopy, FiCheck } from 'react-icons/fi';
 
 
 type Props = {
@@ -39,6 +40,7 @@ const defaultInitFormikValue: AddTransaction = {
 const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [selectedId, setSelectedId] = useState<string>('')
+  const [copied, setCopied] = useState<boolean>(false);
 
   const [order, setOrder] = useState<OrderView>(null)
   const [initFormikValue] = useState<AddTransaction>(defaultInitFormikValue)
@@ -92,6 +94,20 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
       }
     });
   }
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+
+      // Reset ke normal setelah 5 detik
+      setTimeout(() => {
+        setCopied(false);
+      }, 3000);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  };
 
   return (
     <Modal show={show} onClickOverlay={() => onClickOverlay('', true)} layout={'sm:max-w-4xl'}>
@@ -316,7 +332,17 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                     <hr className="mb-2" />
                     <div className="flex justify-between items-center mb-2 text-rose-500">
                       <div>Sisa Pembayaran</div>
-                      <div>{displayMoney(order?.outstanding)}</div>
+                      <div className="flex items-center">
+                        <button
+                          onClick={() => copyToClipboard(order?.outstanding.toString())}
+                          className="p-2"
+                          aria-label="Copy Text"
+                          title="Copy Text"
+                        >
+                          {copied ? <FiCheck className="text-green-500" size={"1.2rem"} /> : <FiCopy className="text-gray-700" size={"1.2rem"}/>}
+                        </button>
+                        <div>{displayMoney(order?.outstanding)}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
