@@ -54,7 +54,7 @@ const Index: NextPage<Props> = ({ id }) => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Paper Detail'}</title>
+        <title>{process.env.APP_NAME + ' - Kertas Detail'}</title>
       </Head>
       <ModalEditPaper
         show={showModalEditPaper}
@@ -64,7 +64,7 @@ const Index: NextPage<Props> = ({ id }) => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Paper', path: '/paper' },
+            { name: 'Kertas', path: '/paper' },
             { name: paper?.name || id, path: '' },
           ]}
         />
@@ -79,11 +79,11 @@ const Index: NextPage<Props> = ({ id }) => {
             <div>
               <div className="mb-4">
                 <div className="text-xl flex justify-between items-center mb-2">
-                  <div>Paper</div>
+                  <div>Kertas</div>
                   <button
                     className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                     type="button"
-                    title='Edit Paper'
+                    title='Edit Kertas'
                     onClick={() => toggleModalEditPaper(paper?.id)}
                   >
                     <RiPencilLine className='text-amber-500' size={'1.2rem'} />

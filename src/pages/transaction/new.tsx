@@ -95,18 +95,18 @@ const New: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Buat Transaction'}</title>
+        <title>{process.env.APP_NAME + ' - Buat Transaksi'}</title>
       </Head>
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Transaction', path: '/transaction' },
+            { name: 'Transaksi', path: '/transaction' },
             { name: 'Buat', path: '' },
           ]}
         />
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>Buat Transaction</div>
+            <div className='text-xl'>Buat Transaksi</div>
           </div>
           <div>
             <Formik
@@ -133,10 +133,10 @@ const New: NextPage<Props> = () => {
                     </div>
                     <div className="mb-4 max-w-xl">
                       <TextField
-                        label={'Nama Transaction'}
+                        label={'Nama Transaksi'}
                         name={'name'}
                         type={'text'}
-                        placeholder={'Nama Transaction'}
+                        placeholder={'Nama Transaksi'}
                         required
                       />
                     </div>

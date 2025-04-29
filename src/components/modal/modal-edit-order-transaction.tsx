@@ -144,7 +144,7 @@ const ModalEditOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id, 
     <Modal show={show} onClickOverlay={onClickOverlay} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>{selectedId ? 'Edit Transaction' : 'Create Transaction'}</div>
+          <div>{selectedId ? 'Edit Transaksi' : 'Buat Transaksi'}</div>
           <button type="button" onClick={() => onClickOverlay('')} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -169,7 +169,7 @@ const ModalEditOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id, 
                   <Form noValidate={true}>
                     <div className="mb-4">
                       <TextField
-                        label={'Name Transaction'}
+                        label={'Name Transaksi'}
                         name={'name'}
                         type={'text'}
                         placeholder={'DP 1, DP 25%, DP 50%, Pelunsan, ...'}

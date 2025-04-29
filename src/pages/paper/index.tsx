@@ -112,7 +112,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Nama Paper"}
+            {"Nama Kertas"}
           </div>
         );
       },
@@ -270,7 +270,7 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Paper'}</title>
+        <title>{process.env.APP_NAME + ' - Kertas'}</title>
       </Head>
       <ModalFilter
         show={showModalFilter}
@@ -293,7 +293,7 @@ const Index: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Paper', path: '' },
+            { name: 'Kertas', path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>

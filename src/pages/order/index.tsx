@@ -96,7 +96,7 @@ const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore
     
       window.open(whatsappUrl, '_blank');
     } else {
-      notif.error("Nomor telepon tidak ditemukan");
+      notif.error("Nomor telepon tidak ditemukan, harap simpan nomor telepon pelanggan terlebih dahulu");
     }
   }
 

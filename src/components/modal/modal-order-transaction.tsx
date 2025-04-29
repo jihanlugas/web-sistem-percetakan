@@ -108,7 +108,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
     <Modal show={show} onClickOverlay={() => onClickOverlay('', true)} layout={'sm:max-w-4xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Transaction</div>
+          <div>Transaksi</div>
           <button type="button" onClick={() => onClickOverlay('', true)} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -299,7 +299,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
               <hr className="mb-4" />
               <div className="mb-4">
                 <div className="mb-4 grid grid-cols-3 gap-4">
-                  <div className="text-lg">Transaction</div>
+                  <div className="text-lg">Total Order</div>
                   <div className="col-span-2">
                     <div className="flex justify-between items-center mb-2">
                       <div>Print</div>
@@ -347,7 +347,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                 <div className="mb-4">
                   <hr className="mb-4" />
                   <div className="mb-4 grid grid-cols-3 gap-4">
-                    <div className="text-lg">New Transaction</div>
+                    <div className="text-lg">Buat Transaksi</div>
                     <div className="col-span-2">
                       <Formik
                         initialValues={initFormikValue}
@@ -360,7 +360,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                             <Form noValidate={true}>
                               <div className="mb-4">
                                 <TextField
-                                  label={'Name Transaction'}
+                                  label={'Name Transaksi'}
                                   name={'name'}
                                   type={'text'}
                                   placeholder={'DP 1, DP 25%, DP 50%, Pelunsan, ...'}

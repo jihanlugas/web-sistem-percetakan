@@ -70,18 +70,18 @@ const New: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Buat Paper'}</title>
+        <title>{process.env.APP_NAME + ' - Buat Kertas'}</title>
       </Head>
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Paper', path: '/paper' },
+            { name: 'Kertas', path: '/paper' },
             { name: 'Buat', path: '' },
           ]}
         />
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>Buat Paper</div>
+            <div className='text-xl'>Buat Kertas</div>
           </div>
           <div>
             <Formik

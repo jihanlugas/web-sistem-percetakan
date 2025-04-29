@@ -55,7 +55,7 @@ const defaultMenu = [
     path: '/finishing',
   },
   {
-    name: 'Transaction',
+    name: 'Transaksi',
     icon: 'TbCashRegister',
     path: '/transaction',
   },

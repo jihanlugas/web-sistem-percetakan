@@ -54,7 +54,7 @@ const Index: NextPage<Props> = ({ id }) => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Transaction Detail'}</title>
+        <title>{process.env.APP_NAME + ' - Transaksi Detail'}</title>
       </Head>
       <ModalEditTransaction
         show={showModalEditTransaction}
@@ -64,7 +64,7 @@ const Index: NextPage<Props> = ({ id }) => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Transaction', path: '/transaction' },
+            { name: 'Transaksi', path: '/transaction' },
             { name: transaction?.name || id, path: '' },
           ]}
         />
@@ -79,11 +79,11 @@ const Index: NextPage<Props> = ({ id }) => {
             <div>
               <div className="mb-4">
                 <div className="text-xl flex justify-between items-center mb-2">
-                  <div>Transaction</div>
+                  <div>Transaksi</div>
                   <button
                     className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                     type="button"
-                    title='Edit Transaction'
+                    title='Edit Transaksi'
                     onClick={() => toggleModalEditTransaction(transaction?.id)}
                   >
                     <RiPencilLine className='text-amber-500' size={'1.2rem'} />
@@ -91,7 +91,7 @@ const Index: NextPage<Props> = ({ id }) => {
                 </div>
                 <div className="grid grid-cols-5 gap-4">
                   <div className="col-span-2 grid grid-cols-2 gap-4">
-                    <div className="text-gray-600">{'Nama Transaction'}</div>
+                    <div className="text-gray-600">{'Nama Transaksi'}</div>
                     <div className="">{transaction?.name}</div>
                     <div className="text-gray-600">{'Keterangan'}</div>
                     <div className="whitespace-pre-wrap">{transaction?.description || '-'}</div>
