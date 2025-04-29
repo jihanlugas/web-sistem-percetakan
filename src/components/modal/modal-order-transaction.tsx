@@ -17,6 +17,7 @@ import CheckboxField from "@/components/formik/checkbox-field";
 import { Tooltip } from "react-tooltip";
 import TextFieldNumber from "../formik/text-field-number";
 import { FiCopy, FiCheck } from 'react-icons/fi';
+import { copyToClipboardWithFallback } from "@/utils/helper";
 
 
 type Props = {
@@ -96,16 +97,10 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
   }
 
   const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
+    const success = await copyToClipboardWithFallback(text);
+    if (success) {
       setCopied(true);
-
-      // Reset ke normal setelah 5 detik
-      setTimeout(() => {
-        setCopied(false);
-      }, 3000);
-    } catch (err) {
-      console.error('Failed to copy: ', err);
+      setTimeout(() => setCopied(false), 5000);
     }
   };
 

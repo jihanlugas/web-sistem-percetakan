@@ -87,9 +87,17 @@ const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore
     })
   }
 
-  const handleClickPhase = (id) => {
-    setMoreBar(false);
-    toggleModalOrderPhase(id, false);
+  const handleClickWhatsappClient = () => {
+    if (row.original.customer?.phoneNumber) {
+      const phoneNumber = row.original.customer?.phoneNumber;
+      const message = 'Halo ' + row.original.customer.name + ' ';
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    
+      window.open(whatsappUrl, '_blank');
+    } else {
+      notif.error("Nomor telepon tidak ditemukan");
+    }
   }
 
   const handleClickTransaction = (id) => {
@@ -110,11 +118,11 @@ const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore
       </button>
       <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
         <div className="" role="none">
-          {/* <button onClick={() => handleClickPhase(row.original.id)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
-            {'Phase'}
-          </button> */}
+          <button onClick={() => handleClickWhatsappClient()} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+            {'Whatsapp Pelangan'}
+          </button>
           <button onClick={() => handleClickTransaction(row.original.id)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
-            {'Transaction'}
+            {'Transaksi'}
           </button>
           <hr />
           <button onClick={() => generateSpk(row.original.id)} className={'px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left flex '}>

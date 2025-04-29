@@ -63,3 +63,29 @@ export const removeEmptyValues = (obj) => {
     Object.entries(obj).filter(([, value]) => value !== null && value !== undefined && value !== '')
   );
 }
+
+export const copyToClipboardWithFallback = async (text: string): Promise<boolean> => {
+  // try {
+  //   await navigator.clipboard.writeText(text);
+  //   return true;
+  // } catch (err) {
+    // console.warn('Clipboard API failed, using fallback.', err);
+
+    try {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed'; // avoid scroll jump
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+      return successful;
+    } catch (fallbackErr) {
+      console.error('Fallback copy failed', fallbackErr);
+      return false;
+    }
+  // }
+};
