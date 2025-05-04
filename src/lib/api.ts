@@ -159,7 +159,6 @@ class Api {
 
 			if (contentDisposition) {
 				const match = contentDisposition.split("filename=");
-				console.log('match ', match)
 				if (match && match[1]) {
 					filename = match[1];
 				}

@@ -7,6 +7,7 @@ export declare interface CompanyView {
   email: string;
   phoneNumber: string;
   address: string;
+  invoiceNote: string;
   createBy: string;
   createDt: string;
   updateBy: string;
@@ -34,8 +35,10 @@ export declare interface CreateCompany {
 export declare interface UpdateCompany {
   name: string;
   description: string;
+  email: string;
   phoneNumber: string;
   address: string;
+  invoiceNote: string;
 }
 
 export declare interface PageCompany extends Paging{

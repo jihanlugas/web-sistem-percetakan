@@ -129,6 +129,7 @@ const SingIn: NextPage<Props> = () => {
             </Link>
           </div> */}
         </div>
+        {/* <div className='absolute text-8xl -rotate-45'>Test</div> */}
       </div>
 
     </>
