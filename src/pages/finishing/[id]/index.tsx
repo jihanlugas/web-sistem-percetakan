@@ -10,7 +10,7 @@ import { GetServerSideProps, NextPage } from "next/types";
 import { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { RiPencilLine } from "react-icons/ri";
-import ModalEditFinishing from "@/components/component/modal-edit-finishing";
+import ModalEditFinishing from "@/components/modal/modal-edit-finishing";
 
 
 

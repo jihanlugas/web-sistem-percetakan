@@ -96,9 +96,9 @@ const Index: NextPage<Props> = ({ id }) => {
                     <div className="text-gray-600">{'Keterangan'}</div>
                     <div className="whitespace-pre-wrap">{transaction?.description || '-'}</div>
                     <div className="text-gray-600">{'Nama Order'}</div>
-                    <div className="">{transaction?.orderName}</div>
+                    <div className="">{transaction?.orderName || '-'}</div>
                     <div className="text-gray-600">{'Type'}</div>
-                    <div className="">{transaction?.type === 1 ? 'Debit' : 'Kredit'}</div>
+                    <div className="">{transaction?.type === 1 ? 'Pemasukan' : 'Pengeluaran'}</div>
                     <div className="text-gray-600">{'Harga'}</div>
                     <div className="">{displayMoney(transaction?.amount)}</div>
                     <div className="text-gray-600">{'Create By'}</div>

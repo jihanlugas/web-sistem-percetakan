@@ -46,7 +46,7 @@ const Breadcrumb: NextPage<Props> = ({ links }) => {
               </div>
             </Link>
           )}
-          <div className='mr-4'>{links.pop().name}</div>
+          <div className='mr-4'>{links[links.length - 1].name}</div>
         </div>
       </div>
     </div>

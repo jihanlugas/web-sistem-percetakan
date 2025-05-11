@@ -15,6 +15,7 @@ import TextAreaField from "@/components/formik/text-area-field";
 import DropdownField from "@/components/formik/dropdown-field";
 import { OrderView, PageOrder } from "@/types/order";
 import TextFieldNumber from "../formik/text-field-number";
+import { TRANSACTION_TYPE_DEBIT, TRANSACTION_TYPE_KREDIT } from "@/utils/constant";
 
 
 type Props = {
@@ -69,6 +70,7 @@ const ModalEditTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) => 
 
   const handleSubmit = async (values: UpdateTransaction, formikHelpers: FormikHelpers<UpdateTransaction>) => {
     values.amount = parseInt(values.amount as string)
+    values.type = parseInt(values.type as string)
 
     mutateSubmit(values, {
       onSuccess: ({ status, message, payload }) => {
@@ -177,7 +179,7 @@ const ModalEditTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) => 
                         <DropdownField
                           label={"Type"}
                           name={"type"}
-                          items={[{ name: "Debit", id: 1 }, { name: "Kredit", id: -1 }]}
+                          items={[{name: "Pemasukan", id: TRANSACTION_TYPE_DEBIT}, {name: "Pengeluaran", id: TRANSACTION_TYPE_KREDIT}]}
                           keyValue={"id"}
                           keyLabel={"name"}
                           field={true}
