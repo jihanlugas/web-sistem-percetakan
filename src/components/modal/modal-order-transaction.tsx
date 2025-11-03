@@ -18,6 +18,8 @@ import { Tooltip } from "react-tooltip";
 import TextFieldNumber from "../formik/text-field-number";
 import { FiCopy, FiCheck } from 'react-icons/fi';
 import { copyToClipboardWithFallback } from "@/utils/helper";
+import RadioField from "../formik/radio-field";
+import { PAYMENT_TYPE_CASH, PAYMENT_TYPE_TRASNFER } from "@/utils/constant";
 
 
 type Props = {
@@ -36,6 +38,7 @@ const defaultInitFormikValue: AddTransaction = {
   name: '',
   description: '',
   amount: '',
+  paymentType: PAYMENT_TYPE_CASH,
 }
 
 const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) => {
@@ -318,7 +321,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                       <>
                         {order?.transactions.map((transaction, key) => (
                           <div key={key} className="flex justify-between items-center mb-2 text-green-500">
-                            <div>{transaction.name}</div>
+                            <div>{transaction.name + ' | ' + transaction.paymentType}</div>
                             <div>{displayMoney(transaction.amount)}</div>
                           </div>
                         ))}
@@ -334,7 +337,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                           aria-label="Copy Text"
                           title="Copy Text"
                         >
-                          {copied ? <FiCheck className="text-green-500" size={"1.2rem"} /> : <FiCopy className="text-gray-700" size={"1.2rem"}/>}
+                          {copied ? <FiCheck className="text-green-500" size={"1.2rem"} /> : <FiCopy className="text-gray-700" size={"1.2rem"} />}
                         </button>
                         <div>{displayMoney(order?.outstanding)}</div>
                       </div>
@@ -355,7 +358,7 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                         enableReinitialize={true}
                         onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
                       >
-                        {({ }) => {
+                        {({ values }) => {
                           return (
                             <Form noValidate={true}>
                               <div className="mb-4">
@@ -382,12 +385,29 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                                   required
                                 />
                               </div>
+                              <div className="mb-4 flex">
+                                <RadioField
+                                  name="paymentType"
+                                  label="Cash"
+                                  value={PAYMENT_TYPE_CASH}
+                                  field={true}
+                                />
+                                <RadioField
+                                  name="paymentType"
+                                  label="Trasnfer"
+                                  value={PAYMENT_TYPE_TRASNFER}
+                                  field={true}
+                                />
+                              </div>
                               <div className="mb-4">
                                 <ButtonSubmit
                                   label={'Simpan'}
                                   disabled={isPending}
                                   loading={isPending}
                                 />
+                              </div>
+                              <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                                {JSON.stringify(values, null, 4)}
                               </div>
                             </Form>
                           )

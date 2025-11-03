@@ -99,6 +99,8 @@ const Index: NextPage<Props> = ({ id }) => {
                     <div className="">{transaction?.orderName || '-'}</div>
                     <div className="text-gray-600">{'Type'}</div>
                     <div className="">{transaction?.type === 1 ? 'Pemasukan' : 'Pengeluaran'}</div>
+                    <div className="text-gray-600">{'Tipe Pembayaran'}</div>
+                    <div className="">{transaction?.paymentType}</div>
                     <div className="text-gray-600">{'Harga'}</div>
                     <div className="">{displayMoney(transaction?.amount)}</div>
                     <div className="text-gray-600">{'Create By'}</div>

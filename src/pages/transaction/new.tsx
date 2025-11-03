@@ -17,7 +17,8 @@ import DropdownField from '@/components/formik/dropdown-field';
 import { OrderView, PageOrder } from '@/types/order';
 import { useEffect, useState } from 'react';
 import TextFieldNumber from '@/components/formik/text-field-number';
-import { TRANSACTION_TYPE_DEBIT, TRANSACTION_TYPE_KREDIT } from '@/utils/constant';
+import { PAYMENT_TYPE_CASH, PAYMENT_TYPE_TRASNFER, TRANSACTION_TYPE_DEBIT, TRANSACTION_TYPE_KREDIT } from '@/utils/constant';
+import RadioField from '@/components/formik/radio-field';
 
 
 type Props = object
@@ -41,6 +42,7 @@ const initFormikValue: CreateTransaction = {
   description: '',
   type: TRANSACTION_TYPE_DEBIT,
   amount: '',
+  paymentType: PAYMENT_TYPE_CASH,
 }
 
 const New: NextPage<Props> = () => {
@@ -151,7 +153,7 @@ const New: NextPage<Props> = () => {
                       <DropdownField
                         label={"Type"}
                         name={"type"}
-                        items={[{name: "Pemasukan", id: TRANSACTION_TYPE_DEBIT}, {name: "Pengeluaran", id: TRANSACTION_TYPE_KREDIT}]}
+                        items={[{ name: "Pemasukan", id: TRANSACTION_TYPE_DEBIT }, { name: "Pengeluaran", id: TRANSACTION_TYPE_KREDIT }]}
                         keyValue={"id"}
                         keyLabel={"name"}
                         field={true}
@@ -164,6 +166,20 @@ const New: NextPage<Props> = () => {
                         name={'amount'}
                         placeholder={'Harga'}
                         required
+                      />
+                    </div>
+                    <div className="mb-4 flex max-w-xl">
+                      <RadioField
+                        name="paymentType"
+                        label="Cash"
+                        value={PAYMENT_TYPE_CASH}
+                        field={true}
+                      />
+                      <RadioField
+                        name="paymentType"
+                        label="Trasnfer"
+                        value={PAYMENT_TYPE_TRASNFER}
+                        field={true}
                       />
                     </div>
                     <div className="mb-8 max-w-xl">

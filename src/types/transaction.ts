@@ -9,6 +9,7 @@ export declare interface TransactionView {
   name: string;
   description: string;
   type: string | number;
+  paymentType: string;
   amount: number;
   createBy: string;
   createDt: string;
@@ -47,6 +48,7 @@ export declare interface CreateTransaction {
   description: string;
   type: string | number;
   amount: number | string;
+  paymentType: string;
 }
 
 export declare interface UpdateTransaction {
@@ -55,4 +57,5 @@ export declare interface UpdateTransaction {
   description: string;
   type: string | number;
   amount: number | string;
+  paymentType: string;
 }

@@ -4,6 +4,9 @@ export const USER_ROLE_USER = 'USER'
 export const TRANSACTION_TYPE_DEBIT = 1;
 export const TRANSACTION_TYPE_KREDIT = -1;
 
+export const PAYMENT_TYPE_CASH = "CASH";
+export const PAYMENT_TYPE_TRASNFER = "TRANSFER";
+
 export const VALIDATION_MAX_FILE_SIZE = 1024 * 1024 * 5; // 5 MB
 export const VALIDATION_ALLOWED_FILE_TYPE = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
 

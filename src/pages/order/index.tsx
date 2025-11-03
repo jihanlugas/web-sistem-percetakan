@@ -93,7 +93,7 @@ const DropdownMore: NextPage<CellContext<OrderView, unknown> & PropsDropdownMore
       const message = 'Halo ' + row.original.customer.name + ' ';
       const encodedMessage = encodeURIComponent(message);
       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    
+
       window.open(whatsappUrl, '_blank');
     } else {
       notif.error("Nomor telepon tidak ditemukan, harap simpan nomor telepon pelanggan terlebih dahulu");
@@ -482,6 +482,7 @@ const Index: NextPage<Props> = () => {
     }
     setSelectedId(id)
     setShowModalOrderTransaction(!showModalOrderTransaction);
+    
   };
 
 

@@ -95,6 +95,7 @@ export declare interface AddTransaction {
   name: string;
   description: string;
   amount: number | string;
+  paymentType: string;
 }
 
 export declare interface UpdateOrder {

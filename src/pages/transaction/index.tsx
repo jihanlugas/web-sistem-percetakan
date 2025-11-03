@@ -159,6 +159,26 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
+      id: 'payment_type',
+      accessorKey: 'paymentType',
+      header: () => {
+        return (
+          <div className='whitespace-nowrap'>
+            {"Harga"}
+          </div>
+        );
+      },
+      cell: ({ getValue, row }) => {
+        return (
+          <>
+            <div className='w-full capitalize'>
+              <span>{getValue() as string}</span>
+            </div>
+          </>
+        )
+      },
+    },
+    {
       id: 'amount',
       accessorKey: 'amount',
       header: () => {

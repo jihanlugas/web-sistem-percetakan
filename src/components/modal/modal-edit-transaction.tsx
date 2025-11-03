@@ -15,7 +15,8 @@ import TextAreaField from "@/components/formik/text-area-field";
 import DropdownField from "@/components/formik/dropdown-field";
 import { OrderView, PageOrder } from "@/types/order";
 import TextFieldNumber from "../formik/text-field-number";
-import { TRANSACTION_TYPE_DEBIT, TRANSACTION_TYPE_KREDIT } from "@/utils/constant";
+import { PAYMENT_TYPE_CASH, PAYMENT_TYPE_TRASNFER, TRANSACTION_TYPE_DEBIT, TRANSACTION_TYPE_KREDIT } from "@/utils/constant";
+import RadioField from "../formik/radio-field";
 
 
 type Props = {
@@ -36,6 +37,7 @@ const defaultInitFormikValue: UpdateTransaction = {
   description: '',
   type: '',
   amount: '',
+  paymentType: 'CASH',
 }
 
 const pageRequestOrder: PageOrder = {
@@ -98,6 +100,7 @@ const ModalEditTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) => 
           description: data.payload.description,
           amount: data.payload.amount,
           type: data.payload.type,
+          paymentType: data.payload.paymentType,
         })
       }
     }
@@ -179,7 +182,7 @@ const ModalEditTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) => 
                         <DropdownField
                           label={"Type"}
                           name={"type"}
-                          items={[{name: "Pemasukan", id: TRANSACTION_TYPE_DEBIT}, {name: "Pengeluaran", id: TRANSACTION_TYPE_KREDIT}]}
+                          items={[{ name: "Pemasukan", id: TRANSACTION_TYPE_DEBIT }, { name: "Pengeluaran", id: TRANSACTION_TYPE_KREDIT }]}
                           keyValue={"id"}
                           keyLabel={"name"}
                           field={true}
@@ -192,6 +195,20 @@ const ModalEditTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) => 
                           name={'amount'}
                           placeholder={'Harga'}
                           required
+                        />
+                      </div>
+                      <div className="mb-4 flex">
+                        <RadioField
+                          name="paymentType"
+                          label="Cash"
+                          value={PAYMENT_TYPE_CASH}
+                          field={true}
+                        />
+                        <RadioField
+                          name="paymentType"
+                          label="Trasnfer"
+                          value={PAYMENT_TYPE_TRASNFER}
+                          field={true}
                         />
                       </div>
                       <div className="mb-4">
