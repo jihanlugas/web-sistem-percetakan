@@ -1,79 +1,47 @@
-import { Store } from 'react-notifications-component';
+import { toast } from 'react-toastify';
 
 class notif {
   static success = (msg: string) => {
-    Store.addNotification({
-      title: "Successful!",
-      message: msg,
-      type: "success",
-      insert: "top",
-      container: "top-center",
-      animationIn: ["animate__animated", "animate__bounceIn"],
-      animationOut: ["animate__animated", "animate__bounceOut"],
-      dismiss: {
-        duration: 3500,
-        onScreen: false,
-        pauseOnHover: true,
-        showIcon: true,
-
-      },
+    toast.success(msg, {
+      position: "top-center",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
     });
   };
 
   static error = (msg: string) => {
-    Store.addNotification({
-      title: "Error!",
-      message: msg,
-      type: "danger",
-      insert: "top",
-      container: "top-center",
-      animationIn: ["animate__animated", "animate__bounceIn"],
-      animationOut: ["animate__animated", "animate__bounceOut"],
-      dismiss: {
-        duration: 3500,
-        onScreen: false,
-        pauseOnHover: true,
-        showIcon: true,
-
-      },
+    toast.error(msg, {
+      position: "top-center",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
     });
   };
 
   static info = (msg: string) => {
-    Store.addNotification({
-      title: "Info!",
-      message: msg,
-      type: "info",
-      insert: "top",
-      container: "top-center",
-      animationIn: ["animate__animated", "animate__bounceIn"],
-      animationOut: ["animate__animated", "animate__bounceOut"],
-      dismiss: {
-        duration: 3500,
-        onScreen: false,
-        pauseOnHover: true,
-        showIcon: true,
-
-      },
+    toast.info(msg, {
+      position: "top-center",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
     });
   };
 
   static warning = (msg: string) => {
-    Store.addNotification({
-      title: "Warning!",
-      message: msg,
-      type: "warning",
-      insert: "top",
-      container: "top-center",
-      animationIn: ["animate__animated", "animate__bounceIn"],
-      animationOut: ["animate__animated", "animate__bounceOut"],
-      dismiss: {
-        duration: 3500,
-        onScreen: false,
-        pauseOnHover: true,
-        showIcon: true,
-
-      },
+    toast.warning(msg, {
+      position: "top-center",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
     });
   };
 }

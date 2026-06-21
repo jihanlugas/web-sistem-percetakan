@@ -406,9 +406,6 @@ const ModalOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =>
                                   loading={isPending}
                                 />
                               </div>
-                              <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                                {JSON.stringify(values, null, 4)}
-                              </div>
                             </Form>
                           )
                         }}

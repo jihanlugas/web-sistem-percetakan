@@ -1,4 +1,4 @@
-import 'react-notifications-component/dist/theme.css'
+import 'react-toastify/dist/ReactToastify.css';
 import 'animate.css/animate.min.css';
 import '../styles/globals.css'
 import '../styles/react-tooltip.css'
@@ -6,7 +6,7 @@ import Head from 'next/head';
 import { NextPage } from 'next/types';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PageWithLayoutType from '@/types/layout';
-import { ReactNotifications } from 'react-notifications-component'
+import { ToastContainer } from 'react-toastify';
 
 
 type AppLayoutProps = {
@@ -21,7 +21,7 @@ const MyApp: NextPage<AppLayoutProps> = ({ Component, pageProps }) => {
 
   return (
     <>
-      <ReactNotifications />
+      <ToastContainer />
       <Head>
         <title>{process.env.APP_NAME}</title>
       </Head>
