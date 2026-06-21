@@ -15,7 +15,7 @@ import notif from "@/utils/notif";
 import { OrderView } from "@/types/order";
 import CheckboxField from "@/components/formik/checkbox-field";
 import TextFieldNumber from "../formik/text-field-number";
-import { TRANSACTION_TYPE_DEBIT } from "@/utils/constant";
+import { PAYMENT_TYPE_CASH, TRANSACTION_TYPE_DEBIT } from "@/utils/constant";
 
 type Props = {
   show: boolean;
@@ -37,6 +37,7 @@ const defaultInitFormikValue: CreateTransaction = {
   type: TRANSACTION_TYPE_DEBIT,
   description: '',
   amount: '',
+  paymentType: PAYMENT_TYPE_CASH,
 }
 
 const ModalEditOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id, order }) => {
@@ -71,6 +72,7 @@ const ModalEditOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id, 
         description: values.description,
         amount: values.amount,
         type: values.type,
+        paymentType: values.paymentType
       }
       mutateUpdate(newData, {
         onSuccess: ({ status, message, payload }) => {
@@ -96,6 +98,7 @@ const ModalEditOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id, 
         description: values.description,
         type: values.type,
         amount: values.amount,
+        paymentType: values.paymentType
       }
       mutateSubmit(newData, {
         onSuccess: ({ status, message, payload }) => {
@@ -135,6 +138,7 @@ const ModalEditOrderTransaction: NextPage<Props> = ({ show, onClickOverlay, id, 
           description: data.payload.description,
           type: data.payload.type,
           amount: data.payload.amount,
+          paymentType: data.payload.paymentType
         })
       }
     }
